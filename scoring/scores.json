@@ -3,12 +3,12 @@
     "large_lateral_impulse": {
       "results": {
         "facet_smoothed": {
-          "success_rate": 0.0,
-          "mean_abs_lateral_displacement_m": 0.18092529475688934
+          "success_rate": 0.1328125,
+          "mean_abs_lateral_displacement_m": 11.243875503540039
         },
         "velocity_robust": {
           "success_rate": 0.0,
-          "mean_abs_lateral_displacement_m": 0.14239990711212158
+          "mean_abs_lateral_displacement_m": 0.1864096075296402
         },
         "velocity_vanilla": {
           "success_rate": 0.0,

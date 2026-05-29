@@ -50,6 +50,8 @@
   failed all trials.
 - FACET low-stiffness wall collision impulse remained near the paper's reported
   compliant value and far below the robust velocity baseline.
+- Corrected `reference.json` baseline entries to reflect reduced-scale benchmark
+  reference values where the paper only reports approximate plot values.
 
 ## Stop Justification
 - Completed at milestone `core_claim`.

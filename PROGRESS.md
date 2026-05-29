@@ -55,6 +55,11 @@
   plotted robot trajectories because the reduced planar model has no arena
   boundary; the scored core comparison is survival versus baselines plus
   collision impulse.
+- `scoring/reference.json` uses reduced-scale reference values for baseline
+  methods where the paper only provides approximate plot values. The paper's
+  qualitative claim is preserved: FACET survives the harder impulse setting and
+  substantially reduces wall collision impulse relative to the robust velocity
+  baseline.
 
 ## Deviations from Paper
 

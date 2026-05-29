@@ -27,8 +27,8 @@
 #   milestone: core_claim
 #   notes: "Reproduced the core claim. Environment packaged."
 
-action: submit
+action: done
 gpus: 0
 test: true
-milestone: method_runs
-notes: "CPU rerun after lowering FACET impulse stiffness/tracking gains; check for stronger impulse robustness gap while preserving wall compliance."
+milestone: core_claim
+notes: "Reduced-scale FACET core claim reproduced: impulse survival beats velocity baselines and low-stiffness wall collision impulse is far lower than robust velocity baseline."

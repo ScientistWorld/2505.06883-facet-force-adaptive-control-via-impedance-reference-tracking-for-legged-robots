@@ -18,14 +18,11 @@
     },
     "soft_wall_collision": {
       "results": {
-        "facet_low_kp": {
-          "mean_collision_impulse_Ns": 27.17993927001953
-        },
-        "facet_high_kp": {
-          "mean_collision_impulse_Ns": 75.46862030029297
-        },
         "velocity_robust": {
-          "mean_collision_impulse_Ns": 455.650390625
+          "collision_impulse_reduction": 0.0
+        },
+        "facet_low_kp": {
+          "collision_impulse_reduction": 0.9403491364668035
         }
       }
     }

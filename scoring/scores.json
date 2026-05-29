@@ -1,0 +1,36 @@
+{
+  "experiments": {
+    "large_lateral_impulse": {
+      "results": {
+        "facet_smoothed": {
+          "success_rate": 0.0,
+          "mean_abs_lateral_displacement_m": 0.04549746215343475,
+          "mean_final_forward_speed_mps": 1.2604310512542725
+        },
+        "velocity_robust": {
+          "success_rate": 0.0,
+          "mean_abs_lateral_displacement_m": 0.14239990711212158,
+          "mean_final_forward_speed_mps": 1.4864827394485474
+        },
+        "velocity_vanilla": {
+          "success_rate": 0.0,
+          "mean_abs_lateral_displacement_m": 0.06687945127487183,
+          "mean_final_forward_speed_mps": 1.4864821434020996
+        }
+      }
+    },
+    "soft_wall_collision": {
+      "results": {
+        "facet_low_kp": {
+          "mean_collision_impulse_Ns": 19.477590560913086
+        },
+        "facet_high_kp": {
+          "mean_collision_impulse_Ns": 57.312686920166016
+        },
+        "velocity_robust": {
+          "mean_collision_impulse_Ns": 455.650390625
+        }
+      }
+    }
+  }
+}

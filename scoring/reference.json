@@ -33,7 +33,7 @@
       }
     },
     "soft_wall_collision": {
-      "description": "Wall collision at 1.5 m/s. The paper reports that the compliant FACET setting reduces collision impulse by about 80% relative to the robust velocity baseline.",
+      "description": "Wall collision at 1.5 m/s. The paper reports that the compliant FACET setting reduces 0.5 s post-contact collision impulse by about 80% relative to the robust velocity baseline.",
       "weight": 0.30,
       "primary_metric": "collision_impulse_reduction",
       "metrics": {
@@ -60,7 +60,7 @@
       }
     },
     "impedance_stiffness_modulation": {
-      "description": "Wall contact with the same learned policy under low versus high virtual stiffness. The paper reports that collision impulse is modulated by the impedance parameter Kp.",
+      "description": "Wall contact with the same learned policy under low versus high virtual stiffness. The paper reports that 0.5 s post-contact collision impulse is modulated by the impedance parameter Kp.",
       "weight": 0.25,
       "primary_metric": "normalized_wall_impulse",
       "metrics": {

@@ -13,6 +13,8 @@ set -e
 
 cd /home/user
 
+rm -rf checkpoints/facet_planar
+
 EPISODES="${EPISODES:-128}" \
 TEACHER_UPDATES="${TEACHER_UPDATES:-60}" \
 STUDENT_UPDATES="${STUDENT_UPDATES:-30}" \

@@ -75,11 +75,16 @@
   reduction with `1.0` wall contact rate.
 - Added a stiffness-modulation evaluation target that compares low and high
   virtual stiffness commands for the same learned policy.
+- CPU job `0b2b5e8f-228` ran the first stiffness-modulation check. It did not
+  support the secondary claim: low stiffness had normalized wall impulse
+  `0.956` relative to high stiffness, with both contact rates at `1.0`.
+- The next run retrains with a wider stiffness command range and evaluates wall
+  impulse over the paper's 0.5 s post-contact integration window.
 
 ## Remaining
 
-- Run the stiffness-modulation experiment and verify that high-stiffness and
-  low-stiffness wall artifacts are scored independently.
+- Rerun the retrained stiffness-modulation experiment and check whether the
+  widened command range produces a meaningful low/high impulse separation.
 - Optional future expansion: add explicit open-loop and closed-loop reference
   target ablations from Table 2. The Table 2 numbers are documented in the
   paper briefing but are not included as official targets until an evaluator is

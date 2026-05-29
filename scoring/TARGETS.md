@@ -19,7 +19,8 @@ Tests whether improved disturbance handling is achieved while preserving the
 paper's safety constraint: lower collision impulse under compliant settings.
 
 - **Metric**: `collision_impulse_reduction` (higher is better, relative to the
-  robust velocity baseline)
+  robust velocity baseline; wall impulse is integrated over the first 0.5 s
+  after initial contact)
 - **Metric**: `wall_contact_rate` (higher is better as a task-validity
   constraint; the controller must actually reach/contact the wall rather than
   lowering impulse by stopping early)
@@ -33,7 +34,8 @@ Tests whether the same deployed controller changes contact behavior when the
 virtual stiffness command changes.
 
 - **Metric**: `normalized_wall_impulse` (lower is better; low-stiffness impulse
-  divided by high-stiffness impulse)
+  divided by high-stiffness impulse, both integrated over the first 0.5 s after
+  initial contact)
 - **Metric**: `wall_contact_rate` (higher is better as a task-validity
   constraint)
 - **How to run evaluation**: run `scripts/reproduce.sh` or generate rollout

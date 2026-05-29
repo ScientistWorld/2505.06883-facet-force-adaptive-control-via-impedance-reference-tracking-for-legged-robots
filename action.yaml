@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: true
 milestone: core_claim_plus
-notes: "Reuse the validated PPO checkpoint to add the high-stiffness wall rollout, rerun baselines, and evaluate the new stiffness-modulation secondary target."
+notes: "Retrain the PPO FACET policy with a wider impedance-stiffness command range and reevaluate the 0.5s wall impulse secondary target."

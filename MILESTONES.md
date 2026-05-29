@@ -17,3 +17,7 @@
 - CPU job `24368869-42e` trained the reduced PPO teacher/student FACET policy end-to-end and regenerated all rollout artifacts.
 - The PPO policy reached `1.0` impulse success while both velocity baselines remained at `0.0`, and low-stiffness wall contact reduced collision impulse by `0.901` with `1.0` contact rate.
 - Added a follow-up stiffness-modulation experiment to test the secondary claim that the same policy changes contact impulse when the impedance stiffness command changes.
+
+### [2026-05-29 09:34] - core_claim_plus
+- CPU job `0b2b5e8f-228` generated the high-stiffness wall artifact, but low stiffness only reached normalized wall impulse `0.956`, so the stiffness-modulation secondary claim is not yet reproduced.
+- Updated the next run to use the paper's 0.5 s post-contact impulse window, widen the sampled stiffness command range, and retrain before reevaluating the secondary target.

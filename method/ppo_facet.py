@@ -111,7 +111,7 @@ class FACETTrainingEnv:
         self.reset()
 
     def _sample_command(self, count: int) -> ImpedanceCommand:
-        kp = self.rng.uniform(1.5, 8.0, size=count).astype(np.float32)
+        kp = np.exp(self.rng.uniform(np.log(0.5), np.log(32.0), size=count)).astype(np.float32)
         target_velocity = np.zeros((count, 2), dtype=np.float32)
         target_velocity[:, 0] = self.rng.uniform(1.2, 1.8, size=count).astype(np.float32)
         return ImpedanceCommand(
@@ -249,6 +249,8 @@ class FACETTrainingEnv:
         reward_np = (
             1.2 * np.exp(-pos_err / 0.25)
             + 1.8 * np.exp(-vel_err / 0.25)
+            - 0.20 * pos_err
+            - 0.50 * vel_err
             - 0.03 * np.sum(action * action, axis=1)
             - 0.08 * forward_err
             - 2.0 * self.env.failed.astype(np.float32)

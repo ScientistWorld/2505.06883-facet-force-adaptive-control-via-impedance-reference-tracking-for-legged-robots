@@ -11,11 +11,6 @@ freezing in place.
 
 This experiment checks the safety side of the claim. The controller is driven
 into a soft wall, and the evaluator measures the reduction in integrated
-contact impulse relative to the robust velocity baseline. A useful result lowers
-the impulse while still preserving locomotion robustness.
-
-## ablation_tracking_targets
-
-This paper-reported reference target records the Table 2 tracking-target
-ablation. The current reduced benchmark does not run this experiment yet, but it
-defines the next expansion target for future agents.
+contact impulse relative to the robust velocity baseline. The contact-rate
+constraint prevents a method from improving this metric by simply stopping
+before it reaches the wall.

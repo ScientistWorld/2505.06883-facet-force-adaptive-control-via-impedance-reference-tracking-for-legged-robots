@@ -18,7 +18,7 @@ from torch.distributions import Normal
 from torch.nn import functional as F
 
 from data.facet_planar_env import PlanarForceEnv
-from method.facet_reference import FACETController, ImpedanceCommand, SmoothedImpedanceReference
+from method.facet_reference import ImpedanceCommand, SmoothedImpedanceReference
 
 
 @dataclass
@@ -106,23 +106,26 @@ class FACETTrainingEnv:
         self.env = PlanarForceEnv(n_envs, mode="impulse", seed=seed)
         self.ref = SmoothedImpedanceReference(n_envs=n_envs, dt=self.env.cfg.dt)
         self.last_actions = np.zeros((n_envs, 3, 2), dtype=np.float32)
-        self.command = self._sample_command()
+        self.command = self._sample_command(n_envs)
         self.modes = np.zeros(n_envs, dtype=np.int32)
         self.reset()
 
-    def _sample_command(self) -> ImpedanceCommand:
+    def _sample_command(self, count: int) -> ImpedanceCommand:
+        kp = self.rng.uniform(1.5, 8.0, size=count).astype(np.float32)
+        target_velocity = np.zeros((count, 2), dtype=np.float32)
+        target_velocity[:, 0] = self.rng.uniform(1.2, 1.8, size=count).astype(np.float32)
         return ImpedanceCommand(
-            kp=4.0,
-            kd=2.0 * np.sqrt(4.0),
-            virtual_mass=self.env.cfg.mass,
-            target_velocity=np.array([self.env.cfg.target_vx, 0.0], dtype=np.float32),
+            kp=kp,
+            kd=2.0 * np.sqrt(kp),
+            virtual_mass=np.full(count, self.env.cfg.mass, dtype=np.float32),
+            target_velocity=target_velocity,
         )
 
     def reset(self) -> tuple[torch.Tensor, torch.Tensor]:
         self.env.reset()
         self.modes = self.rng.integers(0, 2, size=self.n_envs, dtype=np.int32)
         self.last_actions.fill(0.0)
-        self.command = self._sample_command()
+        self.command = self._sample_command(self.n_envs)
         self.ref.reset(self.env.pos, self.env.vel)
         return self.observations(np.zeros((self.n_envs, 2), dtype=np.float32))
 
@@ -140,6 +143,11 @@ class FACETTrainingEnv:
         self.env.push_peak[idx] = self.rng.uniform(320.0, 430.0, size=len(idx)).astype(np.float32)
         self.env.push_duration[idx] = self.rng.uniform(0.45, 0.55, size=len(idx)).astype(np.float32)
         self.modes[idx] = self.rng.integers(0, 2, size=len(idx), dtype=np.int32)
+        command = self._sample_command(len(idx))
+        self.command.kp[idx] = command.kp
+        self.command.kd[idx] = command.kd
+        self.command.virtual_mass[idx] = command.virtual_mass
+        self.command.target_velocity[idx] = command.target_velocity
         self.last_actions[idx] = 0.0
         for pos, vel, force in self.ref.history:
             pos[idx] = 0.0
@@ -149,40 +157,43 @@ class FACETTrainingEnv:
     def external_forces(self) -> tuple[np.ndarray, np.ndarray]:
         forces = np.zeros((self.n_envs, 2), dtype=np.float32)
         wall_forces = np.zeros((self.n_envs, 2), dtype=np.float32)
-        for i in range(self.n_envs):
-            if self.modes[i] == 0:
-                old_mode = self.env.mode
-                self.env.mode = "impulse"
-                one_force, _ = self.env.external_forces()
-                self.env.mode = old_mode
-                forces[i] = one_force[i]
-            else:
-                penetration = self.env.pos[i, 0] - self.env.cfg.wall_x
-                if penetration > 0:
-                    wall_forces[i, 0] = -self.env.cfg.wall_kp * penetration - self.env.cfg.wall_kd * max(
-                        self.env.vel[i, 0], 0.0
-                    )
+        impulse_mask = self.modes == 0
+        if impulse_mask.any():
+            tau = self.env.t[impulse_mask] - self.env.cfg.push_start
+            duration = self.env.push_duration[impulse_mask]
+            half = 0.5 * duration
+            rising = tau / np.maximum(half, 1e-6)
+            falling = (duration - tau) / np.maximum(half, 1e-6)
+            scale = np.where(tau <= half, rising, falling)
+            active = (tau >= 0.0) & (tau <= duration)
+            forces[impulse_mask, 1] = self.env.push_peak[impulse_mask] * np.maximum(0.0, scale) * active
+
+        wall_mask = self.modes == 1
+        if wall_mask.any():
+            penetration = self.env.pos[wall_mask, 0] - self.env.cfg.wall_x
+            active = penetration > 0.0
+            local_wall = np.zeros_like(penetration, dtype=np.float32)
+            local_wall[active] = (
+                -self.env.cfg.wall_kp * penetration[active]
+                - self.env.cfg.wall_kd * np.maximum(self.env.vel[wall_mask, 0][active], 0.0)
+            )
+            wall_forces[wall_mask, 0] = local_wall
         return forces + wall_forces, wall_forces
 
     def observations(self, force_ext: np.ndarray) -> tuple[torch.Tensor, torch.Tensor]:
         t = self.env.t[:, None]
         phase = np.concatenate([np.sin(t), np.cos(t)], axis=1).astype(np.float32)
-        command = np.tile(
-            np.array(
-                [
-                    self.command.target_velocity[0],
-                    self.command.target_velocity[1],
-                    self.command.kp / 40.0,
-                    self.command.kd / 20.0,
-                    self.command.virtual_mass / 20.0,
-                ],
-                dtype=np.float32,
-            ),
-            (self.n_envs, 1),
-        )
+        command = np.column_stack(
+            [
+                self.command.target_velocity[:, 0],
+                self.command.target_velocity[:, 1],
+                self.command.kp / 40.0,
+                self.command.kd / 20.0,
+                self.command.virtual_mass / 20.0,
+            ]
+        ).astype(np.float32)
         deploy = np.concatenate(
             [
-                self.env.pos,
                 self.env.vel,
                 self.env.tilt[:, None],
                 phase,
@@ -291,6 +302,11 @@ def train_policy(output_dir: Path, config: PPOConfig) -> Path:
     policy = FACETPolicy(obs.shape[-1], priv.shape[-1], 2).to(device)
     optimizer = torch.optim.Adam(policy.parameters(), lr=config.lr)
     output_dir.mkdir(parents=True, exist_ok=True)
+    print(
+        f"Training FACET PPO on {device} with {config.n_envs} envs, "
+        f"{config.teacher_updates} teacher updates and {config.student_updates} student updates",
+        flush=True,
+    )
 
     def run_stage(stage: str, updates: int) -> None:
         nonlocal obs, priv
@@ -363,6 +379,11 @@ def train_policy(output_dir: Path, config: PPOConfig) -> Path:
                     nn.utils.clip_grad_norm_(policy.parameters(), config.max_grad_norm)
                     optimizer.step()
             if (update + 1) % 10 == 0 or update == updates - 1:
+                print(
+                    f"{stage} update {update + 1}/{updates}: "
+                    f"reward={float(rewards_b.mean()):.3f} done={float(dones_b.mean()):.3f}",
+                    flush=True,
+                )
                 torch.save(
                     {
                         "model": policy.state_dict(),
@@ -424,7 +445,7 @@ def policy_rollout(mode: str, episodes: int, seed: int, kp: float, name: str, ch
             (episodes, 1),
         )
         deploy = np.concatenate(
-            [env.pos, env.vel, env.tilt[:, None], phase, command_arr, last_actions.reshape(episodes, -1)],
+            [env.vel, env.tilt[:, None], phase, command_arr, last_actions.reshape(episodes, -1)],
             axis=1,
         )
         pos_targets, vel_targets, acc_targets = ref.targets(env.pos, force_ext, command)

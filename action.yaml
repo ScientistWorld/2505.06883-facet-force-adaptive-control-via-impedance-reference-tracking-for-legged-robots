@@ -4,5 +4,5 @@
 action: submit
 gpus: 0
 test: false
-milestone: none
-notes: "Train the new reduced FACET PPO teacher/student policy from scratch, run velocity baselines, and evaluate generated rollout artifacts."
+milestone: core_claim
+notes: "Fresh CPU run of the PPO teacher/student FACET path after audit fixes; overwrites stale pre-PPO artifacts, runs baselines, and evaluates record-derived scores."

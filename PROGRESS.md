@@ -61,6 +61,11 @@
   reduced PPO teacher/student implementation that uses FACET's smoothed
   impedance reference model as the reward target. This new path is not yet
   counted as `method_runs` until the submitted job completes.
+- A second audit found the evaluator was trusting producer-written summary
+  fields. The evaluator now recomputes success, final speed, wall impulse, and
+  contact rate from rollout records only.
+- PPO training now samples the impedance command interface over stiffness and
+  target speed, and the wall evaluation uses a genuinely low-stiffness command.
 
 ## Remaining
 
@@ -68,7 +73,9 @@
   writes rollout artifacts and scores without relying on the old analytic
   controller.
 - Optional future expansion: add explicit open-loop and closed-loop reference
-  target ablations from Table 2.
+  target ablations from Table 2. The Table 2 numbers are documented in the
+  paper briefing but are not included as official targets until an evaluator is
+  implemented for them.
 - Optional future expansion: port the benchmark from the planar dynamics model
   to Isaac Lab if the full robot assets and training code become available.
 
@@ -87,6 +94,9 @@
   only reports graphically or qualitatively. This keeps automated validation
   tied to reproducible artifacts while preserving the paper's qualitative
   comparisons.
+- The official scoring now covers only experiments evaluated by
+  `scripts/evaluate.sh`. The unimplemented Table 2 ablation was removed from
+  official scoring to avoid a phantom target.
 
 ## Deviations from Paper
 

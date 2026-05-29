@@ -10,9 +10,9 @@ import numpy as np
 
 @dataclass
 class ImpedanceCommand:
-    kp: float
-    kd: float
-    virtual_mass: float
+    kp: float | np.ndarray
+    kd: float | np.ndarray
+    virtual_mass: float | np.ndarray
     target_velocity: np.ndarray
 
 
@@ -39,7 +39,15 @@ class SmoothedImpedanceReference:
 
     def desired_position(self, pos: np.ndarray, command: ImpedanceCommand) -> np.ndarray:
         # Paper's fixed target velocity mode: x_des = Kd/Kp * v_target + x_sim.
-        return pos + (command.kd / max(command.kp, 1e-6)) * command.target_velocity[None, :]
+        kp = np.asarray(command.kp, dtype=np.float32)
+        kd = np.asarray(command.kd, dtype=np.float32)
+        ratio = kd / np.maximum(kp, 1e-6)
+        if ratio.ndim == 0:
+            ratio = ratio[None]
+        target_velocity = np.asarray(command.target_velocity, dtype=np.float32)
+        if target_velocity.ndim == 1:
+            target_velocity = np.tile(target_velocity[None, :], (pos.shape[0], 1))
+        return pos + ratio[:, None] * target_velocity
 
     def integrate_from(
         self,
@@ -54,12 +62,21 @@ class SmoothedImpedanceReference:
         ref_pos = start_pos.copy()
         ref_vel = start_vel.copy()
         x_des = self.desired_position(current_pos, command)
+        kp = np.asarray(command.kp, dtype=np.float32)
+        kd = np.asarray(command.kd, dtype=np.float32)
+        virtual_mass = np.asarray(command.virtual_mass, dtype=np.float32)
+        if kp.ndim == 0:
+            kp = np.full(ref_pos.shape[0], float(kp), dtype=np.float32)
+        if kd.ndim == 0:
+            kd = np.full(ref_pos.shape[0], float(kd), dtype=np.float32)
+        if virtual_mass.ndim == 0:
+            virtual_mass = np.full(ref_pos.shape[0], float(virtual_mass), dtype=np.float32)
         acc = np.zeros_like(ref_pos)
         if force_sequence is None:
             force_sequence = [force_ext for _ in range(max(1, steps))]
         for step_force in force_sequence[-max(1, steps) :]:
-            spring = command.kp * (x_des - ref_pos) - command.kd * ref_vel
-            acc = (spring + step_force) / command.virtual_mass
+            spring = kp[:, None] * (x_des - ref_pos) - kd[:, None] * ref_vel
+            acc = (spring + step_force) / virtual_mass[:, None]
             ref_vel = ref_vel + acc * self.dt
             ref_pos = ref_pos + ref_vel * self.dt
         return ref_pos, ref_vel, acc

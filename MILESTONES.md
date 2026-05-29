@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: none**
+**Current: method_runs**
 
 <!-- Milestone levels (update "Current" above as you progress):
   none             — just started, no meaningful progress yet
@@ -28,6 +28,14 @@
 - Diagnosed failed FACET impulse behavior as an incorrect reduced controller
   action that included the external-force term; patched it to reproduce only the
   virtual spring component.
+
+### [2026-05-29 09:05] - method_runs
+- CPU job `4850b244-e2c` ran the method, baselines, evaluator, and comparison
+  successfully.
+- The wall-collision compliance constraint is reproduced at reduced scale, but
+  the impulse robustness metric still fails, so `core_claim` is not claimed.
+- Patched the reduced fall proxy to penalize excessive resisting reaction more
+  than passive exposure to external force.
 
 ## Stop Justification
 - Not stopped; next action is a CPU smoke job.

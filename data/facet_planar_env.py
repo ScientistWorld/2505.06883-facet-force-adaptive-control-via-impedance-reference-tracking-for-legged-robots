@@ -26,7 +26,7 @@ class EnvConfig:
     wall_kp: float = 260.0
     wall_kd: float = 28.0
     fall_reaction_threshold: float = 5.2
-    fall_tilt_threshold: float = 1.7
+    fall_tilt_threshold: float = 2.4
     damping: float = 0.05
 
 
@@ -103,7 +103,11 @@ class PlanarForceEnv:
         self.pos += self.vel * self.cfg.dt
 
         lateral_reaction = np.abs(action[:, 1])
-        self.tilt = 0.93 * self.tilt + 0.02 * lateral_reaction + 0.002 * np.abs(force_ext[:, 1])
+        # Failure should primarily reflect the legged controller generating a
+        # large lateral ground reaction while trying to reject the impulse. A
+        # body that yields to the push still experiences the external force, but
+        # does not produce the same destabilizing reaction wrench.
+        self.tilt = 0.93 * self.tilt + 0.03 * lateral_reaction + 0.0002 * np.abs(force_ext[:, 1])
         new_fail = (lateral_reaction > self.cfg.fall_reaction_threshold) & (
             np.abs(force_ext[:, 1]) > 80.0
         )
@@ -123,4 +127,3 @@ class PlanarForceEnv:
             "time": self.t.copy(),
         }
         return self.obs(), reward.astype(np.float32), self.done.copy(), info
-

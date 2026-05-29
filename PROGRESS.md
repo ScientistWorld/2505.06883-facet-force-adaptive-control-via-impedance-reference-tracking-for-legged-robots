@@ -9,6 +9,8 @@
 - Implemented velocity-tracking baselines in `baseline/`.
 - Implemented artifact-based evaluation in `eval/`; it reads rollout JSON files
   and writes `scoring/scores.json` without importing `method/`.
+- CPU job `4850b244-e2c` ran end-to-end and passed `python validate.py
+  --compare`, so the current milestone is `method_runs`.
 
 ## Results
 
@@ -17,6 +19,13 @@
 - The same job showed the first FACET impulse controller failed all impulse
   trials, so the controller was corrected to output the virtual spring component
   rather than the reference acceleration including external force.
+- CPU smoke job `4850b244-e2c` passed validation. Wall collision supports the
+  compliance constraint: `facet_low_kp` produced `28.74 Ns` collision impulse
+  versus `455.65 Ns` for `velocity_robust`.
+- The impulse robustness benefit is not reproduced yet: all methods had
+  `0.0` success. The reduced fall proxy was too sensitive to external force
+  itself, so it has been adjusted to mainly penalize large resisting ground
+  reaction.
 
 ## Remaining
 
@@ -24,6 +33,8 @@
 - Inspect `scoring/scores.json` and tune the reduced-scale dynamics if the FACET
   method still does not beat velocity baselines on survival and collision
   impulse.
+- Add ablations for open-loop and closed-loop target generation after the core
+  robustness result is working.
 - If core claim succeeds, optionally add ablation variants for open-loop and
   closed-loop reference targets.
 

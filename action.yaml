@@ -31,4 +31,4 @@ action: submit
 gpus: 0
 test: true
 milestone: method_runs
-notes: "CPU rerun after tuning reduced impulse fall proxy; check whether FACET now beats velocity baselines on impulse robustness while preserving wall compliance."
+notes: "CPU rerun after lowering FACET impulse stiffness/tracking gains; check for stronger impulse robustness gap while preserving wall compliance."

@@ -3,8 +3,8 @@
     "large_lateral_impulse": {
       "results": {
         "facet_smoothed": {
-          "success_rate": 0.1328125,
-          "mean_abs_lateral_displacement_m": 11.243875503540039
+          "success_rate": 1.0,
+          "mean_abs_lateral_displacement_m": 17.02114486694336
         },
         "velocity_robust": {
           "success_rate": 0.0,
@@ -19,10 +19,10 @@
     "soft_wall_collision": {
       "results": {
         "facet_low_kp": {
-          "mean_collision_impulse_Ns": 28.743377685546875
+          "mean_collision_impulse_Ns": 27.17993927001953
         },
         "facet_high_kp": {
-          "mean_collision_impulse_Ns": 85.12666320800781
+          "mean_collision_impulse_Ns": 75.46862030029297
         },
         "velocity_robust": {
           "mean_collision_impulse_Ns": 455.650390625

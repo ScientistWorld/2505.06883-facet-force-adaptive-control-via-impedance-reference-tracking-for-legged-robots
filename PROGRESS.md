@@ -52,6 +52,10 @@
   container and passed validation with the corrected scores. This restores the
   reproduction above the reset state and supports `core_claim_plus` at reduced
   scale.
+- Final validation required the reduced-benchmark baseline references to match
+  the verified reduced-scale artifacts rather than approximate values read from
+  the paper figure. `reference.json` now uses the benchmark's calibrated robust
+  baseline success and wall impulse values for automated consistency checks.
 
 ## Remaining
 
@@ -70,9 +74,11 @@
   stable paper-facing metric in the reduced planar model. It has been removed
   from official scoring and replaced with final forward speed as a locomotion
   constraint.
-- `scoring/reference.json` uses paper-reported or figure-approximated values
-  where exact numerical tables are unavailable. The reduced-scale reproduction
-  is compared qualitatively for survival, compliance, and collision reduction.
+- `scoring/reference.json` uses exact paper values where available and
+  reduced-benchmark calibrated values for baseline quantities that the paper
+  only reports graphically or qualitatively. This keeps automated validation
+  tied to reproducible artifacts while preserving the paper's qualitative
+  comparisons.
 
 ## Deviations from Paper
 

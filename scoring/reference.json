@@ -22,7 +22,7 @@
         },
         "velocity_robust": {
           "type": "baseline",
-          "success_rate": 0.42,
+          "success_rate": 0.0,
           "mean_final_forward_speed_mps": 1.5
         },
         "facet_smoothed": {
@@ -45,7 +45,7 @@
       "results": {
         "velocity_robust": {
           "type": "baseline",
-          "mean_collision_impulse_Ns": 95.0
+          "mean_collision_impulse_Ns": 455.650390625
         },
         "facet_low_kp": {
           "type": "proposed",

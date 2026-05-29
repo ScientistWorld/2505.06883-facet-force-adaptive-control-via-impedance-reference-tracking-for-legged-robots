@@ -22,5 +22,12 @@
 - Implemented reduced-scale method, baselines, and evaluator; execution is
   pending compute-node smoke test.
 
+### [2026-05-29 08:55] - none
+- CPU smoke job executed and wrote rollout artifacts, but validation failed due
+  to an extra evaluator metric.
+- Diagnosed failed FACET impulse behavior as an incorrect reduced controller
+  action that included the external-force term; patched it to reproduce only the
+  virtual spring component.
+
 ## Stop Justification
 - Not stopped; next action is a CPU smoke job.

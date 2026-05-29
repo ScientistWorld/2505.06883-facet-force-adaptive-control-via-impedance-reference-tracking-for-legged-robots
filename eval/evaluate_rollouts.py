@@ -38,7 +38,6 @@ def main() -> None:
                     name: {
                         "success_rate": run["success_rate"],
                         "mean_abs_lateral_displacement_m": run["mean_abs_lateral_displacement"],
-                        "mean_final_forward_speed_mps": run["mean_final_forward_speed"],
                     }
                     for name, run in impulse.items()
                 }

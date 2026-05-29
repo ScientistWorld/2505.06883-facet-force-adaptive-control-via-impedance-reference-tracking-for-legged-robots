@@ -12,15 +12,18 @@
 
 ## Results
 
-- Pending CPU smoke job. Local validation of `scoring/reference.json` and import
-  separation passes, but rollout execution requires the container's numpy
-  install.
+- CPU smoke job `6d94ef34-558` executed the rollout pipeline and produced
+  artifacts, but failed final validation because an extra metric was emitted.
+- The same job showed the first FACET impulse controller failed all impulse
+  trials, so the controller was corrected to output the virtual spring component
+  rather than the reference acceleration including external force.
 
 ## Remaining
 
-- Run `scripts/reproduce.sh` on the compute node.
+- Rerun `scripts/reproduce.sh` on the compute node after the controller fix.
 - Inspect `scoring/scores.json` and tune the reduced-scale dynamics if the FACET
-  method does not beat velocity baselines on survival and collision impulse.
+  method still does not beat velocity baselines on survival and collision
+  impulse.
 - If core claim succeeds, optionally add ablation variants for open-loop and
   closed-loop reference targets.
 

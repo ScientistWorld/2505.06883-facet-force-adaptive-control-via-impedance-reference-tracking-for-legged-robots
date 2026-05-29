@@ -97,12 +97,17 @@ class FACETController:
         pos_targets, vel_targets, acc_targets = self.ref.targets(pos, force_ext, self.command)
         ref_pos = pos_targets.mean(axis=0)
         ref_vel = vel_targets.mean(axis=0)
-        # PD tracking of the smoothed reference plus the reference acceleration.
-        action = acc_targets.mean(axis=0) + 5.0 * (ref_pos - pos) + 2.0 * (ref_vel - vel)
+        x_des = self.ref.desired_position(pos, self.command)
+        spring_acc = (
+            self.command.kp * (x_des - ref_pos) - self.command.kd * ref_vel
+        ) / self.command.virtual_mass
+        # Eq. (2) gives ref_acc = (spring + external_force) / m. Since the
+        # simulated robot receives the same external force directly, its ground
+        # reaction action should reproduce only the virtual spring component.
+        action = spring_acc + 2.0 * (ref_pos - pos) + 1.0 * (ref_vel - vel)
         self.ref.push_state(pos, vel)
         return action.astype(np.float32), {
             "ref_pos": ref_pos,
             "ref_vel": ref_vel,
             "ref_acc": acc_targets.mean(axis=0),
         }
-

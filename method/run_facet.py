@@ -36,6 +36,7 @@ def main() -> None:
     runs = [
         policy_rollout("impulse", args.episodes, args.seed, kp=4.0, name="facet_smoothed", checkpoint=checkpoint),
         policy_rollout("wall", args.episodes, args.seed + 1, kp=1.5, name="facet_low_kp", checkpoint=checkpoint),
+        policy_rollout("wall", args.episodes, args.seed + 2, kp=8.0, name="facet_high_kp", checkpoint=checkpoint),
     ]
     for run in runs:
         path = args.output_dir / f"{run['method']}_{run['mode']}.json"

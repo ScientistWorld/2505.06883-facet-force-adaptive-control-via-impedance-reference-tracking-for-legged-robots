@@ -26,3 +26,16 @@ paper's safety constraint: lower collision impulse under compliant settings.
 - **How to run evaluation**: run `scripts/reproduce.sh` or generate rollout
   artifacts with `scripts/method.sh` and `scripts/baseline.sh`, then run
   `scripts/evaluate.sh`.
+
+## impedance_stiffness_modulation
+
+Tests whether the same deployed controller changes contact behavior when the
+virtual stiffness command changes.
+
+- **Metric**: `normalized_wall_impulse` (lower is better; low-stiffness impulse
+  divided by high-stiffness impulse)
+- **Metric**: `wall_contact_rate` (higher is better as a task-validity
+  constraint)
+- **How to run evaluation**: run `scripts/reproduce.sh` or generate rollout
+  artifacts with `scripts/method.sh` and `scripts/baseline.sh`, then run
+  `scripts/evaluate.sh`.

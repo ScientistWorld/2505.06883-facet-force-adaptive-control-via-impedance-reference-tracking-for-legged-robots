@@ -66,12 +66,20 @@
   contact rate from rollout records only.
 - PPO training now samples the impedance command interface over stiffness and
   target speed, and the wall evaluation uses a genuinely low-stiffness command.
+- CPU job `24368869-42e` validated the PPO replacement end-to-end and passed
+  `python validate.py --compare`. The milestone is restored to
+  `core_claim_plus`.
+- PPO scores from that job: `facet_smoothed` reached `1.0` impulse success and
+  `1.459 m/s` final forward speed, while both velocity baselines stayed at
+  `0.0` success. Low-stiffness FACET reached `0.901` collision-impulse
+  reduction with `1.0` wall contact rate.
+- Added a stiffness-modulation evaluation target that compares low and high
+  virtual stiffness commands for the same learned policy.
 
 ## Remaining
 
-- Run the new PPO-based method path in the compute container and verify that it
-  writes rollout artifacts and scores without relying on the old analytic
-  controller.
+- Run the stiffness-modulation experiment and verify that high-stiffness and
+  low-stiffness wall artifacts are scored independently.
 - Optional future expansion: add explicit open-loop and closed-loop reference
   target ablations from Table 2. The Table 2 numbers are documented in the
   paper briefing but are not included as official targets until an evaluator is

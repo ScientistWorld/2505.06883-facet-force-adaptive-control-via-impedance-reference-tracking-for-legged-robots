@@ -3,6 +3,6 @@
 # only after your turn ends. Sleeping blocks the entire pipeline.
 action: submit
 gpus: 0
-test: false
-milestone: core_claim
-notes: "Fresh CPU run of the PPO teacher/student FACET path after audit fixes; overwrites stale pre-PPO artifacts, runs baselines, and evaluates record-derived scores."
+test: true
+milestone: core_claim_plus
+notes: "Reuse the validated PPO checkpoint to add the high-stiffness wall rollout, rerun baselines, and evaluate the new stiffness-modulation secondary target."

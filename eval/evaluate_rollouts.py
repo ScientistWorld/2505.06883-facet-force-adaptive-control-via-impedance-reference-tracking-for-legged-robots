@@ -66,6 +66,7 @@ def main() -> None:
     }
     wall = {
         "facet_low_kp": load(args.input_dir / "facet_low_kp_wall.json"),
+        "facet_high_kp": load(args.input_dir / "facet_high_kp_wall.json"),
         "velocity_robust": load(args.input_dir / "velocity_robust_wall.json"),
     }
     impulse_summary = {name: summarize(run) for name, run in impulse.items()}
@@ -92,6 +93,19 @@ def main() -> None:
                         "collision_impulse_reduction": 1.0
                         - wall_summary["facet_low_kp"]["mean_wall_impulse"]
                         / max(wall_summary["velocity_robust"]["mean_wall_impulse"], 1e-9),
+                        "wall_contact_rate": wall_summary["facet_low_kp"]["wall_contact_rate"],
+                    },
+                }
+            },
+            "impedance_stiffness_modulation": {
+                "results": {
+                    "facet_high_kp": {
+                        "normalized_wall_impulse": 1.0,
+                        "wall_contact_rate": wall_summary["facet_high_kp"]["wall_contact_rate"],
+                    },
+                    "facet_low_kp": {
+                        "normalized_wall_impulse": wall_summary["facet_low_kp"]["mean_wall_impulse"]
+                        / max(wall_summary["facet_high_kp"]["mean_wall_impulse"], 1e-9),
                         "wall_contact_rate": wall_summary["facet_low_kp"]["wall_contact_rate"],
                     },
                 }

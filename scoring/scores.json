@@ -4,25 +4,27 @@
       "results": {
         "facet_smoothed": {
           "success_rate": 1.0,
-          "mean_final_forward_speed_mps": 1.1992695331573486
+          "mean_final_forward_speed_mps": 1.4589385306462646
         },
         "velocity_robust": {
           "success_rate": 0.0,
-          "mean_final_forward_speed_mps": 1.4864832162857056
+          "mean_final_forward_speed_mps": 1.4864833354949951
         },
         "velocity_vanilla": {
           "success_rate": 0.0,
-          "mean_final_forward_speed_mps": 1.4864821434020996
+          "mean_final_forward_speed_mps": 1.48648202419281
         }
       }
     },
     "soft_wall_collision": {
       "results": {
         "velocity_robust": {
-          "collision_impulse_reduction": 0.0
+          "collision_impulse_reduction": 0.0,
+          "wall_contact_rate": 1.0
         },
         "facet_low_kp": {
-          "collision_impulse_reduction": 0.9403491364668035
+          "collision_impulse_reduction": 0.9006515907624402,
+          "wall_contact_rate": 1.0
         }
       }
     }

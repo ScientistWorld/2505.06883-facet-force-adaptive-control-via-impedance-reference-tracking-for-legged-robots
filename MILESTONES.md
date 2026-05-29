@@ -21,3 +21,9 @@
 ### [2026-05-29 09:34] - core_claim_plus
 - CPU job `0b2b5e8f-228` generated the high-stiffness wall artifact, but low stiffness only reached normalized wall impulse `0.956`, so the stiffness-modulation secondary claim is not yet reproduced.
 - Updated the next run to use the paper's 0.5 s post-contact impulse window, widen the sampled stiffness command range, and retrain before reevaluating the secondary target.
+
+### [2026-05-29 09:49] - core_claim_plus
+- CPU job `6f85a149-626` retrained with the wider stiffness range and passed validation.
+- Core impulse robustness remains reproduced: `facet_smoothed` reached `1.0` success while both velocity baselines reached `0.0`.
+- The stricter 0.5 s wall metric shows reduced but not paper-level compliance: `facet_low_kp` reduced collision impulse by `0.412` versus the robust baseline and reached normalized low/high stiffness impulse `0.708`.
+- Stopping at `core_claim_plus`; the secondary stiffness-modulation target is implemented and scored, but not strong enough to claim `secondary_claims`.

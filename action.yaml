@@ -1,8 +1,6 @@
 # IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends. Sleeping blocks the entire pipeline.
-action: submit
-gpus: 0
-test: true
+action: done
 milestone: core_claim_plus
-notes: "Retrain the PPO FACET policy with a wider impedance-stiffness command range and reevaluate the 0.5s wall impulse secondary target."
+notes: "Core FACET PPO reproduction is packaged and validated. Secondary stiffness modulation is implemented and scored, but current numbers are modest, so final milestone is core_claim_plus."

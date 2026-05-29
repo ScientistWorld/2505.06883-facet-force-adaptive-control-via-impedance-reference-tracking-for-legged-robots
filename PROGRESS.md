@@ -80,11 +80,17 @@
   `0.956` relative to high stiffness, with both contact rates at `1.0`.
 - The next run retrains with a wider stiffness command range and evaluates wall
   impulse over the paper's 0.5 s post-contact integration window.
+- CPU job `6f85a149-626` passed validation after retraining with the wider
+  stiffness range. It preserved the impulse robustness result (`1.0` success
+  for FACET, `0.0` for both velocity baselines), but the stricter wall metrics
+  were weaker: `0.412` collision-impulse reduction versus the robust baseline
+  and `0.708` normalized low/high stiffness impulse.
 
 ## Remaining
 
-- Rerun the retrained stiffness-modulation experiment and check whether the
-  widened command range produces a meaningful low/high impulse separation.
+- Higher milestone work remains: improve stiffness modulation so low-stiffness
+  wall impulse approaches the paper's 80% reduction under the 0.5 s
+  post-contact metric.
 - Optional future expansion: add explicit open-loop and closed-loop reference
   target ablations from Table 2. The Table 2 numbers are documented in the
   paper briefing but are not included as official targets until an evaluator is
@@ -110,6 +116,9 @@
 - The official scoring now covers only experiments evaluated by
   `scripts/evaluate.sh`. The unimplemented Table 2 ablation was removed from
   official scoring to avoid a phantom target.
+- The implemented stiffness-modulation target is included in `scores.json`, but
+  the current reproduction does not claim `secondary_claims` because the
+  low/high impulse separation is modest rather than paper-level.
 
 ## Deviations from Paper
 

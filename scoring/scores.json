@@ -4,15 +4,15 @@
       "results": {
         "facet_smoothed": {
           "success_rate": 1.0,
-          "mean_abs_lateral_displacement_m": 17.02114486694336
+          "mean_final_forward_speed_mps": 1.1992695331573486
         },
         "velocity_robust": {
           "success_rate": 0.0,
-          "mean_abs_lateral_displacement_m": 0.1864096075296402
+          "mean_final_forward_speed_mps": 1.4864832162857056
         },
         "velocity_vanilla": {
           "success_rate": 0.0,
-          "mean_abs_lateral_displacement_m": 0.06687945127487183
+          "mean_final_forward_speed_mps": 1.4864821434020996
         }
       }
     },

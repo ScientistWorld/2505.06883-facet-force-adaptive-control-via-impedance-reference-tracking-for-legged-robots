@@ -12,3 +12,8 @@
 ### [2026-05-29 08:45] - core_claim
 - Reproduced the reduced-scale central claim: the FACET controller survives the large lateral impulse setting while velocity-tracking baselines fail.
 - Reproduced the safety constraint: low-stiffness FACET substantially reduces wall collision impulse relative to the robust velocity baseline, with a higher-stiffness FACET setting producing larger impulse as expected.
+
+### [2026-05-29 08:47] - core_claim
+- Audited the continuation workspace from a reset `method_runs` state.
+- Fixed the official impulse metric by replacing unbounded lateral displacement with final forward speed as the locomotion constraint.
+- Regenerated `scoring/scores.json` from existing rollout artifacts and verified `scripts/evaluate.sh` plus `python validate.py --compare` pass locally.

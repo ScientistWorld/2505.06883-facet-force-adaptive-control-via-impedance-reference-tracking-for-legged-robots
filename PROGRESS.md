@@ -16,6 +16,10 @@
   retained much lower wall-collision impulse than the robust baseline.
 - `MILESTONES.md`, `CHECKLIST.md`, and scoring docs now reflect the achieved
   `core_claim` state and the remaining optional expansion items.
+- Continuation audit found that the method is a reduced but recognizable
+  FACET implementation, while the official impulse secondary metric needed
+  correction. The evaluator now reports final forward speed instead of
+  unbounded lateral displacement.
 
 ## Results
 
@@ -39,12 +43,16 @@
   `facet_smoothed` achieved `1.0` impulse success while `velocity_robust` and
   `velocity_vanilla` achieved `0.0`; `facet_low_kp` produced `27.18 Ns` wall
   collision impulse versus `455.65 Ns` for `velocity_robust`.
+- After the metric correction, the artifact-based evaluator reports
+  `facet_smoothed` at `1.0` impulse success and `1.20 m/s` final forward speed,
+  while both velocity baselines fail the impulse test. Wall collision remains
+  `27.18 Ns` for low-stiffness FACET versus `455.65 Ns` for the robust velocity
+  baseline.
 
 ## Remaining
 
-- Submit one more CPU verification job from the packaged `scripts/run.sh` to
-  confirm the current workspace reproduces the same scores after metadata
-  cleanup.
+- Submit one CPU verification job from the packaged `scripts/run.sh` to confirm
+  the corrected scoring contract inside the container.
 - Optional future expansion: add explicit open-loop and closed-loop reference
   target ablations from Table 2.
 - Optional future expansion: port the benchmark from the planar dynamics model
@@ -56,15 +64,13 @@
   Isaac Lab training code release.
 - The full robot simulation is scaled down because reproducing Isaac Lab assets
   and 250M-step teacher-student PPO is not practical in this benchmark setup.
-- The benchmark's impulse displacement metric is much larger than the paper's
-  plotted robot trajectories because the reduced planar model has no arena
-  boundary; the scored core comparison is survival versus baselines plus
-  collision impulse.
-- `scoring/reference.json` uses reduced-scale reference values for baseline
-  methods where the paper only provides approximate plot values. The paper's
-  qualitative claim is preserved: FACET survives the harder impulse setting and
-  substantially reduces wall collision impulse relative to the robust velocity
-  baseline.
+- The initial continuation audit found the lateral displacement score was not a
+  stable paper-facing metric in the reduced planar model. It has been removed
+  from official scoring and replaced with final forward speed as a locomotion
+  constraint.
+- `scoring/reference.json` uses paper-reported or figure-approximated values
+  where exact numerical tables are unavailable. The reduced-scale reproduction
+  is compared qualitatively for survival, compliance, and collision reduction.
 
 ## Deviations from Paper
 

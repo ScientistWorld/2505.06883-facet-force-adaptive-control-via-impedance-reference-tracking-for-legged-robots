@@ -6,9 +6,9 @@ Tests whether the controller remains balanced when a forward-moving body is
 struck by a large lateral ramp impulse.
 
 - **Metric**: `success_rate` (higher is better)
-- **Metric**: `mean_abs_lateral_displacement_m` (higher is better for this
-  benchmark because compliant survival requires moving with the push instead of
-  rigidly rejecting it)
+- **Metric**: `mean_final_forward_speed_mps` (higher is better as a locomotion
+  constraint; the controller should survive without simply giving up forward
+  motion)
 - **How to run evaluation**: run `scripts/reproduce.sh` or generate rollout
   artifacts with `scripts/method.sh` and `scripts/baseline.sh`, then run
   `scripts/evaluate.sh`.
@@ -22,4 +22,3 @@ paper's safety constraint: lower collision impulse under compliant settings.
 - **How to run evaluation**: run `scripts/reproduce.sh` or generate rollout
   artifacts with `scripts/method.sh` and `scripts/baseline.sh`, then run
   `scripts/evaluate.sh`.
-

@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: true
 milestone: core_claim
-notes: "CPU verification job: rerun the packaged FACET planar reproduction, baseline rollouts, evaluator, and validation after metadata cleanup."
+notes: "CPU verification job after audit fix: rerun the packaged FACET planar reproduction, baseline rollouts, corrected evaluator, and validation."

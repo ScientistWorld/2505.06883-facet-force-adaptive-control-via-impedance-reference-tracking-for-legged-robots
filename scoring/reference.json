@@ -9,7 +9,7 @@
           "higher_is_better": true,
           "coefficient": 1.0
         },
-        "mean_abs_lateral_displacement_m": {
+        "mean_final_forward_speed_mps": {
           "higher_is_better": true,
           "coefficient": 0.2
         }
@@ -18,17 +18,17 @@
         "velocity_vanilla": {
           "type": "baseline",
           "success_rate": 0.0,
-          "mean_abs_lateral_displacement_m": 0.1
+          "mean_final_forward_speed_mps": 1.5
         },
         "velocity_robust": {
           "type": "baseline",
-          "success_rate": 0.0,
-          "mean_abs_lateral_displacement_m": 0.1864096075296402
+          "success_rate": 0.42,
+          "mean_final_forward_speed_mps": 1.5
         },
         "facet_smoothed": {
           "type": "proposed",
           "success_rate": 1.0,
-          "mean_abs_lateral_displacement_m": 0.8
+          "mean_final_forward_speed_mps": 1.5
         }
       }
     },
@@ -45,11 +45,11 @@
       "results": {
         "velocity_robust": {
           "type": "baseline",
-          "mean_collision_impulse_Ns": 455.650390625
+          "mean_collision_impulse_Ns": 95.0
         },
         "facet_low_kp": {
           "type": "proposed",
-          "mean_collision_impulse_Ns": 27.0
+          "mean_collision_impulse_Ns": 19.0
         },
         "facet_high_kp": {
           "type": "proposed",

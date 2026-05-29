@@ -5,6 +5,9 @@
 - **Perturbation success rate**: fraction of randomized trials in which the
   robot remains upright after a lateral ramp impulse while walking forward.
   Higher is better. Failure occurs when non-foot body parts contact the ground.
+- **Final forward speed**: forward speed at the end of the perturbation
+  episode. This is a constraint metric for the reduced benchmark: a controller
+  should survive the impulse while still making locomotion progress.
 - **Maximum survived impulse / force level**: largest tested disturbance level
   at which the controller maintains a high success rate. Higher is better.
 - **Collision impulse**: time integral of the wall contact force during the

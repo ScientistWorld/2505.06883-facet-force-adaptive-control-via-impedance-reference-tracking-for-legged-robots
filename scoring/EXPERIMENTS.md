@@ -4,7 +4,8 @@
 
 This experiment checks whether a controller can keep moving after a large
 sideways push. A useful result has a higher survival rate than the velocity
-tracking baselines and does not simply freeze in place.
+tracking baselines and keeps meaningful forward motion rather than simply
+freezing in place.
 
 ## soft_wall_collision
 

@@ -31,4 +31,4 @@ action: submit
 gpus: 0
 test: true
 milestone: none
-notes: "CPU smoke test: install numpy, run FACET planar method, baselines, evaluator, and validate scores."
+notes: "Retry CPU smoke test after fixing FACET controller to output only virtual spring action and removing extra score metric."

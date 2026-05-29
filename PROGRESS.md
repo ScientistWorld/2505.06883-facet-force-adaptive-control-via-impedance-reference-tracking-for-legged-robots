@@ -14,6 +14,8 @@
 - CPU job `1fa1f65f-30f` reproduced the reduced-scale core claim: FACET
   survived all large impulse trials while both velocity baselines failed, and
   retained much lower wall-collision impulse than the robust baseline.
+- `MILESTONES.md`, `CHECKLIST.md`, and scoring docs now reflect the achieved
+  `core_claim` state and the remaining optional expansion items.
 
 ## Results
 
@@ -40,6 +42,9 @@
 
 ## Remaining
 
+- Submit one more CPU verification job from the packaged `scripts/run.sh` to
+  confirm the current workspace reproduces the same scores after metadata
+  cleanup.
 - Optional future expansion: add explicit open-loop and closed-loop reference
   target ablations from Table 2.
 - Optional future expansion: port the benchmark from the planar dynamics model

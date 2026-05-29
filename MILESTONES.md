@@ -1,8 +1,14 @@
 # Reproduction Milestones
 
-**Current: method_runs**
+**Current: core_claim**
 
 ## Progress Log
 
-## Stop Justification
-- Completed at milestone `method_runs`.
+### [2026-05-29 08:44] - method_runs
+- Implemented the FACET impedance reference model with temporally smoothed targets at lags 8, 16, and 32 control steps.
+- Implemented a reduced planar force-interaction environment, velocity-tracking baselines, artifact-based evaluation, and an end-to-end reproduction script.
+- Verified the method and baselines execute end-to-end and write `scoring/scores.json`.
+
+### [2026-05-29 08:45] - core_claim
+- Reproduced the reduced-scale central claim: the FACET controller survives the large lateral impulse setting while velocity-tracking baselines fail.
+- Reproduced the safety constraint: low-stiffness FACET substantially reduces wall collision impulse relative to the robust velocity baseline, with a higher-stiffness FACET setting producing larger impulse as expected.

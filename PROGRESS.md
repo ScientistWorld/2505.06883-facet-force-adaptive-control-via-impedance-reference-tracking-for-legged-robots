@@ -11,6 +11,9 @@
   and writes `scoring/scores.json` without importing `method/`.
 - CPU job `4850b244-e2c` ran end-to-end and passed `python validate.py
   --compare`, so the current milestone is `method_runs`.
+- CPU job `1fa1f65f-30f` reproduced the reduced-scale core claim: FACET
+  survived all large impulse trials while both velocity baselines failed, and
+  retained much lower wall-collision impulse than the robust baseline.
 
 ## Results
 
@@ -30,17 +33,17 @@
   `core_claim`: `facet_smoothed` reached `0.133` success while both velocity
   baselines remained at `0.0`. FACET impulse stiffness and tracking gains were
   reduced to better represent the compliant mode used for large pushes.
+- CPU job `1fa1f65f-30f` reached the core claim at reduced scale:
+  `facet_smoothed` achieved `1.0` impulse success while `velocity_robust` and
+  `velocity_vanilla` achieved `0.0`; `facet_low_kp` produced `27.18 Ns` wall
+  collision impulse versus `455.65 Ns` for `velocity_robust`.
 
 ## Remaining
 
-- Rerun `scripts/reproduce.sh` on the compute node after the controller fix.
-- Inspect `scoring/scores.json` and tune the reduced-scale dynamics if the FACET
-  method still does not beat velocity baselines on survival and collision
-  impulse.
-- Add ablations for open-loop and closed-loop target generation after the core
-  robustness result is working.
-- If core claim succeeds, optionally add ablation variants for open-loop and
-  closed-loop reference targets.
+- Optional future expansion: add explicit open-loop and closed-loop reference
+  target ablations from Table 2.
+- Optional future expansion: port the benchmark from the planar dynamics model
+  to Isaac Lab if the full robot assets and training code become available.
 
 ## Issues
 
@@ -48,6 +51,10 @@
   Isaac Lab training code release.
 - The full robot simulation is scaled down because reproducing Isaac Lab assets
   and 250M-step teacher-student PPO is not practical in this benchmark setup.
+- The benchmark's impulse displacement metric is much larger than the paper's
+  plotted robot trajectories because the reduced planar model has no arena
+  boundary; the scored core comparison is survival versus baselines plus
+  collision impulse.
 
 ## Deviations from Paper
 

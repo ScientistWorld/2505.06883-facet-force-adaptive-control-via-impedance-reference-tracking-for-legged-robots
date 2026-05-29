@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: method_runs**
+**Current: core_claim**
 
 <!-- Milestone levels (update "Current" above as you progress):
   none             — just started, no meaningful progress yet
@@ -43,5 +43,13 @@
 - The success rate remained too low for `core_claim`; reduced FACET's impulse
   stiffness and tracking gains to increase compliant yielding.
 
+### [2026-05-29 09:25] - core_claim
+- CPU job `1fa1f65f-30f` passed validation and reproduced the central
+  reduced-scale claim.
+- FACET survived all large impulse trials while both velocity-tracking baselines
+  failed all trials.
+- FACET low-stiffness wall collision impulse remained near the paper's reported
+  compliant value and far below the robust velocity baseline.
+
 ## Stop Justification
-- Not stopped; next action is a CPU smoke job.
+- Completed at milestone `core_claim`.

@@ -48,11 +48,13 @@
   while both velocity baselines fail the impulse test. Wall collision remains
   `27.18 Ns` for low-stiffness FACET versus `455.65 Ns` for the robust velocity
   baseline.
+- CPU verification job `8a1779a2-03f` reran `scripts/run.sh` inside the
+  container and passed validation with the corrected scores. This restores the
+  reproduction above the reset state and supports `core_claim_plus` at reduced
+  scale.
 
 ## Remaining
 
-- Submit one CPU verification job from the packaged `scripts/run.sh` to confirm
-  the corrected scoring contract inside the container.
 - Optional future expansion: add explicit open-loop and closed-loop reference
   target ablations from Table 2.
 - Optional future expansion: port the benchmark from the planar dynamics model

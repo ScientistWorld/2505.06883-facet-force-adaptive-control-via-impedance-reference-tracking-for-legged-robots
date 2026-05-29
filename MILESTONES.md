@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: core_claim**
+**Current: core_claim_plus**
 
 ## Progress Log
 
@@ -17,3 +17,8 @@
 - Audited the continuation workspace from a reset `method_runs` state.
 - Fixed the official impulse metric by replacing unbounded lateral displacement with final forward speed as the locomotion constraint.
 - Regenerated `scoring/scores.json` from existing rollout artifacts and verified `scripts/evaluate.sh` plus `python validate.py --compare` pass locally.
+
+### [2026-05-29 08:48] - core_claim_plus
+- CPU container job `8a1779a2-03f` reran the packaged reproduction and passed `python validate.py --compare`.
+- Verified the corrected scoring contract inside the container: FACET survived the large impulse trials while both velocity baselines failed.
+- Verified the additional wall-compliance setting: low-stiffness FACET reduced collision impulse versus the robust velocity baseline, and high-stiffness FACET produced a larger impulse as expected.

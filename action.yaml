@@ -1,8 +1,8 @@
 # IMPORTANT: Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends. Sleeping blocks the entire pipeline.
-action: submit
+action: done
 gpus: 0
 test: true
-milestone: core_claim
-notes: "CPU verification job after audit fix: rerun the packaged FACET planar reproduction, baseline rollouts, corrected evaluator, and validation."
+milestone: core_claim_plus
+notes: "Container verification job 8a1779a2-03f passed after the audit scoring fix. Reduced-scale FACET reproduction covers impulse robustness and wall-compliance modulation with artifact-based evaluation."

@@ -27,6 +27,18 @@
           "wall_contact_rate": 1.0
         }
       }
+    },
+    "impedance_stiffness_modulation": {
+      "results": {
+        "facet_high_kp": {
+          "normalized_wall_impulse": 1.0,
+          "wall_contact_rate": 1.0
+        },
+        "facet_low_kp": {
+          "normalized_wall_impulse": 0.956450678770444,
+          "wall_contact_rate": 1.0
+        }
+      }
     }
   }
 }

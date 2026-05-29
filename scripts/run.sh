@@ -13,4 +13,11 @@ set -e
 
 cd /home/user
 
-EPISODES="${EPISODES:-128}" bash scripts/reproduce.sh
+rm -rf checkpoints/facet_planar
+
+EPISODES="${EPISODES:-128}" \
+TEACHER_UPDATES="${TEACHER_UPDATES:-60}" \
+STUDENT_UPDATES="${STUDENT_UPDATES:-30}" \
+N_ENVS="${N_ENVS:-128}" \
+ROLLOUT_STEPS="${ROLLOUT_STEPS:-96}" \
+bash scripts/reproduce.sh

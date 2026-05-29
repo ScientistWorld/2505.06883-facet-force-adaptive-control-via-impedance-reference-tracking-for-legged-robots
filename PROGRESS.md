@@ -56,9 +56,17 @@
   the verified reduced-scale artifacts rather than approximate values read from
   the paper figure. `reference.json` now uses the benchmark's calibrated robust
   baseline success and wall impulse values for automated consistency checks.
+- Continuation audit found the prior runnable method was an analytic controller,
+  not the paper's PPO-trained policy. The method path has been replaced with a
+  reduced PPO teacher/student implementation that uses FACET's smoothed
+  impedance reference model as the reward target. This new path is not yet
+  counted as `method_runs` until the submitted job completes.
 
 ## Remaining
 
+- Run the new PPO-based method path in the compute container and verify that it
+  writes rollout artifacts and scores without relying on the old analytic
+  controller.
 - Optional future expansion: add explicit open-loop and closed-loop reference
   target ablations from Table 2.
 - Optional future expansion: port the benchmark from the planar dynamics model

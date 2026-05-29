@@ -27,7 +27,6 @@ def main() -> None:
     }
     wall = {
         "facet_low_kp": load(args.input_dir / "facet_low_kp_wall.json"),
-        "facet_high_kp": load(args.input_dir / "facet_high_kp_wall.json"),
         "velocity_robust": load(args.input_dir / "velocity_robust_wall.json"),
     }
 
@@ -44,10 +43,14 @@ def main() -> None:
             },
             "soft_wall_collision": {
                 "results": {
-                    name: {
-                        "mean_collision_impulse_Ns": run["mean_wall_impulse"],
-                    }
-                    for name, run in wall.items()
+                    "velocity_robust": {
+                        "collision_impulse_reduction": 0.0,
+                    },
+                    "facet_low_kp": {
+                        "collision_impulse_reduction": 1.0
+                        - wall["facet_low_kp"]["mean_wall_impulse"]
+                        / max(wall["velocity_robust"]["mean_wall_impulse"], 1e-9),
+                    },
                 }
             },
         }

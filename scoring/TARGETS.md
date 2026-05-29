@@ -18,7 +18,8 @@ struck by a large lateral ramp impulse.
 Tests whether improved disturbance handling is achieved while preserving the
 paper's safety constraint: lower collision impulse under compliant settings.
 
-- **Metric**: `mean_collision_impulse_Ns` (lower is better)
+- **Metric**: `collision_impulse_reduction` (higher is better, relative to the
+  robust velocity baseline)
 - **How to run evaluation**: run `scripts/reproduce.sh` or generate rollout
   artifacts with `scripts/method.sh` and `scripts/baseline.sh`, then run
   `scripts/evaluate.sh`.

@@ -24,15 +24,18 @@ class SmoothedImpedanceReference:
         self.dt = dt
         self.lags = lags
         self.max_lag = max(lags)
-        self.history: deque[tuple[np.ndarray, np.ndarray]] = deque(maxlen=self.max_lag + 1)
+        self.history: deque[tuple[np.ndarray, np.ndarray, np.ndarray]] = deque(maxlen=self.max_lag + 1)
 
     def reset(self, pos: np.ndarray, vel: np.ndarray) -> None:
         self.history.clear()
+        zero_force = np.zeros_like(pos)
         for _ in range(self.max_lag + 1):
-            self.history.append((pos.copy(), vel.copy()))
+            self.history.append((pos.copy(), vel.copy(), zero_force.copy()))
 
-    def push_state(self, pos: np.ndarray, vel: np.ndarray) -> None:
-        self.history.append((pos.copy(), vel.copy()))
+    def push_state(self, pos: np.ndarray, vel: np.ndarray, force_ext: np.ndarray | None = None) -> None:
+        if force_ext is None:
+            force_ext = np.zeros_like(pos)
+        self.history.append((pos.copy(), vel.copy(), force_ext.copy()))
 
     def desired_position(self, pos: np.ndarray, command: ImpedanceCommand) -> np.ndarray:
         # Paper's fixed target velocity mode: x_des = Kd/Kp * v_target + x_sim.
@@ -46,14 +49,17 @@ class SmoothedImpedanceReference:
         force_ext: np.ndarray,
         command: ImpedanceCommand,
         steps: int,
+        force_sequence: list[np.ndarray] | None = None,
     ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         ref_pos = start_pos.copy()
         ref_vel = start_vel.copy()
         x_des = self.desired_position(current_pos, command)
         acc = np.zeros_like(ref_pos)
-        for _ in range(max(1, steps)):
+        if force_sequence is None:
+            force_sequence = [force_ext for _ in range(max(1, steps))]
+        for step_force in force_sequence[-max(1, steps) :]:
             spring = command.kp * (x_des - ref_pos) - command.kd * ref_vel
-            acc = (spring + force_ext) / command.virtual_mass
+            acc = (spring + step_force) / command.virtual_mass
             ref_vel = ref_vel + acc * self.dt
             ref_pos = ref_pos + ref_vel * self.dt
         return ref_pos, ref_vel, acc
@@ -67,9 +73,11 @@ class SmoothedImpedanceReference:
         hist = list(self.history)
         for lag in self.lags:
             idx = max(0, len(hist) - 1 - lag)
-            start_pos, start_vel = hist[idx]
+            start_pos, start_vel, _ = hist[idx]
+            force_sequence = [entry[2] for entry in hist[idx + 1 :]]
+            force_sequence.append(force_ext)
             ref_pos, ref_vel, ref_acc = self.integrate_from(
-                start_pos, start_vel, current_pos, force_ext, command, lag
+                start_pos, start_vel, current_pos, force_ext, command, lag, force_sequence
             )
             pos_targets.append(ref_pos)
             vel_targets.append(ref_vel)

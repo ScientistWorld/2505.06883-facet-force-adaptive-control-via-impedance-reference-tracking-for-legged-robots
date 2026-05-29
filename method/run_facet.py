@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the FACET impedance-reference method in the benchmark simulator."""
+"""Train and evaluate the reduced FACET PPO policy."""
 
 from __future__ import annotations
 
@@ -7,63 +7,7 @@ import argparse
 import json
 from pathlib import Path
 
-import numpy as np
-
-from data.facet_planar_env import PlanarForceEnv
-from method.facet_reference import FACETController
-
-
-def rollout(mode: str, episodes: int, seed: int, kp: float, name: str) -> dict:
-    env = PlanarForceEnv(episodes, mode=mode, seed=seed)
-    if mode == "impulse":
-        controller = FACETController(
-            episodes,
-            env.cfg.dt,
-            kp=kp,
-            virtual_mass=env.cfg.mass,
-            pos_gain=0.45,
-            vel_gain=0.2,
-        )
-    else:
-        controller = FACETController(episodes, env.cfg.dt, kp=kp, virtual_mass=env.cfg.mass)
-    obs = env.reset()
-    controller.reset(env.pos, env.vel)
-    records = []
-    wall_impulse = np.zeros(episodes, dtype=np.float32)
-
-    for _ in range(env.cfg.episode_steps):
-        force_ext, _ = env.external_forces()
-        action, ref_info = controller.act(env.pos, env.vel, force_ext)
-        obs, reward, done, info = env.step(action)
-        wall_impulse += np.abs(info["wall_force"][:, 0]) * env.cfg.dt
-        records.append(
-            {
-                "t": info["time"].tolist(),
-                "pos": env.pos.tolist(),
-                "vel": env.vel.tolist(),
-                "action": action.tolist(),
-                "force_ext": info["force_ext"].tolist(),
-                "wall_force": info["wall_force"].tolist(),
-                "failed": info["failed"].astype(int).tolist(),
-                "ref_pos": ref_info["ref_pos"].tolist(),
-                "ref_vel": ref_info["ref_vel"].tolist(),
-            }
-        )
-        if done.all():
-            break
-
-    success = 1.0 - env.failed.mean()
-    return {
-        "method": name,
-        "mode": mode,
-        "episodes": episodes,
-        "kp": kp,
-        "success_rate": float(success),
-        "mean_wall_impulse": float(wall_impulse.mean()),
-        "mean_abs_lateral_displacement": float(np.abs(env.pos[:, 1]).mean()),
-        "mean_final_forward_speed": float(env.vel[:, 0].mean()),
-        "records": records,
-    }
+from method.ppo_facet import PPOConfig, policy_rollout, train_policy
 
 
 def main() -> None:
@@ -71,13 +15,27 @@ def main() -> None:
     parser.add_argument("--episodes", type=int, default=96)
     parser.add_argument("--output-dir", type=Path, default=Path("checkpoints/facet_planar"))
     parser.add_argument("--seed", type=int, default=7)
+    parser.add_argument("--checkpoint", type=Path, default=None)
+    parser.add_argument("--teacher-updates", type=int, default=60)
+    parser.add_argument("--student-updates", type=int, default=30)
+    parser.add_argument("--n-envs", type=int, default=128)
+    parser.add_argument("--rollout-steps", type=int, default=96)
     args = parser.parse_args()
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
+    checkpoint = args.checkpoint or (args.output_dir / "facet_student.pt")
+    if not checkpoint.exists():
+        config = PPOConfig(
+            n_envs=args.n_envs,
+            rollout_steps=args.rollout_steps,
+            teacher_updates=args.teacher_updates,
+            student_updates=args.student_updates,
+            seed=args.seed,
+        )
+        checkpoint = train_policy(args.output_dir, config)
     runs = [
-        rollout("impulse", args.episodes, args.seed, kp=4.0, name="facet_smoothed"),
-        rollout("wall", args.episodes, args.seed + 1, kp=4.0, name="facet_low_kp"),
-        rollout("wall", args.episodes, args.seed + 2, kp=36.0, name="facet_high_kp"),
+        policy_rollout("impulse", args.episodes, args.seed, kp=4.0, name="facet_smoothed", checkpoint=checkpoint),
+        policy_rollout("wall", args.episodes, args.seed + 1, kp=4.0, name="facet_low_kp", checkpoint=checkpoint),
     ]
     for run in runs:
         path = args.output_dir / f"{run['method']}_{run['mode']}.json"

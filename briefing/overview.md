@@ -1,14 +1,12 @@
 # Overview
 
-- **Paper ID:** <!-- e.g. 1706.03762 -->
-- **Title:** <!-- e.g. Attention Is All You Need -->
-- **Domain:** <!-- e.g. Computer Vision / Object Detection -->
-- **TL;DR:** <!-- One sentence: what this paper does and why it matters -->
+FACET addresses force-aware control for legged robots. The paper argues that
+standard velocity or position tracking produces stiff behavior under external
+forces, while an impedance-style command interface can make the same controller
+soft, robust to pushes, and capable of forceful interaction.
 
-## Short Summary
-
-<!-- 3-5 sentences covering the problem, approach, and main findings -->
-
-## Key Results
-
-<!-- 2-3 bullet points: main findings or numbers in bullet points -->
+The reproduced environment focuses on the core simulation claims: surviving a
+large lateral impulse and reducing collision impulse against a wall. It provides
+a reduced-scale planar benchmark, FACET's smoothed impedance reference
+implementation, velocity-tracking baselines, and reusable evaluation scripts
+that score saved rollout artifacts.

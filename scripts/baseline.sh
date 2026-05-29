@@ -17,4 +17,4 @@ set -e
 
 cd /home/user
 
-# TODO: run baseline
+python -m baseline.run_baseline --episodes "${EPISODES:-96}" --output-dir checkpoints/facet_planar

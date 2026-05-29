@@ -1,17 +1,37 @@
 # Problem Definition
 
-What problem does this paper address? Write this so that someone with no knowledge of the paper can understand what needs to be solved and how success is measured.
-
-Do NOT describe the paper's method or solution here — only the problem itself. Think about if a future scientist agent try to solve this problem from scratch without knowing what approach the paper took. If you leak the solution, you compromise the benchmark.
-
 ## Research Question
 
-<!-- What problem or challenge does this paper tackle? What gap in existing work does it address? -->
+How can a legged robot be controlled so that it remains useful for commanded
+locomotion while also responding appropriately to external physical forces? The
+core task is not only to move to or along a desired planar command, but to do so
+with tunable interaction behavior: the same controller should tolerate large
+pushes, reduce collision severity when compliant behavior is requested, and
+generate meaningful sustained forces when forceful interaction is requested.
+
+This benchmark treats the problem as a legged control task under contact-rich
+disturbances. A candidate method receives the allowed robot observations and
+high-level control commands, then outputs low-level actions for the simulated
+robot. The environment measures whether the resulting behavior is stable,
+trackable, force-aware, and controllable across command settings.
 
 ## Why It Matters
 
-<!-- Why is this problem important? What would a good solution enable? Make it short -->
+Legged robots that rigidly reject all disturbances can be unsafe around people
+and unreliable during physical interaction with objects. A useful controller
+should keep the robot balanced while allowing soft guidance, safer collisions,
+and strong pulling or pushing when the task requires it.
 
 ## Success Criteria
 
-<!-- What would a successful solution look like? What properties should it have? This is about the goal, not the paper's specific approach. Make it short -->
+A successful solution should:
+
+- Maintain locomotion stability under large horizontal impulses.
+- Reduce impact impulse in collision tests when configured for compliant
+  behavior.
+- Preserve command-following accuracy under randomized commands and external
+  forces.
+- Show that interaction behavior is controllable across command settings, rather
+  than being fixed after training.
+- Avoid solving the task by ignoring locomotion quality, falling safely, or
+  exploiting simulator-specific shortcuts.

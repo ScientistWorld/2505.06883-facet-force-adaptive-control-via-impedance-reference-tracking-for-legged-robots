@@ -18,6 +18,11 @@ set -e
 
 cd /home/user
 
+bash scripts/method.sh
+bash scripts/baseline.sh
+bash scripts/evaluate.sh checkpoints/facet_planar
+python validate.py --compare
+
 # TODO: implement full reproduction pipeline
 # e.g.:
 #   bash scripts/baseline.sh

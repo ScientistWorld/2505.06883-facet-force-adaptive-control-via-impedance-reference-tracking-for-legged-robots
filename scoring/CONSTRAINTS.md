@@ -1,78 +1,65 @@
 # Scientist Constraints
 
-<!-- Do not edit this unless you decide to stop -->
+## Robot and Simulator
 
-<!--
-A scientist agent will attempt to improve on your reproduced results.
-These constraints define what the scientist must hold fixed, so that
-any improvement reflects genuine methodological innovation — not just
-throwing more resources at the problem.
+Use the provided legged-robot environments, robot assets, actuator model, action
+rate, contact model, and termination rules. The paper's claims are about control
+under physical interaction, so changing the robot morphology, simulator physics,
+wall model, or fall definition would change the benchmark rather than improve
+the method.
 
-CONTEXT: Your reproduction becomes a benchmark environment. The scientist
-gets your code, data, evaluation pipeline, and these constraints. They
-must beat your scores while respecting every constraint listed here.
-Without good constraints, a scientist can trivially "improve" by swapping
-in a larger model, using a richer dataset that is simply publicly avaliable, or more 
-— none of which demonstrate real scientific insight.
+## Observations and Commands
 
-Your job is to act as a judge: distinguish between flexible innovation
-and non-genuine improvement. Constraints should block trivial gains
-(e.g. just swapping in a bigger model) while leaving room for creative
-methodology (e.g. a clever augmentation strategy, a better loss
-function, a novel use of existing tools). When in doubt, ask: "does
-this require insight, or just more resources?" Lock down the resources,
-leave the insight open. Do not block innovation.
+Use only the observation channels exposed by the benchmark for the policy at
+deployment time. Do not add external force sensors, privileged simulator state,
+future trajectory information, wall penetration state, or termination labels to
+the deployed policy input. The high-level command interface must remain the one
+provided by the environment so that compliance and forceful behavior are tested
+under the same task formulation.
 
-For example, if a scientist downloads online IMDB reviews to supplement a
-sentiment dataset, that's resource scaling. But if they use an LLM to
-augment the existing training data, that's methodology — they designed
-that pipeline. This is just an example, but keep this kind of distinction 
-in mind when writing constraints.
+## Training Data and Randomization
 
-Be SPECIFIC to this paper. Generic constraints are useless. Name the
-exact model, the exact dataset, the exact splits. Explain the reasoning
-so the scientist understands the intent behind each constraint, not
-just the rule — this helps them judge edge cases on their own.
+Use only data generated inside the provided simulation environments plus the
+paper-specified robot assets. Do not import motion-capture datasets, offline
+robot logs, additional hardware demonstrations, external terrain/contact
+datasets, or pretrained controllers. Keep the benchmark command ranges,
+disturbance distributions, domain randomization families, and evaluation seeds
+fixed when reporting scores.
 
-Think about at least:
-- Model: architecture, size, pretrained weights
-- Data: which datasets, which splits, whether external data is allowed
+## Baselines
 
-You may add other constraint categories if relevant to this paper
-(e.g. training procedure, evaluation protocol, problem formulation).
+Keep the provided velocity-tracking and robust velocity-tracking baselines
+unchanged when computing relative metrics. A scientist may add new comparison
+methods, but the official scores must still include the fixed baselines so that
+collision reduction, robustness gain, and payload capacity remain comparable.
 
-Example for a sentiment analysis paper:
+## Compute and Scale
 
-## Model
-The scientist must use BERT-base-uncased (110M parameters, HuggingFace
-`bert-base-uncased`). The paper's contribution is a novel fine-tuning
-strategy, not architecture design. Switching to a larger model (e.g.
-DeBERTa-v3-large, 304M params) would improve accuracy but would not
-demonstrate any methodological insight. The scientist may modify the
-fine-tuning procedure, add adapter layers, change the classification
-head, or alter the training loop — but the base encoder must remain
-BERT-base-uncased with its standard pretrained weights.
+Do not increase the robot count per experiment, number of evaluation trials, or
+evaluation horizon beyond the benchmark settings when producing official scores.
+Training may be made more sample-efficient or better optimized, but improvements
+must not come from using a larger simulator batch, longer training budget, or
+ensembling multiple independently trained policies at evaluation time.
 
-## Data
-The scientist must use only the provided SST-2 binary sentiment
-dataset (67,349 training examples, 872 validation, 1,821 test).
-No external sentiment corpora or additional human-labeled data.
-The test split must not be used for training or validation.
+## Hardware Claims
 
-Delete this comment block and fill in your actual constraints below.
-
-At the very end, write a compliance checklist for the scientist agent.
-Each item should be a concrete, verifiable condition the scientist can
-check off before submitting. These should mirror your constraints above
-but phrased as yes/no checks.
-
-Example checklist (for the sentiment analysis example above):
+Only report hardware payload or compliant-following scores if the corresponding
+real-robot procedure is actually run. Simulation-only reproductions must label
+payload tests as simulated or equivalent opposing-force tests and must not claim
+real-world deployment.
 
 ## Compliance Checklist
-- [ ] Model is BERT-base-uncased (110M params), not a larger variant
-- [ ] No external sentiment datasets used beyond SST-2
-- [ ] Test split not used for training or validation
 
-ONLY WRITE ABOUT WHAT TO RESTRICT. NEVER WRITE ABOUT WHAT REMAINS OPEN.
-
--->
+- [ ] Uses the provided robot assets, simulator, action rate, contact model, and
+  termination rules.
+- [ ] Deployed policy receives no privileged simulator state, external force
+  sensor readings, future information, or evaluator-only signals.
+- [ ] Official scores use the fixed command ranges, disturbance distributions,
+  domain randomization families, and evaluation seeds.
+- [ ] No external demonstrations, robot logs, motion-capture data, pretrained
+  controllers, or additional contact datasets are used.
+- [ ] Velocity-tracking and robust velocity-tracking baselines are unchanged for
+  relative metrics.
+- [ ] Official results are from a single deployed policy per method, not an
+  ensemble or hand-picked checkpoint collection.
+- [ ] Hardware results are only claimed when the hardware procedure was run.

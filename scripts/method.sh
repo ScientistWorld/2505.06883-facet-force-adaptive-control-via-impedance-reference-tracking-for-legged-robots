@@ -10,5 +10,4 @@ set -e
 
 cd /home/user
 
-# TODO: run the paper's method
-# TODO: call scripts/evaluate.sh to score
+python -m method.run_facet --episodes "${EPISODES:-96}" --output-dir checkpoints/facet_planar

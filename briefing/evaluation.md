@@ -1,15 +1,66 @@
 # Evaluation
 
-How success is measured. Describe only the metrics, targets, and evaluation procedure — do NOT describe the paper's method or how they achieved these results. Think of this as a general evaluation protocal for other scientists trying to solve the same problem, where they should not see this paper's solution.
-
 ## Metrics
 
-<!-- What metrics are used? How are they computed? What does higher/lower mean? -->
+- **Perturbation success rate**: fraction of randomized trials in which the
+  robot remains upright after a lateral ramp impulse while walking forward.
+  Higher is better. Failure occurs when non-foot body parts contact the ground.
+- **Maximum survived impulse / force level**: largest tested disturbance level
+  at which the controller maintains a high success rate. Higher is better.
+- **Collision impulse**: time integral of the wall contact force during the
+  first 0.5 seconds after a wall collision. Lower is better for compliant
+  settings.
+- **Collision impulse reduction**: relative reduction in collision impulse
+  compared with a robust velocity-tracking controller under the same wall test.
+  Higher is better.
+- **Tracking error**: squared position, velocity, and acceleration errors against
+  the benchmark reference trajectories used by the evaluator. Lower is better.
+- **Task success rate**: fraction of randomized command-and-force trials that
+  avoid falling or invalid contacts. Higher is better.
+- **Pulling capacity**: largest payload or sustained opposing force that can be
+  moved without collapse or loss of heading control. Higher is better.
 
 ## Baselines and Targets
 
-<!-- What performance levels exist as reference points? Include the paper's reported numbers as targets, and any standard baselines. A scientist agent should know what "good" looks like. -->
+The main simulation baselines are:
+
+- A standard velocity-tracking locomotion controller.
+- A velocity-tracking controller trained with the same random impulse
+  perturbation distribution used for the reproduced system.
+
+The paper's headline targets are:
+
+- Survival under substantially larger lateral disturbances than both velocity
+  baselines, with reported robustness up to about 200 Ns impulse and trajectory
+  examples at 400 N peak force.
+- About 80% lower collision impulse than the robust velocity baseline in the
+  wall-collision setting when compliant behavior is requested.
+- In the ablation benchmark, deployable-controller success around 0.97 with
+  lower normalized position and velocity tracking errors than the reported
+  comparison variants.
+- On hardware, reliable pulling of a 10 kg payload, compared with reported
+  baseline limits of 2.5 kg for the built-in controller and failure beyond 5 kg
+  for the robust velocity controller.
+
+Hardware numbers are useful context, but the reusable benchmark should rely on
+simulation metrics unless a real robot is explicitly available.
 
 ## Evaluation Protocol
 
-<!-- How should evaluation be run? What data split, what conditions? Any important details about how to compare fairly (e.g., fixed seeds, specific test sets, averaging over runs). -->
+Evaluate all methods in the same simulator, robot model, action rate, episode
+length, termination rules, command ranges, and domain randomization settings.
+Do not tune a method on the final evaluation seeds.
+
+For the perturbation benchmark, command forward locomotion at 1.5 m/s. Apply a
+horizontal ramp impulse after the robot has reached stable locomotion, with the
+force lasting 0.4 to 0.6 seconds. Report success rate over 64 randomized
+parallel trials per disturbance level.
+
+For the collision benchmark, command the robot into a soft virtual wall at
+1.5 m/s. Integrate the wall contact force over the first 0.5 seconds after
+contact and report the impulse distribution for each tested control setting.
+
+For randomized tracking and ablation-style evaluation, sample high-level
+commands and external forces from the benchmark distributions, then report
+position error, velocity error, acceleration error, and success rate using the
+same evaluator for every submitted method.

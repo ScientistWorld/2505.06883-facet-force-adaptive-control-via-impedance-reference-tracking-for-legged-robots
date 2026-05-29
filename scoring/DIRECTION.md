@@ -1,94 +1,48 @@
 # Research Direction
 
-<!-- Do not edit this unless you decide to stop -->
-
-<!--
-Define the research direction a scientist must follow when trying to
-improve on the paper's results. This is NOT about resource constraints
-(model size, dataset — those go in CONSTRAINTS.md). This is about
-the methodological scope: what research question is being pursued,
-and what approaches are in-bounds vs out-of-bounds.
-
-WHY THIS MATTERS: Without direction constraints, a scientist evaluate on this
-can trivially "beat" a paper by switching paradigms entirely. As a general
-example: if a paper proposes a novel Mamba variant and benchmarks it
-against prior Mamba models, switching to a Transformer would likely
-beat the numbers — but that tells us nothing about Mamba research.
-The scientist must work within the paper's problem space so that
-improvement demonstrates genuine insight in that area.
-
-THE RIGHT LEVEL OF SPECIFICITY: The direction should be scoped to the
-paper's actual contribution — not so broad that anything goes, but not
-so narrow that it dictates the exact technique. Think of it as: the
-scientist must work on the SAME PROBLEM and improve the SAME KIND OF
-THING the paper contributed, but they have full freedom in HOW they
-improve it.
-
-In the same example: 
-Too broad:  "Must use SSMs" — lets the scientist work on any SSM
-            problem, ignoring what this paper actually contributed.
-Too narrow: "Must use selective scan with input-dependent A matrices"
-            — dictates the technique, leaving no room for creativity.
-Right:      "Must improve input-dependent state dynamics for SSM
-            language modeling" — scoped to the contribution, open on
-            how to achieve it.
-
-WHAT TO WRITE:
-1. Research Problem — what question the paper addresses (one paragraph)
-2. Core Contribution — what specific thing the paper introduced or
-   improved (this is the area the scientist must work within)
-3. Approach Scope — what approach family and what aspects the scientist
-   can modify
-4. Out of Bounds — paradigm switches and scope violations
-
-Be specific to this paper. Explain the reasoning so the scientist
-understands the intent, not just the rule.
-
-Example for a paper proposing a new Mamba variant for language modeling:
-
 ## Research Problem
-This paper improves state-space models (SSMs) for language modeling.
-The core question is whether input-dependent state dynamics can close
-the quality gap between SSMs and Transformers on language tasks. ...
+
+This benchmark studies force-adaptive control for legged robots. The scientific
+question is whether a learned controller can combine stable locomotion, tunable
+compliance, and forceful interaction within one deployable policy, instead of
+behaving like a fixed stiff velocity tracker or a purely passive disturbance
+response.
 
 ## Core Contribution
-The paper's novelty is a selective scan mechanism that adapts the
-state transition matrices to the input, replacing the fixed dynamics
-of prior SSMs (S4, H3). The scientist must work on improving this
-kind of contribution: how the SSM processes sequences with
-input-dependent dynamics. ...
+
+The paper's contribution is a learning-based control formulation that exposes a
+continuous interaction-control interface and trains the robot to match a
+force-responsive task-space behavior under external perturbations. A scientist
+should work within that contribution area: improving how the robot learns,
+represents, estimates, or follows the intended force-adaptive behavior while
+preserving the same kind of high-level interaction interface.
 
 ## Approach Scope
-The scientist should focus on the scan / state-dynamics component
-of the SSM. They may:
-- Redesign the selection mechanism (different parameterization,
-  gating, conditioning)
-- Change the state representation (different dimensions, structure,
-  initialization)
-- Modify how input signals interact with the state (mixing,
-  normalization, discretization)
-- Alter the training procedure for the SSM components (loss,
-  scheduling, curriculum)
- - ...
 
-The scientist may also make architectural changes around the core
-SSM block (normalization, skip connections, mixing layers) as long
-as the SSM with input-dependent dynamics remains the central
-sequence-processing component. ...
+In-bounds work includes changes to the learned controller, estimator,
+representation of command history, reward shaping, curriculum, training
+schedule, disturbance sampling, policy architecture, adaptation mechanism, or
+tracking target construction, as long as the result remains a single legged
+controller for the benchmark's force-adaptive locomotion and interaction tasks.
+
+Methods may improve robustness, tracking accuracy, compliance modulation,
+payload capacity, or sim-to-real suitability, but they must still solve the same
+problem: controllable physical interaction for a legged robot under the fixed
+benchmark interface.
 
 ## Out of Bounds
-- Replacing the SSM backbone with a Transformer or attention-based
-  architecture. The paper's thesis is that SSMs can be competitive
-  — switching to attention sidesteps that thesis entirely.
-- Hybrid architectures that are majority-attention (e.g., Transformer
-  with one SSM layer). A small attention component used as a tool
-  within an SSM-first design is acceptable if justified.
-- Ensemble methods that combine an SSM with a separate Transformer.
-  The goal is a single-model SSM contribution.
-- Working on a different SSM problem (e.g., improving SSM efficiency
-  or hardware utilization) rather than the quality of input-dependent
-  dynamics. Stay on the paper's research question.
- - ...
 
-Delete this comment block and fill in your actual direction below.
--->
+- Replacing the task with standard velocity tracking, pure position tracking, or
+  direct scripted force control that does not provide tunable interaction
+  behavior.
+- Using a hand-engineered model-predictive controller or trajectory optimizer as
+  the deployed controller unless the learned policy remains the primary
+  force-adaptive controller being evaluated.
+- Changing the benchmark to a different robot, fixed-base manipulator, wheeled
+  platform, or non-contact locomotion problem.
+- Adding privileged deployment sensors or simulator-only state to avoid the
+  estimation and interaction challenge.
+- Beating the scores by hard-coding the evaluator scenarios, detecting wall or
+  impulse tests directly, or specializing separate policies for each metric.
+- Treating falling, sitting, freezing, or excessive yielding as success when the
+  command-tracking and forceful-interaction constraints are violated.

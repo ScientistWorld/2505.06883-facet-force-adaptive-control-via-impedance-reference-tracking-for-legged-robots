@@ -37,5 +37,11 @@
 - Patched the reduced fall proxy to penalize excessive resisting reaction more
   than passive exposure to external force.
 
+### [2026-05-29 09:15] - method_runs
+- CPU job `f52306ba-0b1` kept the wall-collision result and showed FACET
+  surviving more impulse trials than both velocity baselines.
+- The success rate remained too low for `core_claim`; reduced FACET's impulse
+  stiffness and tracking gains to increase compliant yielding.
+
 ## Stop Justification
 - Not stopped; next action is a CPU smoke job.

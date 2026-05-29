@@ -15,7 +15,17 @@ from method.facet_reference import FACETController
 
 def rollout(mode: str, episodes: int, seed: int, kp: float, name: str) -> dict:
     env = PlanarForceEnv(episodes, mode=mode, seed=seed)
-    controller = FACETController(episodes, env.cfg.dt, kp=kp, virtual_mass=env.cfg.mass)
+    if mode == "impulse":
+        controller = FACETController(
+            episodes,
+            env.cfg.dt,
+            kp=kp,
+            virtual_mass=env.cfg.mass,
+            pos_gain=0.45,
+            vel_gain=0.2,
+        )
+    else:
+        controller = FACETController(episodes, env.cfg.dt, kp=kp, virtual_mass=env.cfg.mass)
     obs = env.reset()
     controller.reset(env.pos, env.vel)
     records = []
@@ -65,7 +75,7 @@ def main() -> None:
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
     runs = [
-        rollout("impulse", args.episodes, args.seed, kp=16.0, name="facet_smoothed"),
+        rollout("impulse", args.episodes, args.seed, kp=4.0, name="facet_smoothed"),
         rollout("wall", args.episodes, args.seed + 1, kp=4.0, name="facet_low_kp"),
         rollout("wall", args.episodes, args.seed + 2, kp=36.0, name="facet_high_kp"),
     ]
@@ -76,4 +86,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

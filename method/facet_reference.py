@@ -80,8 +80,18 @@ class SmoothedImpedanceReference:
 class FACETController:
     """Teacher-style policy that tracks smoothed impedance reference targets."""
 
-    def __init__(self, n_envs: int, dt: float, kp: float = 16.0, virtual_mass: float = 12.0):
+    def __init__(
+        self,
+        n_envs: int,
+        dt: float,
+        kp: float = 16.0,
+        virtual_mass: float = 12.0,
+        pos_gain: float = 1.0,
+        vel_gain: float = 0.5,
+    ):
         kd = 2.0 * np.sqrt(kp)
+        self.pos_gain = pos_gain
+        self.vel_gain = vel_gain
         self.command = ImpedanceCommand(
             kp=kp,
             kd=kd,
@@ -104,7 +114,7 @@ class FACETController:
         # Eq. (2) gives ref_acc = (spring + external_force) / m. Since the
         # simulated robot receives the same external force directly, its ground
         # reaction action should reproduce only the virtual spring component.
-        action = spring_acc + 2.0 * (ref_pos - pos) + 1.0 * (ref_vel - vel)
+        action = spring_acc + self.pos_gain * (ref_pos - pos) + self.vel_gain * (ref_vel - vel)
         self.ref.push_state(pos, vel)
         return action.astype(np.float32), {
             "ref_pos": ref_pos,

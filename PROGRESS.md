@@ -26,6 +26,10 @@
   `0.0` success. The reduced fall proxy was too sensitive to external force
   itself, so it has been adjusted to mainly penalize large resisting ground
   reaction.
+- CPU job `f52306ba-0b1` improved impulse behavior but not enough for
+  `core_claim`: `facet_smoothed` reached `0.133` success while both velocity
+  baselines remained at `0.0`. FACET impulse stiffness and tracking gains were
+  reduced to better represent the compliant mode used for large pushes.
 
 ## Remaining
 

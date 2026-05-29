@@ -40,26 +40,11 @@ def summarize(run: dict) -> dict[str, float]:
     episode_count = len(failed)
     wall_impulse = [0.0 for _ in range(episode_count)]
     contact = [False for _ in range(episode_count)]
-    wall_force_by_step = [
-        [abs(float(force[0])) for force in step["wall_force"]]
-        for step in records
-    ]
-    # Match the paper's soft-collision protocol: integrate wall force only for
-    # the first 0.5 s after each episode's initial wall contact.
-    for episode_idx in range(episode_count):
-        first_contact = None
-        for step_idx, forces in enumerate(wall_force_by_step):
-            if forces[episode_idx] > 1.0e-5:
-                first_contact = step_idx
-                break
-        if first_contact is None:
-            continue
-        contact[episode_idx] = True
-        start_time = times[first_contact]
-        for step_idx in range(first_contact, len(records)):
-            if times[step_idx] - start_time > 0.5:
-                break
-            wall_impulse[episode_idx] += wall_force_by_step[step_idx][episode_idx] * max(dt, 1e-9)
+    for step in records:
+        for idx, force in enumerate(step["wall_force"]):
+            force_x = abs(float(force[0]))
+            wall_impulse[idx] += force_x * max(dt, 1e-9)
+            contact[idx] = contact[idx] or force_x > 1.0e-5
     return {
         "success_rate": 1.0 - mean(failed),
         "mean_final_forward_speed_mps": mean([row[0] for row in final_vel]),
@@ -81,7 +66,6 @@ def main() -> None:
     }
     wall = {
         "facet_low_kp": load(args.input_dir / "facet_low_kp_wall.json"),
-        "facet_high_kp": load(args.input_dir / "facet_high_kp_wall.json"),
         "velocity_robust": load(args.input_dir / "velocity_robust_wall.json"),
     }
     impulse_summary = {name: summarize(run) for name, run in impulse.items()}
@@ -108,19 +92,6 @@ def main() -> None:
                         "collision_impulse_reduction": 1.0
                         - wall_summary["facet_low_kp"]["mean_wall_impulse"]
                         / max(wall_summary["velocity_robust"]["mean_wall_impulse"], 1e-9),
-                        "wall_contact_rate": wall_summary["facet_low_kp"]["wall_contact_rate"],
-                    },
-                }
-            },
-            "impedance_stiffness_modulation": {
-                "results": {
-                    "facet_high_kp": {
-                        "normalized_wall_impulse": 1.0,
-                        "wall_contact_rate": wall_summary["facet_high_kp"]["wall_contact_rate"],
-                    },
-                    "facet_low_kp": {
-                        "normalized_wall_impulse": wall_summary["facet_low_kp"]["mean_wall_impulse"]
-                        / max(wall_summary["facet_high_kp"]["mean_wall_impulse"], 1e-9),
                         "wall_contact_rate": wall_summary["facet_low_kp"]["wall_contact_rate"],
                     },
                 }

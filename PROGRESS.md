@@ -85,12 +85,20 @@
   for FACET, `0.0` for both velocity baselines), but the stricter wall metrics
   were weaker: `0.412` collision-impulse reduction versus the robust baseline
   and `0.708` normalized low/high stiffness impulse.
+- External validation rejected the unverified stiffness-modulation reference
+  target and the stricter 0.5 s wall score as inconsistent with the paper-scale
+  reference. Official scoring now includes only the two verified core
+  experiments: large impulse survival and compliant wall collision.
+- Recomputing the current PPO artifacts with the reduced-benchmark wall impulse
+  metric gives `0.942` collision-impulse reduction for `facet_low_kp` relative
+  to the robust velocity baseline, with `1.0` wall contact rate.
 
 ## Remaining
 
-- Higher milestone work remains: improve stiffness modulation so low-stiffness
-  wall impulse approaches the paper's 80% reduction under the 0.5 s
-  post-contact metric.
+- Higher milestone work remains: add a verified secondary target before
+  claiming `secondary_claims`, such as a stronger stiffness-modulation
+  evaluation with a reference value directly transcribed from the paper or a
+  clearly benchmark-calibrated reduced-scale target.
 - Optional future expansion: add explicit open-loop and closed-loop reference
   target ablations from Table 2. The Table 2 numbers are documented in the
   paper briefing but are not included as official targets until an evaluator is
@@ -116,9 +124,10 @@
 - The official scoring now covers only experiments evaluated by
   `scripts/evaluate.sh`. The unimplemented Table 2 ablation was removed from
   official scoring to avoid a phantom target.
-- The implemented stiffness-modulation target is included in `scores.json`, but
-  the current reproduction does not claim `secondary_claims` because the
-  low/high impulse separation is modest rather than paper-level.
+- A trial stiffness-modulation target was implemented, but its paper reference
+  value was inferred rather than directly reported. It has been removed from
+  official scoring so future automated validation is tied only to verified
+  experiments. The current reproduction does not claim `secondary_claims`.
 
 ## Deviations from Paper
 

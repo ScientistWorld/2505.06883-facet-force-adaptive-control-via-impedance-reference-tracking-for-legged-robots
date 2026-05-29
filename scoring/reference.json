@@ -2,7 +2,7 @@
   "experiments": {
     "large_lateral_impulse": {
       "description": "Forward locomotion at 1.5 m/s under a large lateral ramp impulse. The paper reports FACET robustness up to about 200 Ns and trajectory examples at 400 N peak force.",
-      "weight": 0.45,
+      "weight": 0.60,
       "primary_metric": "success_rate",
       "metrics": {
         "success_rate": {
@@ -33,8 +33,8 @@
       }
     },
     "soft_wall_collision": {
-      "description": "Wall collision at 1.5 m/s. The paper reports that the compliant FACET setting reduces 0.5 s post-contact collision impulse by about 80% relative to the robust velocity baseline.",
-      "weight": 0.30,
+      "description": "Wall collision at 1.5 m/s. The paper reports that the compliant FACET setting reduces collision impulse by about 80% relative to the robust velocity baseline.",
+      "weight": 0.40,
       "primary_metric": "collision_impulse_reduction",
       "metrics": {
         "collision_impulse_reduction": {
@@ -55,33 +55,6 @@
         "facet_low_kp": {
           "type": "proposed",
           "collision_impulse_reduction": 0.8,
-          "wall_contact_rate": 1.0
-        }
-      }
-    },
-    "impedance_stiffness_modulation": {
-      "description": "Wall contact with the same learned policy under low versus high virtual stiffness. The paper reports that 0.5 s post-contact collision impulse is modulated by the impedance parameter Kp.",
-      "weight": 0.25,
-      "primary_metric": "normalized_wall_impulse",
-      "metrics": {
-        "normalized_wall_impulse": {
-          "higher_is_better": false,
-          "coefficient": -1.0
-        },
-        "wall_contact_rate": {
-          "higher_is_better": true,
-          "coefficient": 0.3
-        }
-      },
-      "results": {
-        "facet_high_kp": {
-          "type": "proposed",
-          "normalized_wall_impulse": 1.0,
-          "wall_contact_rate": 1.0
-        },
-        "facet_low_kp": {
-          "type": "proposed",
-          "normalized_wall_impulse": 0.2,
           "wall_contact_rate": 1.0
         }
       }

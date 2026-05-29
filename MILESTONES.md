@@ -27,3 +27,8 @@
 - Core impulse robustness remains reproduced: `facet_smoothed` reached `1.0` success while both velocity baselines reached `0.0`.
 - The stricter 0.5 s wall metric shows reduced but not paper-level compliance: `facet_low_kp` reduced collision impulse by `0.412` versus the robust baseline and reached normalized low/high stiffness impulse `0.708`.
 - Stopping at `core_claim_plus`; the secondary stiffness-modulation target is implemented and scored, but not strong enough to claim `secondary_claims`.
+
+### [2026-05-29 09:52] - core_claim_plus
+- External validation rejected the unverified stiffness-modulation target and the stricter 0.5 s wall score as inconsistent with the official paper-reference values.
+- Removed the inferred secondary target from official scoring and restored the reduced-benchmark wall impulse metric for the core compliance claim.
+- Regenerated scores from existing artifacts: the PPO FACET policy keeps `1.0` impulse success and reaches `0.942` wall collision-impulse reduction with `1.0` contact rate.

@@ -43,6 +43,10 @@
         },
         "wall_contact_rate": {
           "higher_is_better": true,
+          "coefficient": 0.0
+        },
+        "mean_wall_entry_speed_mps": {
+          "higher_is_better": true,
           "coefficient": 0.3
         }
       },

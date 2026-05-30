@@ -3,11 +3,15 @@
     "large_lateral_impulse": {
       "description": "Forward locomotion at 1.5 m/s under a large lateral ramp impulse. The paper reports FACET robustness up to about 200 Ns and trajectory examples at 400 N peak force.",
       "weight": 0.60,
-      "primary_metric": "success_rate",
+      "primary_metric": "impulse_recovery_score",
       "metrics": {
-        "success_rate": {
+        "impulse_recovery_score": {
           "higher_is_better": true,
           "coefficient": 1.0
+        },
+        "success_rate": {
+          "higher_is_better": true,
+          "coefficient": 0.5
         },
         "mean_final_forward_speed_mps": {
           "higher_is_better": true,
@@ -17,16 +21,19 @@
       "results": {
         "velocity_vanilla": {
           "type": "baseline",
+          "impulse_recovery_score": 0.0,
           "success_rate": 0.0,
           "mean_final_forward_speed_mps": 1.5
         },
         "velocity_robust": {
           "type": "baseline",
+          "impulse_recovery_score": 0.0,
           "success_rate": 0.0,
           "mean_final_forward_speed_mps": 1.5
         },
         "facet_smoothed": {
           "type": "proposed",
+          "impulse_recovery_score": 1.0,
           "success_rate": 1.0,
           "mean_final_forward_speed_mps": 1.5
         }

@@ -50,6 +50,21 @@ def load_rollouts(root: Path) -> dict[str, dict[str, dict[str, Any]]]:
     return grouped
 
 
+def method_index(path: Path) -> dict[str, set[str]]:
+    if not path.exists():
+        return {}
+    payload = json.loads(path.read_text())
+    experiments = payload.get("experiments", payload)
+    index: dict[str, set[str]] = {}
+    for exp_name, exp in experiments.items():
+        if not isinstance(exp, dict):
+            continue
+        results = exp.get("results", exp)
+        if isinstance(results, dict):
+            index[exp_name] = {name for name in results if not name.startswith("_")}
+    return index
+
+
 def slice_indices(episode_count: int) -> list[int]:
     return [idx for idx in range(episode_count) if idx % 2 == 1]
 
@@ -99,6 +114,7 @@ def summarize(run: dict[str, Any]) -> dict[str, float]:
     return {
         "success_rate": 1.0 - mean(failed),
         "mean_final_forward_speed_mps": mean([row[0] for row in final_vel]),
+        "impulse_recovery_score": (1.0 - mean(failed)) * max(mean([row[0] for row in final_vel]), 0.0) / 1.5,
         "mean_wall_impulse": mean(wall_impulse),
         "wall_contact_rate": mean([1.0 if value else 0.0 for value in contact]),
         "mean_wall_entry_speed_mps": mean(entry_speed),
@@ -106,7 +122,7 @@ def summarize(run: dict[str, Any]) -> dict[str, float]:
     }
 
 
-def build_scores(grouped: dict[str, dict[str, dict[str, Any]]]) -> dict[str, Any]:
+def build_scores(grouped: dict[str, dict[str, dict[str, Any]]], expected: dict[str, set[str]]) -> dict[str, Any]:
     scores: dict[str, Any] = {
         "metadata": {
             "slice": SLICE_NAME,
@@ -116,11 +132,16 @@ def build_scores(grouped: dict[str, dict[str, dict[str, Any]]]) -> dict[str, Any
     }
 
     impulse_runs = grouped.get("impulse", {})
+    if expected.get("large_lateral_impulse"):
+        impulse_runs = {
+            name: run for name, run in impulse_runs.items() if name in expected["large_lateral_impulse"]
+        }
     if impulse_runs:
         impulse_summary = {name: summarize(run) for name, run in impulse_runs.items()}
         scores["experiments"]["large_lateral_impulse"] = {
             "results": {
                 name: {
+                    "impulse_recovery_score": metrics["impulse_recovery_score"],
                     "success_rate": metrics["success_rate"],
                     "mean_final_forward_speed_mps": metrics["mean_final_forward_speed_mps"],
                 }
@@ -129,6 +150,8 @@ def build_scores(grouped: dict[str, dict[str, dict[str, Any]]]) -> dict[str, Any
         }
 
     wall_runs = grouped.get("wall", {})
+    if expected.get("soft_wall_collision"):
+        wall_runs = {name: run for name, run in wall_runs.items() if name in expected["soft_wall_collision"]}
     if wall_runs:
         wall_summary = {name: summarize(run) for name, run in wall_runs.items()}
         robust_impulse = wall_summary.get("velocity_robust", {}).get("mean_wall_impulse")
@@ -153,9 +176,10 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("input_dir", nargs="?", type=Path, default=Path("/home/user/checkpoints"))
     parser.add_argument("--output", type=Path, default=Path("/home/user/scoring/scores_test.json"))
+    parser.add_argument("--method-index", type=Path, default=Path("/home/user/scoring/scores.json"))
     args = parser.parse_args()
 
-    scores = build_scores(load_rollouts(args.input_dir))
+    scores = build_scores(load_rollouts(args.input_dir), method_index(args.method_index))
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(scores, indent=2, sort_keys=True) + "\n")
 

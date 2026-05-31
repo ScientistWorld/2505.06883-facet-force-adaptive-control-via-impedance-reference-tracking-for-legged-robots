@@ -3,4 +3,4 @@ action: done
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Packaging audit passed: procedural data only, download.sh creates data/downloads, and no committed code references shared/ paths."
+notes: "Final audit passed: packaged FACET PPO reproduction validates at core_claim with procedural data and clean eval/method separation."

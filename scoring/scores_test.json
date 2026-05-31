@@ -1,0 +1,41 @@
+{
+  "experiments": {
+    "large_lateral_impulse": {
+      "results": {
+        "facet_smoothed": {
+          "impulse_recovery_score": 0.5826689259459575,
+          "mean_final_forward_speed_mps": 0.8740033889189363,
+          "success_rate": 1.0
+        },
+        "velocity_robust": {
+          "impulse_recovery_score": 0.0,
+          "mean_final_forward_speed_mps": 1.4864833354949951,
+          "success_rate": 0.0
+        },
+        "velocity_vanilla": {
+          "impulse_recovery_score": 0.0,
+          "mean_final_forward_speed_mps": 1.48648202419281,
+          "success_rate": 0.0
+        }
+      }
+    },
+    "soft_wall_collision": {
+      "results": {
+        "facet_low_kp": {
+          "collision_impulse_reduction": 0.42234273011389567,
+          "mean_wall_entry_speed_mps": 1.1250121593475342,
+          "wall_contact_rate": 1.0
+        },
+        "velocity_robust": {
+          "collision_impulse_reduction": 0.0,
+          "mean_wall_entry_speed_mps": 1.4164488315582275,
+          "wall_contact_rate": 1.0
+        }
+      }
+    }
+  },
+  "metadata": {
+    "slice": "test",
+    "split_rule": "odd rollout episode indices; wall collision impulse uses odd post-contact samples in the first 0.50s"
+  }
+}

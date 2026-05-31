@@ -1,5 +1,6 @@
 # The system reads this file after the turn ends.
-action: done
+action: submit
 gpus: 0
 test: false
-notes: "Even/odd rollout split; 15 train metrics, 15 test metrics; primary gaps small (impulse -0.0016, wall +0.0203); success/contact validity saturated on fixed artifacts but speed constraint remains non-saturated."
+milestone: core_claim
+notes: "Run the actual reduced FACET reproduction path (method + baselines + evaluate + validate) to restore a non-none milestone."

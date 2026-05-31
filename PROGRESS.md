@@ -92,6 +92,10 @@
 - Recomputing the current PPO artifacts with the reduced-benchmark wall impulse
   metric gives `0.942` collision-impulse reduction for `facet_low_kp` relative
   to the robust velocity baseline, with `1.0` wall contact rate.
+- Final audit keeps the self-reported milestone at `core_claim` to avoid
+  overclaiming beyond the verified official target set. `python validate.py
+  --compare` passes, including split train/test score checks and import
+  separation.
 
 ## Remaining
 

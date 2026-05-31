@@ -1,6 +1,6 @@
 # Reproduction Milestones
 
-**Current: core_claim_plus**
+**Current: core_claim**
 
 ## Progress Log
 
@@ -32,3 +32,7 @@
 - External validation rejected the unverified stiffness-modulation target and the stricter 0.5 s wall score as inconsistent with the official paper-reference values.
 - Removed the inferred secondary target from official scoring and restored the reduced-benchmark wall impulse metric for the core compliance claim.
 - Regenerated scores from existing artifacts: the PPO FACET policy keeps `1.0` impulse success and reaches `0.942` wall collision-impulse reduction with `1.0` contact rate.
+
+### [2026-05-31 23:59] - core_claim
+- Final audit keeps the official milestone at `core_claim` rather than `core_claim_plus`, matching `action.yaml` and the latest verifier state.
+- The packaged environment still validates with the PPO FACET method, velocity baselines, artifact-based evaluator, split train/test checks, and procedural data-only download script.

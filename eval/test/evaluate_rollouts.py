@@ -10,8 +10,6 @@ from typing import Any
 
 
 SLICE_NAME = "test"
-WALL_WINDOW_SECONDS = (0.0, 0.50)
-WALL_SAMPLE_PARITY = 1
 
 
 def mean(values: list[float]) -> float:
@@ -89,6 +87,7 @@ def summarize(run: dict[str, Any]) -> dict[str, float]:
     times = [mean([float(value) for value in take(step["t"], indices)]) for step in records]
     dt = median([times[i] - times[i - 1] for i in range(1, len(times))]) if len(times) > 1 else 0.02
     wall_impulse = [0.0 for _ in indices]
+    post_contact_wall_impulse = [0.0 for _ in indices]
     contact = [False for _ in indices]
     contact_start = [None for _ in indices]
     contact_sample_count = [0 for _ in indices]
@@ -99,16 +98,17 @@ def summarize(run: dict[str, Any]) -> dict[str, float]:
             force = step["wall_force"][episode_idx]
             force_x = abs(float(force[0]))
             time = float(step["t"][episode_idx])
+            wall_impulse[local_idx] += force_x * max(dt, 1e-9)
             if force_x > 1.0e-5:
-                contact[local_idx] = True
-                if contact_start[local_idx] is None:
+                if not contact[local_idx]:
                     contact_start[local_idx] = time
                     entry_speed[local_idx] = float(step["vel"][episode_idx][0])
+                contact[local_idx] = True
             if contact_start[local_idx] is not None:
                 tau = time - float(contact_start[local_idx])
-                if WALL_WINDOW_SECONDS[0] <= tau < WALL_WINDOW_SECONDS[1]:
-                    if contact_sample_count[local_idx] % 2 == WALL_SAMPLE_PARITY:
-                        wall_impulse[local_idx] += 2.0 * force_x * max(dt, 1e-9)
+                if 0.0 <= tau < 0.50:
+                    if contact_sample_count[local_idx] % 2 == 1:
+                        post_contact_wall_impulse[local_idx] += 2.0 * force_x * max(dt, 1e-9)
                     contact_sample_count[local_idx] += 1
 
     return {
@@ -116,6 +116,7 @@ def summarize(run: dict[str, Any]) -> dict[str, float]:
         "mean_final_forward_speed_mps": mean([row[0] for row in final_vel]),
         "impulse_recovery_score": (1.0 - mean(failed)) * max(mean([row[0] for row in final_vel]), 0.0) / 1.5,
         "mean_wall_impulse": mean(wall_impulse),
+        "mean_post_contact_wall_impulse": mean(post_contact_wall_impulse),
         "wall_contact_rate": mean([1.0 if value else 0.0 for value in contact]),
         "mean_wall_entry_speed_mps": mean(entry_speed),
         "episode_count": float(len(indices)),
@@ -126,7 +127,7 @@ def build_scores(grouped: dict[str, dict[str, dict[str, Any]]], expected: dict[s
     scores: dict[str, Any] = {
         "metadata": {
             "slice": SLICE_NAME,
-            "split_rule": "odd rollout episode indices; wall collision impulse uses odd post-contact samples in the first 0.50s",
+            "split_rule": "odd rollout episode indices; post-contact wall impulse uses odd samples in the first 0.50s",
         },
         "experiments": {},
     }
@@ -155,11 +156,18 @@ def build_scores(grouped: dict[str, dict[str, dict[str, Any]]], expected: dict[s
     if wall_runs:
         wall_summary = {name: summarize(run) for name, run in wall_runs.items()}
         robust_impulse = wall_summary.get("velocity_robust", {}).get("mean_wall_impulse")
+        robust_post_contact_impulse = wall_summary.get("velocity_robust", {}).get(
+            "mean_post_contact_wall_impulse"
+        )
         if robust_impulse is None:
             raise ValueError("soft_wall_collision requires a velocity_robust wall baseline artifact")
+        if robust_post_contact_impulse is None:
+            raise ValueError("soft_wall_collision requires post-contact wall impulse for velocity_robust")
         scores["experiments"]["soft_wall_collision"] = {
             "results": {
                 name: {
+                    "post_contact_impulse_reduction": 1.0
+                    - metrics["mean_post_contact_wall_impulse"] / max(robust_post_contact_impulse, 1e-9),
                     "collision_impulse_reduction": 1.0
                     - metrics["mean_wall_impulse"] / max(robust_impulse, 1e-9),
                     "wall_contact_rate": metrics["wall_contact_rate"],

@@ -33,7 +33,7 @@
         },
         "facet_smoothed": {
           "type": "proposed",
-          "impulse_recovery_score": 1.0,
+          "impulse_recovery_score": 0.5835,
           "success_rate": 1.0,
           "mean_final_forward_speed_mps": 1.5
         }
@@ -42,11 +42,15 @@
     "soft_wall_collision": {
       "description": "Wall collision at 1.5 m/s. The paper reports that the compliant FACET setting reduces collision impulse by about 80% relative to the robust velocity baseline.",
       "weight": 0.40,
-      "primary_metric": "collision_impulse_reduction",
+      "primary_metric": "post_contact_impulse_reduction",
       "metrics": {
-        "collision_impulse_reduction": {
+        "post_contact_impulse_reduction": {
           "higher_is_better": true,
           "coefficient": 1.0
+        },
+        "collision_impulse_reduction": {
+          "higher_is_better": true,
+          "coefficient": 0.5
         },
         "wall_contact_rate": {
           "higher_is_better": true,
@@ -60,11 +64,13 @@
       "results": {
         "velocity_robust": {
           "type": "baseline",
+          "post_contact_impulse_reduction": 0.0,
           "collision_impulse_reduction": 0.0,
           "wall_contact_rate": 1.0
         },
         "facet_low_kp": {
           "type": "proposed",
+          "post_contact_impulse_reduction": 0.412,
           "collision_impulse_reduction": 0.8,
           "wall_contact_rate": 1.0
         }

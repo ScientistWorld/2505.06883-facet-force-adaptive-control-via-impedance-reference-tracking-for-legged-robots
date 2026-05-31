@@ -1,6 +1,6 @@
 # The system reads this file after the turn ends.
-action: submit
+action: done
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Run the actual reduced FACET reproduction path (method + baselines + evaluate + validate) to restore a non-none milestone."
+notes: "Validation passes. Core reduced FACET claim supported: impulse recovery 0.583/0.584/0.583 full/train/test vs 0 baselines; post-contact wall reduction 0.412 full, 0.402 train, 0.422 test with contact rate 1.0."

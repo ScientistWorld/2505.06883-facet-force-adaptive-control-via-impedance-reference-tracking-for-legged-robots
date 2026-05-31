@@ -22,13 +22,15 @@
     "soft_wall_collision": {
       "results": {
         "facet_low_kp": {
-          "collision_impulse_reduction": 0.4020541033364029,
+          "collision_impulse_reduction": 0.9415928306398097,
           "mean_wall_entry_speed_mps": 1.1250121593475342,
+          "post_contact_impulse_reduction": 0.4020541033364029,
           "wall_contact_rate": 1.0
         },
         "velocity_robust": {
           "collision_impulse_reduction": 0.0,
           "mean_wall_entry_speed_mps": 1.4164488315582275,
+          "post_contact_impulse_reduction": 0.0,
           "wall_contact_rate": 1.0
         }
       }
@@ -36,6 +38,6 @@
   },
   "metadata": {
     "slice": "train",
-    "split_rule": "even rollout episode indices; wall collision impulse uses even post-contact samples in the first 0.50s"
+    "split_rule": "even rollout episode indices; post-contact wall impulse uses even samples in the first 0.50s"
   }
 }

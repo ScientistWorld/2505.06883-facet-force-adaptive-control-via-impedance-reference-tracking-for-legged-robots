@@ -39,16 +39,28 @@ def summarize(run: dict) -> dict[str, float]:
     dt = median([times[i] - times[i - 1] for i in range(1, len(times))]) if len(times) > 1 else 0.02
     episode_count = len(failed)
     wall_impulse = [0.0 for _ in range(episode_count)]
+    post_contact_wall_impulse = [0.0 for _ in range(episode_count)]
     contact = [False for _ in range(episode_count)]
+    contact_start = [None for _ in range(episode_count)]
     for step in records:
         for idx, force in enumerate(step["wall_force"]):
             force_x = abs(float(force[0]))
+            time = float(step["t"][idx])
             wall_impulse[idx] += force_x * max(dt, 1e-9)
-            contact[idx] = contact[idx] or force_x > 1.0e-5
+            if force_x > 1.0e-5:
+                contact[idx] = True
+                if contact_start[idx] is None:
+                    contact_start[idx] = time
+            if contact_start[idx] is not None:
+                tau = time - float(contact_start[idx])
+                if 0.0 <= tau < 0.50:
+                    post_contact_wall_impulse[idx] += force_x * max(dt, 1e-9)
     return {
         "success_rate": 1.0 - mean(failed),
         "mean_final_forward_speed_mps": mean([row[0] for row in final_vel]),
+        "impulse_recovery_score": (1.0 - mean(failed)) * max(mean([row[0] for row in final_vel]), 0.0) / 1.5,
         "mean_wall_impulse": mean(wall_impulse),
+        "mean_post_contact_wall_impulse": mean(post_contact_wall_impulse),
         "wall_contact_rate": mean([1.0 if value else 0.0 for value in contact]),
     }
 
@@ -76,6 +88,7 @@ def main() -> None:
             "large_lateral_impulse": {
                 "results": {
                     name: {
+                        "impulse_recovery_score": metrics["impulse_recovery_score"],
                         "success_rate": metrics["success_rate"],
                         "mean_final_forward_speed_mps": metrics["mean_final_forward_speed_mps"],
                     }
@@ -85,10 +98,14 @@ def main() -> None:
             "soft_wall_collision": {
                 "results": {
                     "velocity_robust": {
+                        "post_contact_impulse_reduction": 0.0,
                         "collision_impulse_reduction": 0.0,
                         "wall_contact_rate": wall_summary["velocity_robust"]["wall_contact_rate"],
                     },
                     "facet_low_kp": {
+                        "post_contact_impulse_reduction": 1.0
+                        - wall_summary["facet_low_kp"]["mean_post_contact_wall_impulse"]
+                        / max(wall_summary["velocity_robust"]["mean_post_contact_wall_impulse"], 1e-9),
                         "collision_impulse_reduction": 1.0
                         - wall_summary["facet_low_kp"]["mean_wall_impulse"]
                         / max(wall_summary["velocity_robust"]["mean_wall_impulse"], 1e-9),

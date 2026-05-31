@@ -3,14 +3,17 @@
     "large_lateral_impulse": {
       "results": {
         "facet_smoothed": {
+          "impulse_recovery_score": 0.5834478490675489,
           "success_rate": 1.0,
           "mean_final_forward_speed_mps": 0.8751717736013234
         },
         "velocity_robust": {
+          "impulse_recovery_score": 0.0,
           "success_rate": 0.0,
           "mean_final_forward_speed_mps": 1.4864833354949951
         },
         "velocity_vanilla": {
+          "impulse_recovery_score": 0.0,
           "success_rate": 0.0,
           "mean_final_forward_speed_mps": 1.48648202419281
         }
@@ -19,10 +22,12 @@
     "soft_wall_collision": {
       "results": {
         "velocity_robust": {
+          "post_contact_impulse_reduction": 0.0,
           "collision_impulse_reduction": 0.0,
           "wall_contact_rate": 1.0
         },
         "facet_low_kp": {
+          "post_contact_impulse_reduction": 0.41234200428411727,
           "collision_impulse_reduction": 0.9415928306398097,
           "wall_contact_rate": 1.0
         }

@@ -1,6 +1,5 @@
 # The system reads this file after the turn ends.
-action: submit
+action: done
 gpus: 0
 test: false
-milestone: core_claim_plus
-notes: "Run split scoring on saved rollout artifacts; previous split-eval submit was cancelled before producing scores."
+notes: "Even/odd rollout split; 15 train metrics, 15 test metrics; primary gaps small (impulse -0.0016, wall +0.0203); success/contact validity saturated on fixed artifacts but speed constraint remains non-saturated."

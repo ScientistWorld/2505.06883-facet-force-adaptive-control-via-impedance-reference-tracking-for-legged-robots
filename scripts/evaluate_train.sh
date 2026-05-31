@@ -5,4 +5,6 @@ set -euo pipefail
 
 cd /home/user
 
-python eval/train/evaluate_rollouts.py "${1:-/home/user/checkpoints}" --output scoring/scores_train.json
+INPUT_DIR="${1:-/home/user/checkpoints/facet_planar}"
+echo "[evaluate_train] input=${INPUT_DIR}"
+python -u eval/train/evaluate_rollouts.py "${INPUT_DIR}" --output scoring/scores_train.json

@@ -3,4 +3,4 @@ action: submit
 gpus: 0
 test: false
 milestone: core_claim_plus
-notes: "Run split train/test rollout scoring against final checkpoint artifacts."
+notes: "Re-run split scoring with bounded evaluators and explicit artifact logging after SIGTERM."

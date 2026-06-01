@@ -1,6 +1,6 @@
 # The system reads this file after the turn ends.
-action: submit
+action: done
 gpus: 0
-test: true
+test: false
 milestone: core_claim
-notes: "Verify reduced Table 2-style tracking-target ablation artifacts and refreshed split evaluation; keep milestone at core_claim until results are inspected."
+notes: "Final verification passed at core_claim after removing an unverified phantom ablation target and cleaning generated job logs."

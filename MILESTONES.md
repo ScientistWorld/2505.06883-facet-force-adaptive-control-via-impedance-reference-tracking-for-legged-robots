@@ -44,3 +44,7 @@
 ### [2026-06-01 00:15] - core_claim
 - Added a reduced Table 2-style tracking-target ablation producer for smoothed, open-loop, closed-loop, and acceleration target variants.
 - Extended artifact-based evaluation and scoring docs for the ablation, but did not raise the milestone before a compute job verifies the new artifacts and scores.
+
+### [2026-06-01 00:20] - core_claim
+- Final verification found the tracking-target ablation had no validated artifact or `scores.json` entry.
+- Removed that unverified secondary target from official scoring and the default reproduction path, keeping the workspace at the verified `core_claim` milestone.

@@ -48,14 +48,6 @@ def load_rollouts(root: Path) -> dict[str, dict[str, dict[str, Any]]]:
     return grouped
 
 
-def load_ablation(root: Path) -> dict[str, Any] | None:
-    for directory in artifact_dirs(root):
-        path = directory / "tracking_target_ablation.json"
-        if path.exists():
-            return json.loads(path.read_text())
-    return None
-
-
 def method_index(path: Path) -> dict[str, set[str]]:
     if not path.exists():
         return {}
@@ -131,35 +123,6 @@ def summarize(run: dict[str, Any]) -> dict[str, float]:
     }
 
 
-def summarize_ablation(artifact: dict[str, Any], expected: set[str]) -> dict[str, dict[str, float]]:
-    variants = artifact.get("variants", {})
-    indices = slice_indices(int(artifact.get("episodes", 0)))
-    raw: dict[str, dict[str, float]] = {}
-    for name, payload in variants.items():
-        if expected and name not in expected:
-            continue
-        raw[name] = {
-            "pos": mean([float(value) for value in take(payload["pos_error"], indices)]),
-            "vel": mean([float(value) for value in take(payload["vel_error"], indices)]),
-            "acc": mean([float(value) for value in take(payload["acc_error"], indices)]),
-            "success": mean([float(value) for value in take(payload["success"], indices)]),
-        }
-    if raw and "smoothed_teacher" not in raw:
-        raise ValueError("tracking_target_ablation requires smoothed_teacher as the normalization anchor")
-    if not raw:
-        return {}
-    anchor = raw["smoothed_teacher"]
-    return {
-        name: {
-            "pos_error_norm": metrics["pos"] / max(anchor["pos"], 1e-9),
-            "vel_error_norm": metrics["vel"] / max(anchor["vel"], 1e-9),
-            "acc_error_norm": metrics["acc"] / max(anchor["acc"], 1e-9),
-            "success_rate": metrics["success"],
-        }
-        for name, metrics in sorted(raw.items())
-    }
-
-
 def build_scores(grouped: dict[str, dict[str, dict[str, Any]]], expected: dict[str, set[str]]) -> dict[str, Any]:
     scores: dict[str, Any] = {
         "metadata": {
@@ -226,11 +189,6 @@ def main() -> None:
 
     expected = method_index(args.method_index)
     scores = build_scores(load_rollouts(args.input_dir), expected)
-    ablation = load_ablation(args.input_dir)
-    if ablation and expected.get("tracking_target_ablation"):
-        scores["experiments"]["tracking_target_ablation"] = {
-            "results": summarize_ablation(ablation, expected["tracking_target_ablation"])
-        }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(scores, indent=2, sort_keys=True) + "\n")
 

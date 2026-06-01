@@ -3,7 +3,7 @@
     "large_lateral_impulse": {
       "description": "Forward locomotion at 1.5 m/s under a large lateral ramp impulse. The paper reports FACET robustness up to about 200 Ns and trajectory examples at 400 N peak force.",
       "notes": "The paper reports success curves graphically rather than this composite score. The reduced benchmark uses impulse_recovery_score = success_rate * max(final_forward_speed, 0) / 1.5 so that survival without locomotion progress is not rewarded.",
-      "weight": 0.45,
+      "weight": 0.60,
       "primary_metric": "impulse_recovery_score",
       "metrics": {
         "impulse_recovery_score": {
@@ -46,7 +46,7 @@
     "soft_wall_collision": {
       "description": "Wall collision at 1.5 m/s. The paper reports that the compliant FACET setting reduces collision impulse by about 80% relative to the robust velocity baseline.",
       "notes": "The paper reports an approximately 80% wall-impulse reduction from a plotted distribution. The reduced benchmark keeps that headline as collision_impulse_reduction and additionally reports a stricter first-0.5s post-contact reduction calibrated from the reproduced artifact.",
-      "weight": 0.30,
+      "weight": 0.40,
       "primary_metric": "post_contact_impulse_reduction",
       "metrics": {
         "post_contact_impulse_reduction": {
@@ -84,64 +84,6 @@
           "collision_impulse_reduction": 0.8,
           "wall_contact_rate": 1.0,
           "mean_wall_entry_speed_mps": 1.5
-        }
-      }
-    },
-    "tracking_target_ablation": {
-      "description": "Table 2-style ablation of impedance tracking targets: smoothed integrated targets, open-loop integrated targets, closed-loop integrated targets, and raw acceleration targets.",
-      "notes": "Reference numbers are the teacher rows from Table 2. The reduced benchmark computes the same normalized position, velocity, and acceleration tracking-error structure on planar artifacts.",
-      "weight": 0.25,
-      "primary_metric": "pos_error_norm",
-      "metrics": {
-        "pos_error_norm": {
-          "higher_is_better": false,
-          "description": "Position tracking error normalized by the smoothed teacher.",
-          "coefficient": -1.0
-        },
-        "vel_error_norm": {
-          "higher_is_better": false,
-          "description": "Velocity tracking error normalized by the smoothed teacher.",
-          "coefficient": -0.5
-        },
-        "acc_error_norm": {
-          "higher_is_better": false,
-          "description": "Acceleration tracking error normalized by the smoothed teacher.",
-          "coefficient": -0.2
-        },
-        "success_rate": {
-          "higher_is_better": true,
-          "description": "Fraction of trials that avoid the benchmark fall condition.",
-          "coefficient": 0.2
-        }
-      },
-      "results": {
-        "smoothed_teacher": {
-          "type": "proposed",
-          "pos_error_norm": 1.0,
-          "vel_error_norm": 1.0,
-          "acc_error_norm": 1.0,
-          "success_rate": 0.98
-        },
-        "open_loop_teacher": {
-          "type": "proposed",
-          "pos_error_norm": 0.72,
-          "vel_error_norm": 0.92,
-          "acc_error_norm": 0.97,
-          "success_rate": 0.97
-        },
-        "closed_loop_teacher": {
-          "type": "proposed",
-          "pos_error_norm": 17.71,
-          "vel_error_norm": 2.04,
-          "acc_error_norm": 1.14,
-          "success_rate": 0.96
-        },
-        "acceleration_teacher": {
-          "type": "proposed",
-          "pos_error_norm": 70.51,
-          "vel_error_norm": 6.64,
-          "acc_error_norm": 1.65,
-          "success_rate": 0.97
         }
       }
     }

@@ -68,33 +68,6 @@ def summarize(run: dict) -> dict[str, float]:
     }
 
 
-def summarize_ablation(path: Path) -> dict[str, dict[str, float]]:
-    if not path.exists():
-        return {}
-    artifact = json.loads(path.read_text())
-    variants = artifact.get("variants", {})
-    raw = {}
-    for name, payload in variants.items():
-        raw[name] = {
-            "pos": mean([float(value) for value in payload["pos_error"]]),
-            "vel": mean([float(value) for value in payload["vel_error"]]),
-            "acc": mean([float(value) for value in payload["acc_error"]]),
-            "success": mean([float(value) for value in payload["success"]]),
-        }
-    if "smoothed_teacher" not in raw:
-        raise ValueError("tracking_target_ablation requires smoothed_teacher as the normalization anchor")
-    anchor = raw["smoothed_teacher"]
-    return {
-        name: {
-            "pos_error_norm": metrics["pos"] / max(anchor["pos"], 1e-9),
-            "vel_error_norm": metrics["vel"] / max(anchor["vel"], 1e-9),
-            "acc_error_norm": metrics["acc"] / max(anchor["acc"], 1e-9),
-            "success_rate": metrics["success"],
-        }
-        for name, metrics in sorted(raw.items())
-    }
-
-
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input-dir", type=Path, default=Path("checkpoints/facet_planar"))
@@ -151,11 +124,6 @@ def main() -> None:
             },
         }
     }
-    ablation_summary = summarize_ablation(args.input_dir / "tracking_target_ablation.json")
-    if ablation_summary:
-        scores["experiments"]["tracking_target_ablation"] = {
-            "results": ablation_summary,
-        }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(scores, indent=2) + "\n")
 

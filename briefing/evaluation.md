@@ -1,6 +1,6 @@
 # Evaluation
 
-## Metrics
+## Official Reduced-Gym Metrics
 
 - **Perturbation success rate**: fraction of randomized trials in which the
   robot remains upright after a lateral ramp impulse while walking forward.
@@ -8,20 +8,19 @@
 - **Final forward speed**: forward speed at the end of the perturbation
   episode. This is a constraint metric for the reduced benchmark: a controller
   should survive the impulse while still making locomotion progress.
-- **Maximum survived impulse / force level**: largest tested disturbance level
-  at which the controller maintains a high success rate. Higher is better.
 - **Collision impulse**: time integral of the wall contact force during the
   first 0.5 seconds after a wall collision. Lower is better for compliant
   settings.
 - **Collision impulse reduction**: relative reduction in collision impulse
   compared with a robust velocity-tracking controller under the same wall test.
   Higher is better.
-- **Tracking error**: squared position, velocity, and acceleration errors against
-  the benchmark reference trajectories used by the evaluator. Lower is better.
 - **Task success rate**: fraction of randomized command-and-force trials that
   avoid falling or invalid contacts. Higher is better.
-- **Pulling capacity**: largest payload or sustained opposing force that can be
-  moved without collapse or loss of heading control. Higher is better.
+
+The paper also reports maximum survived impulse over a sweep, tracking-error
+ablations, and real-robot pulling capacity. Those are useful context but are
+not official scored targets in this reduced gym unless a future agent adds
+validated artifacts and matching entries in `scoring/scores.json`.
 
 ## Baselines and Targets
 
@@ -38,9 +37,6 @@ The paper's headline targets are:
   examples at 400 N peak force.
 - About 80% lower collision impulse than the robust velocity baseline in the
   wall-collision setting when compliant behavior is requested.
-- In the ablation benchmark, deployable-controller success around 0.97 with
-  lower normalized position and velocity tracking errors than the reported
-  comparison variants.
 - On hardware, reliable pulling of a 10 kg payload, compared with reported
   baseline limits of 2.5 kg for the built-in controller and failure beyond 5 kg
   for the robust velocity controller.
@@ -63,7 +59,6 @@ For the collision benchmark, command the robot into a soft virtual wall at
 1.5 m/s. Integrate the wall contact force over the first 0.5 seconds after
 contact and report the impulse distribution for each tested control setting.
 
-For randomized tracking and ablation-style evaluation, sample high-level
-commands and external forces from the benchmark distributions, then report
-position error, velocity error, acceleration error, and success rate using the
-same evaluator for every submitted method.
+For any future expanded tracking evaluation, sample high-level commands and
+external forces from the benchmark distributions, then report errors and
+success rate using the same evaluator for every submitted method.

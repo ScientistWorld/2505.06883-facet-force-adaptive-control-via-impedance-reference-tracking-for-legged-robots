@@ -99,10 +99,6 @@
 
 ## Remaining
 
-- A CPU job is being submitted to verify the new reduced Table 2-style
-  tracking-target ablation. If the ablation artifacts validate and show a
-  meaningful target-choice effect, the workspace can be considered for
-  `secondary_claims`; until then the official milestone remains `core_claim`.
 - Higher milestone work remains: add a verified secondary target before
   claiming `secondary_claims`, such as a stronger stiffness-modulation
   evaluation with a reference value directly transcribed from the paper or a
@@ -136,6 +132,9 @@
   value was inferred rather than directly reported. It has been removed from
   official scoring so future automated validation is tied only to verified
   experiments. The current reproduction does not claim `secondary_claims`.
+- A trial Table 2-style tracking-target ablation was drafted but never
+  validated into `scores.json`. Final verification removed it from official
+  scoring and from the default reproduction path to avoid a phantom target.
 
 ## Deviations from Paper
 

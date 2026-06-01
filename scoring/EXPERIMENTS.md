@@ -12,5 +12,5 @@ freezing in place.
 This experiment checks the safety side of the claim. The controller is driven
 into a soft wall, and the evaluator measures the reduction in integrated
 contact impulse relative to the robust velocity baseline. The contact-rate
-constraint prevents a method from improving this metric by simply stopping
-before it reaches the wall.
+and entry-speed constraints prevent a method from improving this metric by
+simply stopping before it reaches the wall or approaching it much more slowly.

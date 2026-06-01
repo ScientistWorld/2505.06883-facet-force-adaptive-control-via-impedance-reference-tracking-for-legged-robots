@@ -36,3 +36,7 @@
 ### [2026-05-31 23:59] - core_claim
 - Final audit keeps the official milestone at `core_claim` rather than `core_claim_plus`, matching `action.yaml` and the latest verifier state.
 - The packaged environment still validates with the PPO FACET method, velocity baselines, artifact-based evaluator, split train/test checks, and procedural data-only download script.
+
+### [2026-06-01 00:00] - core_claim
+- Final verification passed after aligning the scored wall-entry-speed metric between `reference.json` and `scores.json`.
+- Removed obsolete tracked trajectory logs and documented reduced-benchmark reference values in `VERIFICATION.md`.

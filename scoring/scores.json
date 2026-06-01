@@ -24,12 +24,14 @@
         "velocity_robust": {
           "post_contact_impulse_reduction": 0.0,
           "collision_impulse_reduction": 0.0,
-          "wall_contact_rate": 1.0
+          "wall_contact_rate": 1.0,
+          "mean_wall_entry_speed_mps": 1.4164488315582275
         },
         "facet_low_kp": {
           "post_contact_impulse_reduction": 0.41234200428411727,
           "collision_impulse_reduction": 0.9415928306398097,
-          "wall_contact_rate": 1.0
+          "wall_contact_rate": 1.0,
+          "mean_wall_entry_speed_mps": 1.1250121593475342
         }
       }
     }

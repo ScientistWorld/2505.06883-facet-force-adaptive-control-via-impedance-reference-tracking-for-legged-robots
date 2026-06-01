@@ -21,9 +21,14 @@ paper's safety constraint: lower collision impulse under compliant settings.
 - **Metric**: `collision_impulse_reduction` (higher is better, relative to the
   robust velocity baseline; wall impulse is integrated over the complete
   reduced-benchmark rollout)
+- **Metric**: `post_contact_impulse_reduction` (higher is better, relative to
+  the robust velocity baseline over the first 0.5 seconds after wall contact)
 - **Metric**: `wall_contact_rate` (higher is better as a task-validity
   constraint; the controller must actually reach/contact the wall rather than
   lowering impulse by stopping early)
+- **Metric**: `mean_wall_entry_speed_mps` (higher is better as a locomotion
+  constraint; the controller should not reduce contact impulse merely by
+  approaching the wall slowly)
 - **How to run evaluation**: run `scripts/reproduce.sh` or generate rollout
   artifacts with `scripts/method.sh` and `scripts/baseline.sh`, then run
   `scripts/evaluate.sh`.

@@ -2,19 +2,23 @@
   "experiments": {
     "large_lateral_impulse": {
       "description": "Forward locomotion at 1.5 m/s under a large lateral ramp impulse. The paper reports FACET robustness up to about 200 Ns and trajectory examples at 400 N peak force.",
+      "notes": "The paper reports success curves graphically rather than this composite score. The reduced benchmark uses impulse_recovery_score = success_rate * max(final_forward_speed, 0) / 1.5 so that survival without locomotion progress is not rewarded.",
       "weight": 0.60,
       "primary_metric": "impulse_recovery_score",
       "metrics": {
         "impulse_recovery_score": {
           "higher_is_better": true,
+          "description": "Composite benefit metric combining survival and retained forward motion.",
           "coefficient": 1.0
         },
         "success_rate": {
           "higher_is_better": true,
+          "description": "Fraction of trials that avoid the benchmark fall condition under the lateral impulse.",
           "coefficient": 0.5
         },
         "mean_final_forward_speed_mps": {
           "higher_is_better": true,
+          "description": "Constraint metric checking that the controller continues moving forward after the disturbance.",
           "coefficient": 0.2
         }
       },
@@ -41,23 +45,28 @@
     },
     "soft_wall_collision": {
       "description": "Wall collision at 1.5 m/s. The paper reports that the compliant FACET setting reduces collision impulse by about 80% relative to the robust velocity baseline.",
+      "notes": "The paper reports an approximately 80% wall-impulse reduction from a plotted distribution. The reduced benchmark keeps that headline as collision_impulse_reduction and additionally reports a stricter first-0.5s post-contact reduction calibrated from the reproduced artifact.",
       "weight": 0.40,
       "primary_metric": "post_contact_impulse_reduction",
       "metrics": {
         "post_contact_impulse_reduction": {
           "higher_is_better": true,
+          "description": "Relative reduction in wall impulse during the first 0.5 seconds after contact versus the fixed robust velocity baseline.",
           "coefficient": 1.0
         },
         "collision_impulse_reduction": {
           "higher_is_better": true,
+          "description": "Relative reduction in total reduced-benchmark wall impulse versus the fixed robust velocity baseline.",
           "coefficient": 0.5
         },
         "wall_contact_rate": {
           "higher_is_better": true,
+          "description": "Task-validity check that the controller actually reaches the wall.",
           "coefficient": 0.0
         },
         "mean_wall_entry_speed_mps": {
           "higher_is_better": true,
+          "description": "Constraint metric discouraging methods from reducing impulse by slowing down before contact.",
           "coefficient": 0.3
         }
       },
@@ -66,13 +75,15 @@
           "type": "baseline",
           "post_contact_impulse_reduction": 0.0,
           "collision_impulse_reduction": 0.0,
-          "wall_contact_rate": 1.0
+          "wall_contact_rate": 1.0,
+          "mean_wall_entry_speed_mps": 1.5
         },
         "facet_low_kp": {
           "type": "proposed",
           "post_contact_impulse_reduction": 0.412,
           "collision_impulse_reduction": 0.8,
-          "wall_contact_rate": 1.0
+          "wall_contact_rate": 1.0,
+          "mean_wall_entry_speed_mps": 1.5
         }
       }
     }

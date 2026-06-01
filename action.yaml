@@ -3,4 +3,4 @@ action: done
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Final audit passed: packaged FACET PPO reproduction validates at core_claim with procedural data and clean eval/method separation."
+notes: "Final verification passed at core_claim; scoring/docs cleaned and validate.py --compare passes."

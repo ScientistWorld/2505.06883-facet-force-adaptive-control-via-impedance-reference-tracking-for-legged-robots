@@ -42,15 +42,17 @@ def summarize(run: dict) -> dict[str, float]:
     post_contact_wall_impulse = [0.0 for _ in range(episode_count)]
     contact = [False for _ in range(episode_count)]
     contact_start = [None for _ in range(episode_count)]
+    entry_speed = [0.0 for _ in range(episode_count)]
     for step in records:
         for idx, force in enumerate(step["wall_force"]):
             force_x = abs(float(force[0]))
             time = float(step["t"][idx])
             wall_impulse[idx] += force_x * max(dt, 1e-9)
             if force_x > 1.0e-5:
-                contact[idx] = True
                 if contact_start[idx] is None:
                     contact_start[idx] = time
+                    entry_speed[idx] = float(step["vel"][idx][0])
+                contact[idx] = True
             if contact_start[idx] is not None:
                 tau = time - float(contact_start[idx])
                 if 0.0 <= tau < 0.50:
@@ -62,6 +64,7 @@ def summarize(run: dict) -> dict[str, float]:
         "mean_wall_impulse": mean(wall_impulse),
         "mean_post_contact_wall_impulse": mean(post_contact_wall_impulse),
         "wall_contact_rate": mean([1.0 if value else 0.0 for value in contact]),
+        "mean_wall_entry_speed_mps": mean(entry_speed),
     }
 
 
@@ -101,6 +104,9 @@ def main() -> None:
                         "post_contact_impulse_reduction": 0.0,
                         "collision_impulse_reduction": 0.0,
                         "wall_contact_rate": wall_summary["velocity_robust"]["wall_contact_rate"],
+                        "mean_wall_entry_speed_mps": wall_summary["velocity_robust"][
+                            "mean_wall_entry_speed_mps"
+                        ],
                     },
                     "facet_low_kp": {
                         "post_contact_impulse_reduction": 1.0
@@ -110,6 +116,9 @@ def main() -> None:
                         - wall_summary["facet_low_kp"]["mean_wall_impulse"]
                         / max(wall_summary["velocity_robust"]["mean_wall_impulse"], 1e-9),
                         "wall_contact_rate": wall_summary["facet_low_kp"]["wall_contact_rate"],
+                        "mean_wall_entry_speed_mps": wall_summary["facet_low_kp"][
+                            "mean_wall_entry_speed_mps"
+                        ],
                     },
                 }
             },

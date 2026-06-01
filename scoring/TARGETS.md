@@ -32,3 +32,19 @@ paper's safety constraint: lower collision impulse under compliant settings.
 - **How to run evaluation**: run `scripts/reproduce.sh` or generate rollout
   artifacts with `scripts/method.sh` and `scripts/baseline.sh`, then run
   `scripts/evaluate.sh`.
+
+## tracking_target_ablation
+
+Tests whether alternative reference-target choices reproduce the paper's
+tracking-ablation behavior: integrated position/velocity targets are evaluated
+against open-loop, closed-loop, and raw acceleration target variants.
+
+- **Metric**: `pos_error_norm` (lower is better, normalized by the smoothed
+  target variant)
+- **Metric**: `vel_error_norm` (lower is better, normalized by the smoothed
+  target variant)
+- **Metric**: `acc_error_norm` (lower is better, normalized by the smoothed
+  target variant)
+- **Metric**: `success_rate` (higher is better as a stability constraint)
+- **How to run evaluation**: run `scripts/reproduce.sh` or generate rollout
+  artifacts with `scripts/method.sh`, then run `scripts/evaluate.sh`.

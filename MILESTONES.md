@@ -40,3 +40,7 @@
 ### [2026-06-01 00:00] - core_claim
 - Final verification passed after aligning the scored wall-entry-speed metric between `reference.json` and `scores.json`.
 - Removed obsolete tracked trajectory logs and documented reduced-benchmark reference values in `VERIFICATION.md`.
+
+### [2026-06-01 00:15] - core_claim
+- Added a reduced Table 2-style tracking-target ablation producer for smoothed, open-loop, closed-loop, and acceleration target variants.
+- Extended artifact-based evaluation and scoring docs for the ablation, but did not raise the milestone before a compute job verifies the new artifacts and scores.

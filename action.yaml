@@ -1,6 +1,6 @@
 # The system reads this file after the turn ends.
-action: done
+action: submit
 gpus: 0
-test: false
+test: true
 milestone: core_claim
-notes: "Final verification passed at core_claim; scoring/docs cleaned and validate.py --compare passes."
+notes: "Verify reduced Table 2-style tracking-target ablation artifacts and refreshed split evaluation; keep milestone at core_claim until results are inspected."

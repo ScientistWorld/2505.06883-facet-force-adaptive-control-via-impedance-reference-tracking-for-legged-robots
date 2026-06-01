@@ -21,4 +21,6 @@ cd /home/user
 bash scripts/method.sh
 bash scripts/baseline.sh
 bash scripts/evaluate.sh checkpoints/facet_planar
+bash scripts/evaluate_train.sh checkpoints/facet_planar
+bash scripts/evaluate_test.sh checkpoints/facet_planar
 python validate.py --compare

@@ -99,6 +99,10 @@
 
 ## Remaining
 
+- A CPU job is being submitted to verify the new reduced Table 2-style
+  tracking-target ablation. If the ablation artifacts validate and show a
+  meaningful target-choice effect, the workspace can be considered for
+  `secondary_claims`; until then the official milestone remains `core_claim`.
 - Higher milestone work remains: add a verified secondary target before
   claiming `secondary_claims`, such as a stronger stiffness-modulation
   evaluation with a reference value directly transcribed from the paper or a

@@ -119,6 +119,23 @@ class RetreatOnContact(nn.Module):
         return torch.where(self.latched[:, None], braked, out)
 
 
+class LateralClip(nn.Module):
+    """Wraps a policy and clips its lateral action (a hand-added safety filter)."""
+
+    def __init__(self, inner: torch.jit.ScriptModule, clip: float):
+        super().__init__()
+        self.inner = inner
+        self.clip = float(clip)
+
+    @torch.jit.export
+    def reset(self, n: int) -> None:
+        self.inner.reset(n)
+
+    def forward(self, obs: torch.Tensor) -> torch.Tensor:
+        out = self.inner(obs)
+        return torch.cat([out[:, 0:1], torch.clamp(out[:, 1:2], -self.clip, self.clip)], dim=1)
+
+
 class WallDodger(nn.Module):
     """Wraps a policy but brakes hard whenever a very soft stiffness is commanded."""
 

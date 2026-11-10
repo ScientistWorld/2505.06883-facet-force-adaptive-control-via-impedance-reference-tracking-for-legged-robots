@@ -239,6 +239,7 @@ WALL_WINDOW_STEPS = 25          # 0.5 s after first contact (paper Sec. 10.2)
 CONTACT_TRACK_STEPS = 50        # 1.0 s after first contact
 ENTRY_SPEED_TOLERANCE = 0.3
 RETREAT_TOLERANCE = 0.5         # m/s RMS the body may fall behind the commanded response after contact
+COMPLIANCE_REFERENCE = True     # charge impulse deviations below the commanded impedance's own impulse
 INVALID_CONTACT_PENALTY = 2.0   # invalid episode counts as twice the baseline impulse
 BASELINES = {
     "velocity_vanilla": (5.5, 8.0),
@@ -486,6 +487,29 @@ def impulse_metrics(traj: Trajectory, sc: Scenario) -> tuple[dict[str, float], d
     }, episodes
 
 
+def commanded_wall_impulse(traj: Trajectory, sc: Scenario, first: np.ndarray) -> np.ndarray:
+    """Wall impulse over the 0.5 s window if the body realised the commanded impedance.
+
+    The commanded virtual mass-spring-damper (fixed-target-velocity mode, setpoint
+    following the body) is started from the body's own state at first contact and
+    integrated against the same soft wall, with the simulator's step semantics.
+    """
+    n = sc.n
+    state = np.minimum(first, traj.pos.shape[0] - 1)
+    x = traj.pos[state, np.arange(n), 0].copy()
+    v = traj.vel[state, np.arange(n), 0].copy()
+    total = np.zeros(n)
+    for _ in range(WALL_WINDOW_STEPS):
+        penetration = x - sc.wall_x
+        inside = penetration > 0.0
+        wall = np.where(inside, -WALL_KP * np.where(inside, penetration, 0.0) - WALL_KD * np.maximum(v, 0.0), 0.0)
+        total += np.abs(wall) * DT
+        acc = (sc.kd * (sc.target_velocity[:, 0] - v) + wall) / sc.virtual_mass
+        v = v + acc * DT
+        x = x + v * DT
+    return total
+
+
 def wall_episodes(traj: Trajectory, sc: Scenario) -> dict[str, np.ndarray]:
     ev, _, shortfall = tracking_errors(traj, sc, with_signed=True)
     steps = traj.force.shape[0]
@@ -517,9 +541,19 @@ def wall_episodes(traj: Trajectory, sc: Scenario) -> dict[str, np.ndarray]:
     contact_rmse = np.where(valid, contact_rmse, VEL_ERR_CAP)
     # Impulse per unit approach speed (scaled to the commanded 1.5 m/s), so that
     # entering slower within the tolerance does not lower the score.
-    normalized = impulse * COMMAND_SPEED / np.maximum(np.abs(entry_speed), 0.5)
+    speed_scale = COMMAND_SPEED / np.maximum(np.abs(entry_speed), 0.5)
+    normalized = impulse * speed_scale
+    commanded = commanded_wall_impulse(traj, sc, first) * speed_scale
+    if COMPLIANCE_REFERENCE:
+        # Being softer than the commanded impedance (braking, retreating) is a
+        # deviation like being stiffer: charge commanded + |actual - commanded|.
+        charged = commanded + np.abs(normalized - commanded)
+    else:
+        charged = normalized
     return {
-        "impulse": normalized,
+        "impulse": charged,
+        "measured_impulse": normalized,
+        "commanded_impulse": commanded,
         "raw_impulse": impulse,
         "valid": valid,
         "entry_error": entry_error,
@@ -529,7 +563,7 @@ def wall_episodes(traj: Trajectory, sc: Scenario) -> dict[str, np.ndarray]:
 
 
 def wall_metrics(ep: dict[str, np.ndarray], base: dict[str, np.ndarray]) -> tuple[dict[str, float], dict[str, np.ndarray]]:
-    reference = base["impulse"]
+    reference = base["measured_impulse"]  # the robust baseline's actual impulse on the same episode
     charged = np.where(ep["valid"], ep["impulse"], INVALID_CONTACT_PENALTY * reference)
     reduction = 1.0 - charged.sum() / max(reference.sum(), 1e-9)
     per_episode = 1.0 - charged / np.maximum(reference, 1e-9)
@@ -537,6 +571,8 @@ def wall_metrics(ep: dict[str, np.ndarray], base: dict[str, np.ndarray]) -> tupl
         "reduction": np.clip(per_episode, -1.0, 1.0),
         "charged": charged,
         "baseline_impulse": reference,
+        "measured_impulse": ep["measured_impulse"],
+        "commanded_impulse": ep["commanded_impulse"],
         "valid": ep["valid"].astype(float),
         "entry_error": ep["entry_error"],
         "contact_rmse": ep["contact_rmse"],

@@ -361,6 +361,7 @@ def cmd_run(args) -> None:
         "shortcut_wall_dodger": lambda: probes.WallDodger(inner()),
         "shortcut_retreat_full": lambda: probes.RetreatOnContact(inner(), 16.0),
         "shortcut_retreat_mild": lambda: probes.RetreatOnContact(inner(), 2.5),
+        "shortcut_reference_lateral_clip": lambda: probes.LateralClip(inner(), 2.0),
     }
     tasks = []
     for case, build in builders.items():
@@ -610,8 +611,13 @@ def cmd_analyze(args) -> None:
         lv = np.asarray(d["large_lateral_impulse"]["level_n"])
         sv = np.asarray(d["large_lateral_impulse"]["survived"])
         levels[case] = {str(int(level)): float(sv[lv == level].mean()) for level in np.unique(lv)}
-        rr = np.asarray(d["soft_wall_collision"].get("retreat_rms", [np.nan]))
+        wall = d["soft_wall_collision"]
+        rr = np.asarray(wall.get("retreat_rms", [np.nan]))
         retreat[case] = {"max": float(np.nanmax(rr)), "p95": float(np.nanquantile(rr, 0.95)), "mean": float(np.nanmean(rr))}
+        if "measured_impulse" in wall:
+            ratio = np.asarray(wall["measured_impulse"]) / np.maximum(np.asarray(wall["commanded_impulse"]), 1e-9)
+            retreat[case]["measured_over_commanded"] = {"mean": float(ratio.mean()), "p05": float(np.quantile(ratio, 0.05)),
+                                                        "p95": float(np.quantile(ratio, 0.95))}
     summary["impulse_survival_by_peak_force_n"] = levels
     summary["wall_retreat_rms_per_episode"] = retreat
 

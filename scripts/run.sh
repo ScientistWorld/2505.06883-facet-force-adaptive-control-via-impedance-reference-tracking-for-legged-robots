@@ -1,5 +1,5 @@
 #!/bin/bash
-# Final hardening job (resumable after preemption):
+# Final hardening job (resumable after preemption; trained policies on disk are reused):
 #   1. consistency checks between data/, method/, eval/train and eval/test
 #   2. train 5 reference seeds + quality variants (single-threaded, parallel),
 #      score them, ship the median reference seed as checkpoints/facet, build

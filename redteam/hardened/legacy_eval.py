@@ -3,9 +3,10 @@
 
 Usage: python legacy_eval.py <evaluator.py> <checkpoint_root> <output.json> <details.json>
 
-Loads the given evaluator module unchanged, sets RETREAT_TOLERANCE to infinity
-(the behaviour of the gym before the gate was added) and runs its main(). Used
-only to report the before-fix score of the retreat shortcut.
+Loads the given evaluator module unchanged, disables the two wall-collision
+checks added in the final hardening round (RETREAT_TOLERANCE = inf and
+COMPLIANCE_REFERENCE = False, i.e. the gym's behaviour before them) and runs its
+main(). Used only to report before-fix scores of the wall-retreat shortcuts.
 """
 
 import importlib.util
@@ -18,5 +19,6 @@ module = importlib.util.module_from_spec(spec)
 sys.modules["legacy_eval_module"] = module
 spec.loader.exec_module(module)
 module.RETREAT_TOLERANCE = math.inf
+module.COMPLIANCE_REFERENCE = False
 sys.argv = [path, root, "--output", output, "--details", details]
 sys.exit(module.main())

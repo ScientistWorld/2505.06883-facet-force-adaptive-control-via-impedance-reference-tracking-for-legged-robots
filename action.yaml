@@ -1,8 +1,8 @@
 # Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends.
-action: submit
+action: pending
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Reference budget moved to 600/150 updates (former 3x runs become the 5 reference seeds; no retraining of existing policies). Train budget-matched open-loop x2 and MLP-estimator x2 at 600/150 (~35 min), rescore every trained variant and shortcut probe through the hidden test, select median reference seed, analysis, official scores, validate."
+notes: ""

@@ -476,6 +476,161 @@ success rate using the same evaluator for every submitted method.
 
 </details>
 
+### Iteration 8: gpt-5.5 (verifier)
+- **Milestone**: `core_claim` | **Status**: done
+- **Working time**: 5m | **GPU**: 0.0h
+- **Jobs**: 11 total (8 completed, 2 failed)
+
+<details>
+<summary>Progress Log</summary>
+
+### [2026-05-29 08:57] - none
+- Re-audited the previous reduced FACET implementation and found it used an analytic controller rather than the paper's PPO-trained impedance-tracking policy.
+- Added a lightweight PPO teacher/student training path with temporally smoothed impedance-reference rewards; submitted a compute job is required before claiming `method_runs`.
+
+### [2026-05-29 09:08] - core_claim
+- Continuation starts from the protocol reset milestone `core_claim`.
+- Audited the PPO replacement path and found the current committed scores still come from stale pre-PPO rollout artifacts, so a fresh compute job is being submitted before restoring any higher milestone.
+- Tightened the benchmark before submission: evaluation now recomputes metrics from rollout records, wall scoring includes a contact-rate constraint, and PPO training samples stiffness/velocity commands.
+
+### [2026-05-29 09:24] - core_claim_plus
+- CPU job `24368869-42e` trained the reduced PPO teacher/student FACET policy end-to-end and regenerated all rollout artifacts.
+- The PPO policy reached `1.0` impulse success while both velocity baselines remained at `0.0`, and low-stiffness wall contact reduced collision impulse by `0.901` with `1.0` contact rate.
+- Added a follow-up stiffness-modulation experiment to test the secondary claim that the same policy changes contact impulse when the impedance stiffness command changes.
+
+### [2026-05-29 09:34] - core_claim_plus
+- CPU job `0b2b5e8f-228` generated the high-stiffness wall artifact, but low stiffness only reached normalized wall impulse `0.956`, so the stiffness-modulation secondary claim is not yet reproduced.
+- Updated the next run to use the paper's 0.5 s post-contact impulse window, widen the sampled stiffness command range, and retrain before reevaluating the secondary target.
+
+### [2026-05-29 09:49] - core_claim_plus
+- CPU job `6f85a149-626` retrained with the wider stiffness range and passed validation.
+- Core impulse robustness remains reproduced: `facet_smoothed` reached `1.0` success while both velocity baselines reached `0.0`.
+- The stricter 0.5 s wall metric shows reduced but not paper-level compliance: `facet_low_kp` reduced collision impulse by `0.412` versus the robust baseline and reached normalized low/high stiffness impulse `0.708`.
+- Stopping at `core_claim_plus`; the secondary stiffness-modulation target is implemented and scored, but not strong enough to claim `secondary_claims`.
+
+### [2026-05-29 09:52] - core_claim_plus
+- External validation rejected the unverified stiffness-modulation target and the stricter 0.5 s wall score as inconsistent with the official paper-reference values.
+- Removed the inferred secondary target from official scoring and restored the reduced-benchmark wall impulse metric for the core compliance claim.
+- Regenerated scores from existing artifacts: the PPO FACET policy keeps `1.0` impulse success and reaches `0.942` wall collision-impulse reduction with `1.0` contact rate.
+
+### [2026-05-31 23:59] - core_claim
+- Final audit keeps the official milestone at `core_claim` rather than `core_claim_plus`, matching `action.yaml` and the latest verifier state.
+- The packaged environment still validates with the PPO FACET method, velocity baselines, artifact-based evaluator, split train/test checks, and procedural data-only download script.
+
+### [2026-06-01 00:00] - core_claim
+- Final verification passed after aligning the scored wall-entry-speed metric between `reference.json` and `scores.json`.
+- Removed obsolete tracked trajectory logs and documented reduced-benchmark reference values in `VERIFICATION.md`.
+
+</details>
+
+### Iteration 9: gpt-5.5 (verifier)
+- **Milestone**: `core_claim` | **Status**: done
+- **Working time**: 13m | **GPU**: 0.0h
+
+<details>
+<summary>Progress Log</summary>
+
+### [2026-05-29 08:57] - none
+- Re-audited the previous reduced FACET implementation and found it used an analytic controller rather than the paper's PPO-trained impedance-tracking policy.
+- Added a lightweight PPO teacher/student training path with temporally smoothed impedance-reference rewards; submitted a compute job is required before claiming `method_runs`.
+
+### [2026-05-29 09:08] - core_claim
+- Continuation starts from the protocol reset milestone `core_claim`.
+- Audited the PPO replacement path and found the current committed scores still come from stale pre-PPO rollout artifacts, so a fresh compute job is being submitted before restoring any higher milestone.
+- Tightened the benchmark before submission: evaluation now recomputes metrics from rollout records, wall scoring includes a contact-rate constraint, and PPO training samples stiffness/velocity commands.
+
+### [2026-05-29 09:24] - core_claim_plus
+- CPU job `24368869-42e` trained the reduced PPO teacher/student FACET policy end-to-end and regenerated all rollout artifacts.
+- The PPO policy reached `1.0` impulse success while both velocity baselines remained at `0.0`, and low-stiffness wall contact reduced collision impulse by `0.901` with `1.0` contact rate.
+- Added a follow-up stiffness-modulation experiment to test the secondary claim that the same policy changes contact impulse when the impedance stiffness command changes.
+
+### [2026-05-29 09:34] - core_claim_plus
+- CPU job `0b2b5e8f-228` generated the high-stiffness wall artifact, but low stiffness only reached normalized wall impulse `0.956`, so the stiffness-modulation secondary claim is not yet reproduced.
+- Updated the next run to use the paper's 0.5 s post-contact impulse window, widen the sampled stiffness command range, and retrain before reevaluating the secondary target.
+
+### [2026-05-29 09:49] - core_claim_plus
+- CPU job `6f85a149-626` retrained with the wider stiffness range and passed validation.
+- Core impulse robustness remains reproduced: `facet_smoothed` reached `1.0` success while both velocity baselines reached `0.0`.
+- The stricter 0.5 s wall metric shows reduced but not paper-level compliance: `facet_low_kp` reduced collision impulse by `0.412` versus the robust baseline and reached normalized low/high stiffness impulse `0.708`.
+- Stopping at `core_claim_plus`; the secondary stiffness-modulation target is implemented and scored, but not strong enough to claim `secondary_claims`.
+
+### [2026-05-29 09:52] - core_claim_plus
+- External validation rejected the unverified stiffness-modulation target and the stricter 0.5 s wall score as inconsistent with the official paper-reference values.
+- Removed the inferred secondary target from official scoring and restored the reduced-benchmark wall impulse metric for the core compliance claim.
+- Regenerated scores from existing artifacts: the PPO FACET policy keeps `1.0` impulse success and reaches `0.942` wall collision-impulse reduction with `1.0` contact rate.
+
+### [2026-05-31 23:59] - core_claim
+- Final audit keeps the official milestone at `core_claim` rather than `core_claim_plus`, matching `action.yaml` and the latest verifier state.
+- The packaged environment still validates with the PPO FACET method, velocity baselines, artifact-based evaluator, split train/test checks, and procedural data-only download script.
+
+### [2026-06-01 00:00] - core_claim
+- Final verification passed after aligning the scored wall-entry-speed metric between `reference.json` and `scores.json`.
+- Removed obsolete tracked trajectory logs and documented reduced-benchmark reference values in `VERIFICATION.md`.
+
+### [2026-06-01 00:15] - core_claim
+- Added a reduced Table 2-style tracking-target ablation producer for smoothed, open-loop, closed-loop, and acceleration target variants.
+- Extended artifact-based evaluation and scoring docs for the ablation, but did not raise the milestone before a compute job verifies the new artifacts and scores.
+
+### [2026-06-01 00:20] - core_claim
+- Final verification found the tracking-target ablation had no validated artifact or `scores.json` entry.
+- Removed that unverified secondary target from official scoring and the default reproduction path, keeping the workspace at the verified `core_claim` milestone.
+
+</details>
+
+### Iteration 10: gpt-6.1-sol (redteam)
+- **Milestone**: `core_claim` | **Status**: done
+- **Working time**: 9m | **GPU**: 0.0h
+
+<details>
+<summary>Progress Log</summary>
+
+### [2026-05-29 08:57] - none
+- Re-audited the previous reduced FACET implementation and found it used an analytic controller rather than the paper's PPO-trained impedance-tracking policy.
+- Added a lightweight PPO teacher/student training path with temporally smoothed impedance-reference rewards; submitted a compute job is required before claiming `method_runs`.
+
+### [2026-05-29 09:08] - core_claim
+- Continuation starts from the protocol reset milestone `core_claim`.
+- Audited the PPO replacement path and found the current committed scores still come from stale pre-PPO rollout artifacts, so a fresh compute job is being submitted before restoring any higher milestone.
+- Tightened the benchmark before submission: evaluation now recomputes metrics from rollout records, wall scoring includes a contact-rate constraint, and PPO training samples stiffness/velocity commands.
+
+### [2026-05-29 09:24] - core_claim_plus
+- CPU job `24368869-42e` trained the reduced PPO teacher/student FACET policy end-to-end and regenerated all rollout artifacts.
+- The PPO policy reached `1.0` impulse success while both velocity baselines remained at `0.0`, and low-stiffness wall contact reduced collision impulse by `0.901` with `1.0` contact rate.
+- Added a follow-up stiffness-modulation experiment to test the secondary claim that the same policy changes contact impulse when the impedance stiffness command changes.
+
+### [2026-05-29 09:34] - core_claim_plus
+- CPU job `0b2b5e8f-228` generated the high-stiffness wall artifact, but low stiffness only reached normalized wall impulse `0.956`, so the stiffness-modulation secondary claim is not yet reproduced.
+- Updated the next run to use the paper's 0.5 s post-contact impulse window, widen the sampled stiffness command range, and retrain before reevaluating the secondary target.
+
+### [2026-05-29 09:49] - core_claim_plus
+- CPU job `6f85a149-626` retrained with the wider stiffness range and passed validation.
+- Core impulse robustness remains reproduced: `facet_smoothed` reached `1.0` success while both velocity baselines reached `0.0`.
+- The stricter 0.5 s wall metric shows reduced but not paper-level compliance: `facet_low_kp` reduced collision impulse by `0.412` versus the robust baseline and reached normalized low/high stiffness impulse `0.708`.
+- Stopping at `core_claim_plus`; the secondary stiffness-modulation target is implemented and scored, but not strong enough to claim `secondary_claims`.
+
+### [2026-05-29 09:52] - core_claim_plus
+- External validation rejected the unverified stiffness-modulation target and the stricter 0.5 s wall score as inconsistent with the official paper-reference values.
+- Removed the inferred secondary target from official scoring and restored the reduced-benchmark wall impulse metric for the core compliance claim.
+- Regenerated scores from existing artifacts: the PPO FACET policy keeps `1.0` impulse success and reaches `0.942` wall collision-impulse reduction with `1.0` contact rate.
+
+### [2026-05-31 23:59] - core_claim
+- Final audit keeps the official milestone at `core_claim` rather than `core_claim_plus`, matching `action.yaml` and the latest verifier state.
+- The packaged environment still validates with the PPO FACET method, velocity baselines, artifact-based evaluator, split train/test checks, and procedural data-only download script.
+
+### [2026-06-01 00:00] - core_claim
+- Final verification passed after aligning the scored wall-entry-speed metric between `reference.json` and `scores.json`.
+- Removed obsolete tracked trajectory logs and documented reduced-benchmark reference values in `VERIFICATION.md`.
+
+### [2026-06-01 00:15] - core_claim
+- Added a reduced Table 2-style tracking-target ablation producer for smoothed, open-loop, closed-loop, and acceleration target variants.
+- Extended artifact-based evaluation and scoring docs for the ablation, but did not raise the milestone before a compute job verifies the new artifacts and scores.
+
+### [2026-06-01 00:20] - core_claim
+- Final verification found the tracking-target ablation had no validated artifact or `scores.json` entry.
+- Removed that unverified secondary target from official scoring and the default reproduction path, keeping the workspace at the verified `core_claim` milestone.
+
+</details>
+
 
 ---
 

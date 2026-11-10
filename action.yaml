@@ -1,4 +1,2 @@
-action: submit
-gpus: 0
-test: false
-notes: "Bundled scoring audit: 3 full reference seeds, stronger/weaker variants, baseline, controller enumeration, and artifact/missing-value/degenerate shortcuts; per-case no-argument hidden test."
+action: done
+notes: "Audit complete: scoring fails quality ordering; 19 hidden-test runs, 3 reference seeds, 9 paying shortcuts and 3 failed shortcuts documented in REDTEAM.md; gym files restored; commit fabd731."

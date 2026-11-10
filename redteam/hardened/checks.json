@@ -1,0 +1,10 @@
+{
+  "impulse_max_abs_diff_data_vs_test": 0.0,
+  "impulse_max_abs_diff_train_vs_test": 0.0,
+  "ok": true,
+  "reward_targets_vs_eval_metric_max_abs_diff": 0.0,
+  "tracking_max_abs_diff_data_vs_test": 0.0,
+  "tracking_max_abs_diff_train_vs_test": 0.0,
+  "wall_max_abs_diff_data_vs_test": 0.0,
+  "wall_max_abs_diff_train_vs_test": 0.0
+}

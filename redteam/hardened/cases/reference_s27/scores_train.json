@@ -1,0 +1,83 @@
+{
+  "experiments": {
+    "impedance_tracking": {
+      "results": {
+        "facet": {
+          "position_tracking_rmse_m": 0.22072712869527442,
+          "success_rate": 1.0,
+          "velocity_tracking_rmse_mps": 0.7227584735823431
+        },
+        "velocity_robust": {
+          "position_tracking_rmse_m": 0.953827278515691,
+          "success_rate": 0.5,
+          "velocity_tracking_rmse_mps": 2.0139091012921564
+        },
+        "velocity_vanilla": {
+          "position_tracking_rmse_m": 1.1800732346772398,
+          "success_rate": 0.3671875,
+          "velocity_tracking_rmse_mps": 2.43818895592504
+        }
+      }
+    },
+    "large_lateral_impulse": {
+      "results": {
+        "facet": {
+          "impulse_recovery_score": 0.17151694749549487,
+          "success_rate": 1.0,
+          "velocity_tracking_rmse_mps": 1.1512098362998133
+        },
+        "velocity_robust": {
+          "impulse_recovery_score": 0.06405100493371461,
+          "success_rate": 0.125,
+          "velocity_tracking_rmse_mps": 4.316138821010714
+        },
+        "velocity_vanilla": {
+          "impulse_recovery_score": 0.02918637794109313,
+          "success_rate": 0.0625,
+          "velocity_tracking_rmse_mps": 4.61673560596487
+        }
+      }
+    },
+    "soft_wall_collision": {
+      "results": {
+        "facet": {
+          "contact_tracking_rmse_mps": 5.0,
+          "entry_speed_error_mps": 1.1341938783402736,
+          "post_contact_impulse_reduction": -1.0,
+          "wall_contact_rate": 0.0
+        },
+        "velocity_robust": {
+          "contact_tracking_rmse_mps": 1.8263383407870348,
+          "entry_speed_error_mps": 0.013462566539494854,
+          "post_contact_impulse_reduction": 0.0,
+          "wall_contact_rate": 1.0
+        },
+        "velocity_vanilla": {
+          "contact_tracking_rmse_mps": 1.8263383407870348,
+          "entry_speed_error_mps": 0.013462566539494854,
+          "post_contact_impulse_reduction": 0.0,
+          "wall_contact_rate": 1.0
+        }
+      }
+    }
+  },
+  "metadata": {
+    "episodes": {
+      "impedance_tracking": 256,
+      "large_lateral_impulse": 256,
+      "soft_wall_collision": 128
+    },
+    "methods": {
+      "facet": {
+        "status": "ok"
+      },
+      "velocity_robust": {
+        "status": "ok"
+      },
+      "velocity_vanilla": {
+        "status": "ok"
+      }
+    },
+    "slice": "train"
+  }
+}

@@ -65,6 +65,60 @@ class AnalyticImpedance(nn.Module):
         return kd * (obs[:, 0:2] - obs[:, 5:7]) / mass + 0.05 * obs[:, 5:7]
 
 
+class AnalyticClipped(nn.Module):
+    """Analytic impedance law with the lateral action clipped below the fall threshold."""
+
+    def __init__(self, clip: float):
+        super().__init__()
+        self.clip = float(clip)
+
+    @torch.jit.export
+    def reset(self, n: int) -> None:
+        pass
+
+    def forward(self, obs: torch.Tensor) -> torch.Tensor:
+        kd = obs[:, 3:4] * 20.0
+        mass = obs[:, 4:5] * 20.0
+        acc = kd * (obs[:, 0:2] - obs[:, 5:7]) / mass + 0.05 * obs[:, 5:7]
+        lateral = torch.clamp(acc[:, 1:2], -self.clip, self.clip)
+        return torch.cat([acc[:, 0:1], lateral], dim=1)
+
+
+class RetreatOnContact(nn.Module):
+    """Wraps a policy; on the wall-test command, brakes once an unexplained
+    deceleration (wall contact) is seen, instead of following the compliance."""
+
+    def __init__(self, inner: torch.jit.ScriptModule, brake: float):
+        super().__init__()
+        self.inner = inner
+        self.brake = float(brake)
+        self.register_buffer("prev_vx", torch.zeros(1))
+        self.register_buffer("latched", torch.zeros(1, dtype=torch.bool))
+        self.steps = 0
+
+    @torch.jit.export
+    def reset(self, n: int) -> None:
+        self.inner.reset(n)
+        self.prev_vx = torch.zeros(n)
+        self.latched = torch.zeros(n, dtype=torch.bool)
+        self.steps = 0
+
+    def forward(self, obs: torch.Tensor) -> torch.Tensor:
+        out = self.inner(obs)
+        vx = obs[:, 5]
+        if self.prev_vx.shape[0] != obs.shape[0]:
+            self.prev_vx = vx.clone()
+            self.latched = torch.zeros(obs.shape[0], dtype=torch.bool)
+            self.steps = 0
+        wall_cmd = (torch.abs(obs[:, 2] * 40.0 - 0.5) < 0.01) & (torch.abs(obs[:, 0] - 1.5) < 0.01) & (torch.abs(obs[:, 1]) < 0.01)
+        if self.steps > 0:
+            self.latched = self.latched | (wall_cmd & ((vx - self.prev_vx) < -0.04))
+        self.steps = self.steps + 1
+        self.prev_vx = vx.clone()
+        braked = torch.cat([torch.clamp(out[:, 0:1] - self.brake, -8.0, 8.0), out[:, 1:2]], dim=1)
+        return torch.where(self.latched[:, None], braked, out)
+
+
 class WallDodger(nn.Module):
     """Wraps a policy but brakes hard whenever a very soft stiffness is commanded."""
 

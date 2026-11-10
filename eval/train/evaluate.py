@@ -238,6 +238,7 @@ RECOVERY_SCALE = 0.5
 WALL_WINDOW_STEPS = 25          # 0.5 s after first contact (paper Sec. 10.2)
 CONTACT_TRACK_STEPS = 50        # 1.0 s after first contact
 ENTRY_SPEED_TOLERANCE = 0.3
+RETREAT_TOLERANCE = 0.5         # m/s RMS the body may fall behind the commanded response after contact
 INVALID_CONTACT_PENALTY = 2.0   # invalid episode counts as twice the baseline impulse
 BASELINES = {
     "velocity_vanilla": (5.5, 8.0),
@@ -346,6 +347,7 @@ class ScriptedPolicy:
         torch.jit.load(io.BytesIO(self.blob), map_location="cpu")
 
     def make(self, n: int) -> ActFn:
+        torch.manual_seed(0)  # stochastic policies are scored reproducibly
         module = torch.jit.load(io.BytesIO(self.blob), map_location="cpu")
         module.eval()
         if hasattr(module, "reset"):
@@ -420,13 +422,15 @@ def rollout(policy, scenario: Scenario, steps: int) -> Trajectory:
 # ---------------------------------------------------------------------------
 # Metrics.
 # ---------------------------------------------------------------------------
-def tracking_errors(traj: Trajectory, sc: Scenario) -> tuple[np.ndarray, np.ndarray]:
+def tracking_errors(traj: Trajectory, sc: Scenario, with_signed: bool = False):
     """Squared velocity/position errors against the commanded impedance response.
 
     For every state k and window L in LAGS, the commanded virtual
     mass-spring-damper is integrated over the last L control steps from the
     body's own state, under the same external forces, and compared with the
     body's state at k. Rows are states k = 1..T; states after a fall get the cap.
+    With ``with_signed`` also returns the window-averaged signed x-velocity
+    shortfall (commanded response minus body), zero after a fall.
     """
     pos, vel, force = traj.pos, traj.vel, traj.force
     steps = force.shape[0]
@@ -437,6 +441,7 @@ def tracking_errors(traj: Trajectory, sc: Scenario) -> tuple[np.ndarray, np.ndar
     k = np.arange(1, steps + 1)
     ev = np.zeros((steps, sc.n))
     ep = np.zeros((steps, sc.n))
+    sx = np.zeros((steps, sc.n))
     for lag in LAGS:
         s = np.maximum(k - lag, 0)
         x = pos[s].copy()
@@ -453,11 +458,15 @@ def tracking_errors(traj: Trajectory, sc: Scenario) -> tuple[np.ndarray, np.ndar
             x = np.where(active, x_new, x)
         ev += np.sum((vel[k] - v) ** 2, axis=-1)
         ep += np.sum((pos[k] - x) ** 2, axis=-1)
+        sx += v[..., 0] - vel[k][..., 0]
     ev /= len(LAGS)
     ep /= len(LAGS)
+    sx /= len(LAGS)
     after_fall = k[:, None] > traj.fail_state[None, :]
     ev = np.where(after_fall, VEL_ERR_CAP**2, np.minimum(ev, VEL_ERR_CAP**2))
     ep = np.where(after_fall, POS_ERR_CAP**2, np.minimum(ep, POS_ERR_CAP**2))
+    if with_signed:
+        return ev, ep, np.where(after_fall, 0.0, np.clip(sx, -VEL_ERR_CAP, VEL_ERR_CAP))
     return ev, ep
 
 
@@ -478,7 +487,7 @@ def impulse_metrics(traj: Trajectory, sc: Scenario) -> tuple[dict[str, float], d
 
 
 def wall_episodes(traj: Trajectory, sc: Scenario) -> dict[str, np.ndarray]:
-    ev, _ = tracking_errors(traj, sc)
+    ev, _, shortfall = tracking_errors(traj, sc, with_signed=True)
     steps = traj.force.shape[0]
     n = sc.n
     wall = np.abs(traj.wall[:, :, 0])
@@ -491,20 +500,32 @@ def wall_episodes(traj: Trajectory, sc: Scenario) -> dict[str, np.ndarray]:
     impulse = (wall * in_window).sum(axis=0) * DT
     entry_error = np.where(has_contact, np.abs(entry_speed - sc.target_velocity[:, 0]), COMMAND_SPEED)
     entry_error = np.minimum(entry_error, COMMAND_SPEED)
+    k = np.arange(1, steps + 1)[:, None]
+    contact_window = (k > first[None, :]) & (k <= first[None, :] + CONTACT_TRACK_STEPS)
+    count = np.maximum(contact_window.sum(0), 1)
+    contact_rmse = np.sqrt((ev * contact_window).sum(0) / count)
+    # Falling behind the commanded compliant response after contact (braking or
+    # retreating from the wall instead of following the commanded impedance).
+    retreat_rms = np.sqrt((np.maximum(shortfall, 0.0) ** 2 * contact_window).sum(0) / count)
     valid = (
         has_contact
         & (first + WALL_WINDOW_STEPS <= steps)
         & (entry_error <= ENTRY_SPEED_TOLERANCE)
         & (traj.fail_state > first + WALL_WINDOW_STEPS)
+        & (retreat_rms <= RETREAT_TOLERANCE)
     )
-    k = np.arange(1, steps + 1)[:, None]
-    contact_window = (k > first[None, :]) & (k <= first[None, :] + CONTACT_TRACK_STEPS)
-    contact_rmse = np.sqrt((ev * contact_window).sum(0) / np.maximum(contact_window.sum(0), 1))
     contact_rmse = np.where(valid, contact_rmse, VEL_ERR_CAP)
     # Impulse per unit approach speed (scaled to the commanded 1.5 m/s), so that
     # entering slower within the tolerance does not lower the score.
     normalized = impulse * COMMAND_SPEED / np.maximum(np.abs(entry_speed), 0.5)
-    return {"impulse": normalized, "raw_impulse": impulse, "valid": valid, "entry_error": entry_error, "contact_rmse": contact_rmse}
+    return {
+        "impulse": normalized,
+        "raw_impulse": impulse,
+        "valid": valid,
+        "entry_error": entry_error,
+        "contact_rmse": contact_rmse,
+        "retreat_rms": np.where(has_contact, retreat_rms, VEL_ERR_CAP),
+    }
 
 
 def wall_metrics(ep: dict[str, np.ndarray], base: dict[str, np.ndarray]) -> tuple[dict[str, float], dict[str, np.ndarray]]:
@@ -514,9 +535,12 @@ def wall_metrics(ep: dict[str, np.ndarray], base: dict[str, np.ndarray]) -> tupl
     per_episode = 1.0 - charged / np.maximum(reference, 1e-9)
     episodes = {
         "reduction": np.clip(per_episode, -1.0, 1.0),
+        "charged": charged,
+        "baseline_impulse": reference,
         "valid": ep["valid"].astype(float),
         "entry_error": ep["entry_error"],
         "contact_rmse": ep["contact_rmse"],
+        "retreat_rms": ep["retreat_rms"],
     }
     return {
         "post_contact_impulse_reduction": float(np.clip(reduction, -1.0, 1.0)),

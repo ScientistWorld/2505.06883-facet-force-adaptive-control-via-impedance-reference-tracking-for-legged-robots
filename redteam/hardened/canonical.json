@@ -1,19 +1,19 @@
 {
-  "case": "reference_s17",
+  "case": "reference_s27",
   "order": [
     "reference_s7",
-    "reference_s27",
     "reference_s17",
+    "reference_s27",
     "reference_s37",
     "reference_s47"
   ],
   "ranks_relative_to_first_seed": {
-    "reference_s17": 1.4189214420082044,
-    "reference_s27": 1.2043939478590897,
-    "reference_s37": 1.5666548948993353,
-    "reference_s47": 1.963685025308399,
+    "reference_s17": 0.1655075128071969,
+    "reference_s27": 0.4808549957619284,
+    "reference_s37": 0.6120757102893883,
+    "reference_s47": 0.79724060644187,
     "reference_s7": 0.0
   },
   "rule": "median reference seed by rank (trained cohort scales, test slice)",
-  "seed": 17
+  "seed": 27
 }

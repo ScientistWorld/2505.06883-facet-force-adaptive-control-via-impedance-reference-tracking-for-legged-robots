@@ -218,13 +218,18 @@ CHUNK = 64
 COMMAND_SPEED = 1.5
 IMPULSE_COMMAND_KP = 4.0
 IMPULSE_LEVELS_N = (100.0, 200.0, 300.0, 400.0, 600.0, 800.0, 1000.0, 1200.0)
-IMPULSE_PER_LEVEL = 32
+IMPULSE_PER_LEVEL = 64          # paper Sec. 10.2: 64 randomised trials per disturbance level
 IMPULSE_STEPS = 350
 WALL_COMMAND_KP = 0.5
+# Compliant wall command: the lightest commanded inertia (half the nominal body).
+# With a virtual mass equal to the body's, a passive body already realises the
+# commanded impedance and the test cannot tell force-adaptive control from
+# doing nothing; the paper's virtual masses (1-4 kg) are well below its robot's.
+WALL_VIRTUAL_MASS = 6.0
 WALL_POSITION = 3.0
-WALL_EPISODES = 128
+WALL_EPISODES = 256
 WALL_STEPS = 200
-TRACK_EPISODES = 256
+TRACK_EPISODES = 512
 TRACK_STEPS = 350
 VIRTUAL_MASS_CHOICES = (6.0, 12.0, 24.0)   # inertia shaping: 0.5x, 1x, 2x the nominal body
 LAGS = (8, 16, 32)
@@ -294,6 +299,7 @@ def wall_scenario(seed: int) -> Scenario:
     sc = blank_scenario(n)
     randomize_body(rng, sc)
     set_stiffness(sc, WALL_COMMAND_KP)
+    sc.virtual_mass[:] = WALL_VIRTUAL_MASS
     sc.target_velocity[:, 0] = COMMAND_SPEED
     sc.init_vel[:, 0] = COMMAND_SPEED
     sc.wall_x[:] = WALL_POSITION

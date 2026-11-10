@@ -155,6 +155,57 @@ class WallDodger(nn.Module):
         return torch.where(soft[:, None], braked, out)
 
 
+class DOBImpedance(nn.Module):
+    """Hand-written disturbance-observer impedance controller (headroom probe).
+
+    Estimates the external force per unit body mass from the last velocity
+    change, the previous action (nominal first-order actuator lag) and nominal
+    drag, then commands the acceleration that makes a nominal 12 kg body follow
+    the commanded virtual mass-spring-damper (fixed-target-velocity mode). The
+    lateral action is limited below the fall threshold. A hand-engineered
+    model-based controller is out of bounds as a submission (DIRECTION.md); it
+    is scored only to measure how far above the learned reference the test reaches.
+    """
+
+    def __init__(self, alpha: float = 0.4, lateral_clip: float = 4.0):
+        super().__init__()
+        self.alpha = float(alpha)
+        self.lateral_clip = float(lateral_clip)
+        self.mass = 12.0
+        self.drag = 0.05
+        self.dt = 0.02
+        self.register_buffer("prev_v", torch.zeros(1, 2))
+        self.register_buffer("acc_hat", torch.zeros(1, 2))
+        self.register_buffer("f_hat", torch.zeros(1, 2))
+        self.steps = 0
+
+    @torch.jit.export
+    def reset(self, n: int) -> None:
+        self.prev_v = torch.zeros(n, 2)
+        self.acc_hat = torch.zeros(n, 2)
+        self.f_hat = torch.zeros(n, 2)
+        self.steps = 0
+
+    def forward(self, obs: torch.Tensor) -> torch.Tensor:
+        n = obs.shape[0]
+        if self.prev_v.shape[0] != n:
+            self.reset(n)
+        v = obs[:, 5:7]
+        last_action = obs[:, 14:16]
+        acc_now = self.acc_hat + self.alpha * (last_action - self.acc_hat)
+        if self.steps > 0:
+            self.f_hat = (v - self.prev_v) / self.dt - acc_now + self.drag * self.prev_v
+        self.acc_hat = acc_now
+        self.prev_v = v.clone()
+        self.steps = self.steps + 1
+        kd = obs[:, 3:4] * 20.0
+        virtual_mass = obs[:, 4:5] * 20.0
+        desired = (kd * (obs[:, 0:2] - v) + self.mass * self.f_hat) / virtual_mass
+        action = desired - self.f_hat + self.drag * v
+        lateral = torch.clamp(action[:, 1:2], -self.lateral_clip, self.lateral_clip)
+        return torch.clamp(torch.cat([action[:, 0:1], lateral], dim=1), -8.0, 8.0)
+
+
 class NaNPolicy(nn.Module):
     @torch.jit.export
     def reset(self, n: int) -> None:

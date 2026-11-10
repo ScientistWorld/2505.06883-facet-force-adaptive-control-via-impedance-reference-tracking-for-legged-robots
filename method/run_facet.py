@@ -10,7 +10,9 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from method.ppo_facet import PPOConfig, train
+from method.ppo_facet import NET_SIZES, PPOConfig, train
+
+DEFAULT_NET_SIZE = "reduced"
 
 
 def main() -> None:
@@ -23,6 +25,7 @@ def main() -> None:
     parser.add_argument("--rollout-steps", type=int, default=PPOConfig.rollout_steps)
     parser.add_argument("--estimator", choices=["gru", "mlp"], default=PPOConfig.estimator)
     parser.add_argument("--target-mode", choices=["smoothed", "open_loop"], default=PPOConfig.target_mode)
+    parser.add_argument("--net-size", choices=sorted(NET_SIZES), default=DEFAULT_NET_SIZE)
     parser.add_argument("--threads", type=int, default=1)
     parser.add_argument("--force", action="store_true", help="retrain even if policy.pt exists")
     args = parser.parse_args()
@@ -40,6 +43,7 @@ def main() -> None:
         estimator=args.estimator,
         target_mode=args.target_mode,
         threads=args.threads,
+        **NET_SIZES[args.net_size],
     )
     summary = train(args.output_dir, config)
     print(f"[facet] exported {policy} after {summary['train_seconds']} s", flush=True)

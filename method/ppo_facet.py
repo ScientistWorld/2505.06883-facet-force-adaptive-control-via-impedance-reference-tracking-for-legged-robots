@@ -44,6 +44,16 @@ EPISODE_STEPS = 350
 # ~15 kg robot); on this benchmark's actuation scale it is 0.5x/1x/2x the body.
 VIRTUAL_MASS_CHOICES = (6.0, 12.0, 24.0)
 
+# Network sizes. "paper" is Appendix 10.1.1: policy MLP (256, 256, 256), critic
+# MLP (512, 256, 256), privileged encoder MLP with 256 hidden units, GRU
+# estimator with 256 hidden units. "reduced" halves every width.
+NET_SIZES = {
+    "paper": {"actor_hidden": (256, 256, 256), "critic_hidden": (512, 256, 256),
+              "encoder_hidden": 256, "estimator_hidden": 256},
+    "reduced": {"actor_hidden": (128, 128, 128), "critic_hidden": (256, 128, 128),
+                "encoder_hidden": 128, "estimator_hidden": 128},
+}
+
 
 @dataclass
 class PPOConfig:

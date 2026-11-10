@@ -226,6 +226,7 @@ WALL_EPISODES = 128
 WALL_STEPS = 200
 TRACK_EPISODES = 256
 TRACK_STEPS = 350
+VIRTUAL_MASS_CHOICES = (6.0, 12.0, 24.0)   # inertia shaping: 0.5x, 1x, 2x the nominal body
 LAGS = (8, 16, 32)
 VEL_ERR_CAP = 5.0
 POS_ERR_CAP = 2.5
@@ -304,6 +305,7 @@ def tracking_scenario(seed: int) -> Scenario:
     sc = blank_scenario(n)
     randomize_body(rng, sc)
     set_stiffness(sc, np.exp(rng.uniform(math.log(0.5), math.log(32.0), size=n)))
+    sc.virtual_mass[:] = rng.choice(np.asarray(VIRTUAL_MASS_CHOICES), size=n)
     sc.target_velocity[:, 0] = rng.uniform(-0.5, 2.0, size=n)
     sc.target_velocity[:, 1] = rng.uniform(-0.5, 0.5, size=n)
     sc.init_vel[:, 0] = rng.uniform(-0.5, 2.0, size=n)
@@ -368,12 +370,11 @@ class VelocityBaseline:
         self.lateral_gain = lateral_gain
 
     def make(self, n: int) -> ActFn:
+        gains = np.asarray([self.forward_gain, self.lateral_gain], dtype=np.float32)
+
         def act(obs: np.ndarray) -> np.ndarray:
-            obs = obs.astype(np.float64)
-            action = np.zeros((n, ACTION_DIM))
-            action[:, 0] = self.forward_gain * (obs[:, 0] - obs[:, 5])
-            action[:, 1] = self.lateral_gain * (obs[:, 1] - obs[:, 6])
-            return action
+            obs = obs.astype(np.float32)
+            return (gains * (obs[:, 0:2] - obs[:, 5:7])).astype(np.float64)
 
         return act
 

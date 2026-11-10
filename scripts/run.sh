@@ -6,7 +6,7 @@ set -euo pipefail
 
 cd /home/user
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1
-MODE="${HARDEN_MODE:-smoke}"
+MODE="${HARDEN_MODE:-full}"
 echo "[run] $(date -u +%FT%TZ) mode=${MODE} nproc=$(nproc)"
 python -c "import os, torch, numpy; print('torch', torch.__version__, 'numpy', numpy.__version__, 'affinity', len(os.sched_getaffinity(0)))"
 
@@ -17,6 +17,7 @@ if [ "${MODE}" = "smoke" ]; then
   python -u -m method.run_facet --output-dir outputs/timing_probe_mlp --teacher-updates 2 --student-updates 1 --estimator mlp --force
 fi
 
+if [ "${MODE}" = "full" ]; then rm -rf redteam/hardened/cases redteam/hardened/summary.json redteam/hardened/summary.md; fi
 FORCE=1 bash scripts/method.sh
 bash scripts/baseline.sh
 bash scripts/evaluate.sh

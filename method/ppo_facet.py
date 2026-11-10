@@ -40,14 +40,17 @@ from data.facet_planar_env import (
 from method.facet_reference import ImpedanceCommand, ReferenceTargets
 
 EPISODE_STEPS = 350
+# Virtual mass is part of the command (paper Sec. 10.1.4 samples {1, 2, 4} kg on a
+# ~15 kg robot); on this benchmark's actuation scale it is 0.5x/1x/2x the body.
+VIRTUAL_MASS_CHOICES = (6.0, 12.0, 24.0)
 
 
 @dataclass
 class PPOConfig:
     n_envs: int = 256
     rollout_steps: int = 96
-    teacher_updates: int = 160
-    student_updates: int = 40
+    teacher_updates: int = 200
+    student_updates: int = 50
     epochs: int = 4
     minibatches: int = 4
     gamma: float = 0.98
@@ -80,7 +83,7 @@ def sample_training_scenarios(rng: np.random.Generator, n: int) -> Scenario:
     sc = blank_scenario(n)
     randomize_body(rng, sc)
     set_stiffness(sc, np.exp(rng.uniform(math.log(0.5), math.log(32.0), size=n)))
-    sc.virtual_mass[:] = NOMINAL_MASS
+    sc.virtual_mass[:] = rng.choice(np.asarray(VIRTUAL_MASS_CHOICES), size=n)
     sc.target_velocity[:, 0] = rng.uniform(-0.5, 2.0, size=n)
     sc.target_velocity[:, 1] = rng.uniform(-0.5, 0.5, size=n)
     sc.init_vel[:, 0] = rng.uniform(-0.5, 2.0, size=n)
@@ -441,7 +444,7 @@ def train(output_dir: Path, config: PPOConfig) -> dict:
                 est_loss.backward()
                 nn.utils.clip_grad_norm_(est_params, config.max_grad_norm)
                 est_opt.step()
-                est_loss_value = float(est_loss)
+                est_loss_value = float(est_loss.detach())
 
             record = {
                 "stage": stage,

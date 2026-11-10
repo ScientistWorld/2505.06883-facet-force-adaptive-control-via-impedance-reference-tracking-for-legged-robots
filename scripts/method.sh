@@ -13,8 +13,8 @@ if [ "${FORCE:-0}" = "1" ]; then EXTRA+=(--force); fi
 python -u -m method.run_facet \
   --output-dir checkpoints/facet \
   --seed "${SEED:-7}" \
-  --teacher-updates "${TEACHER_UPDATES:-160}" \
-  --student-updates "${STUDENT_UPDATES:-40}" \
+  --teacher-updates "${TEACHER_UPDATES:-200}" \
+  --student-updates "${STUDENT_UPDATES:-50}" \
   --n-envs "${N_ENVS:-256}" \
   --rollout-steps "${ROLLOUT_STEPS:-96}" \
   "${EXTRA[@]}"

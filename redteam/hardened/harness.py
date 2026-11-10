@@ -35,20 +35,20 @@ HD = ROOT / "redteam" / "hardened"
 sys.path.insert(0, str(ROOT))
 
 BUDGETS = {
-    "full": {"teacher": 160, "student": 40, "envs": 256, "steps": 96},
+    "full": {"teacher": 200, "student": 50, "envs": 256, "steps": 96},
     "smoke": {"teacher": 2, "student": 1, "envs": 32, "steps": 16},
 }
 # name, seed, overrides (scale multiplies the update budget)
 TRAIN_RUNS = [
+    ("better_longer", 7, {"scale": 3}),
+    ("better_longer", 17, {"scale": 3}),
+    ("better_longer", 27, {"scale": 3}),
     ("reference", 17, {}),
     ("reference", 27, {}),
     ("weaker_untrained", 7, {"teacher": 0, "student": 0}),
     ("weaker_mlp_estimator", 7, {"estimator": "mlp"}),
     ("weaker_mlp_estimator", 17, {"estimator": "mlp"}),
     ("weaker_open_loop", 7, {"target_mode": "open_loop"}),
-    ("better_longer", 7, {"scale": 3}),
-    ("better_longer", 17, {"scale": 3}),
-    ("better_longer", 27, {"scale": 3}),
 ]
 GRID_KX = (0.25, 0.5, 1.0, 2.0, 4.0, 5.5)
 GRID_KY = (0.0, 0.1, 0.3, 1.0, 4.0)
@@ -301,7 +301,7 @@ def cmd_run(args) -> None:
     evaluate(install(mode, "brute_force_grid_search", grid_root / best / "policy.pt"), "brute_force_grid_search", "test", mode)
 
     # 4. Trained variants (resumable), then score them.
-    workers = max(1, min(cpu_count(), len(TRAIN_RUNS)))
+    workers = max(1, min(cpu_count(), 4, len(TRAIN_RUNS)))
     threads = max(1, cpu_count() // workers)
     print(f"[harness] training {len(TRAIN_RUNS)} runs with {workers} workers x {threads} threads", flush=True)
     with ThreadPoolExecutor(max_workers=workers) as pool:

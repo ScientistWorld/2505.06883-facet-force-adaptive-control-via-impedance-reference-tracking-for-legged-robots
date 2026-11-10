@@ -3,6 +3,6 @@ set -euo pipefail
 
 cd /home/user
 
-echo "[run] $(date -u +%Y-%m-%dT%H:%M:%SZ) starting core reproduction"
-bash scripts/reproduce.sh
-echo "[run] $(date -u +%Y-%m-%dT%H:%M:%SZ) finished core reproduction"
+export OMP_NUM_THREADS=2
+export MKL_NUM_THREADS=2
+python -u redteam/audit.py batch

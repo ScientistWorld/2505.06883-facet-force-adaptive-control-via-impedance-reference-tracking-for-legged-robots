@@ -347,14 +347,57 @@ def train(output_dir: Path, config: PPOConfig) -> dict:
     h = torch.zeros(n, agent.hidden_size())
     history: list[dict] = []
     started = time.time()
+    elapsed_before = 0.0
+    start_stage, start_update = 0, 0
+    resume_path = output_dir / "resume.pt"
+    if resume_path.exists():
+        # Exact resume after preemption: networks, optimisers, RNGs and the
+        # full environment state are restored from the last saved update.
+        state = torch.load(resume_path, map_location="cpu", weights_only=False)
+        agent.load_state_dict(state["agent"])
+        actor_opt.load_state_dict(state["actor_opt"])
+        critic_opt.load_state_dict(state["critic_opt"])
+        est_opt.load_state_dict(state["est_opt"])
+        task, obs_np, priv_np, h = state["task"], state["obs"], state["priv"], state["h"]
+        history = state["history"]
+        torch.set_rng_state(state["torch_rng"])
+        np.random.set_state(state["np_rng"])
+        start_stage, start_update = state["stage_index"], state["next_update"]
+        elapsed_before = state["elapsed"]
+        print(f"[facet] resumed from {resume_path} at stage {start_stage} update {start_update}", flush=True)
+
+    def save_resume(stage_index: int, next_update: int) -> None:
+        state = {
+            "agent": agent.state_dict(),
+            "actor_opt": actor_opt.state_dict(),
+            "critic_opt": critic_opt.state_dict(),
+            "est_opt": est_opt.state_dict(),
+            "task": task,
+            "obs": obs_np,
+            "priv": priv_np,
+            "h": h,
+            "history": history,
+            "torch_rng": torch.get_rng_state(),
+            "np_rng": np.random.get_state(),
+            "stage_index": stage_index,
+            "next_update": next_update,
+            "elapsed": elapsed_before + time.time() - started,
+        }
+        tmp = resume_path.with_suffix(".tmp")
+        torch.save(state, tmp)
+        tmp.replace(resume_path)
+
     print(
         f"[facet] seed={config.seed} estimator={config.estimator} targets={config.target_mode} "
         f"envs={n} steps/update={batch} teacher={config.teacher_updates} student={config.student_updates}",
         flush=True,
     )
 
-    for stage, updates in (("teacher", config.teacher_updates), ("student", config.student_updates)):
-        for update in range(updates):
+    stages = (("teacher", config.teacher_updates), ("student", config.student_updates))
+    for stage_index, (stage, updates) in enumerate(stages):
+        if stage_index < start_stage:
+            continue
+        for update in range(start_update if stage_index == start_stage else 0, updates):
             on_buf, pn_buf, lat_buf, u_buf, logp_buf, val_buf, rew_buf, done_buf = ([] for _ in range(8))
             h0 = h.clone()
             stat_acc = {"tracking": 0.0, "vel_err": 0.0, "falls": 0.0}
@@ -452,16 +495,18 @@ def train(output_dir: Path, config: PPOConfig) -> dict:
                 "reward": float(rewards.mean()),
                 "done": float(done_seq.mean()),
                 "estimator_loss": est_loss_value,
-                "std": float(agent.log_std.exp().mean()),
-                "elapsed_s": round(time.time() - started, 1),
+                "std": float(agent.log_std.detach().exp().mean()),
+                "elapsed_s": round(elapsed_before + time.time() - started, 1),
                 **{key: round(val, 5) for key, val in stat_acc.items()},
             }
             history.append(record)
             if (update + 1) % 10 == 0 or update + 1 == updates:
                 print(f"[facet] {json.dumps(record)}", flush=True)
+                save_resume(stage_index, update + 1)
 
     export_student(agent, output_dir / "policy.pt")
     torch.save({"agent": agent.state_dict(), "config": asdict(config)}, output_dir / "agent_state.pt")
-    summary = {"config": asdict(config), "history": history, "train_seconds": round(time.time() - started, 1)}
+    summary = {"config": asdict(config), "history": history, "train_seconds": round(elapsed_before + time.time() - started, 1)}
     (output_dir / "train_log.json").write_text(json.dumps(summary, indent=1))
+    resume_path.unlink(missing_ok=True)
     return summary

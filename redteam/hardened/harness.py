@@ -40,8 +40,8 @@ BUDGETS = {
 }
 # name, seed, overrides (scale multiplies the update budget)
 TRAIN_RUNS = [
-    ("better_longer", 7, {"scale": 3}),
     ("better_longer", 17, {"scale": 3}),
+    ("better_longer", 7, {"scale": 3}),
     ("better_longer", 27, {"scale": 3}),
     ("reference", 17, {}),
     ("reference", 27, {}),
@@ -167,6 +167,11 @@ def train_job(mode: str, name: str, seed: int, overrides: dict, threads: int) ->
 def evaluate(root: Path, case: str, split: str, mode: str, output: Path | None = None) -> dict:
     output = output or (HD / "cases" / case / f"scores_{split}.json")
     details = out_dir(mode) / "cases" / case / f"details_{split}.json"
+    status_path = HD / "cases" / case / f"status_{split}.json"
+    if status_path.exists() and output.exists() and details.exists():
+        previous = json.loads(status_path.read_text())
+        if previous.get("returncode") == 0:
+            return previous  # resumed job: this case/split is already scored
     output.parent.mkdir(parents=True, exist_ok=True)
     started = time.time()
     proc = subprocess.run(

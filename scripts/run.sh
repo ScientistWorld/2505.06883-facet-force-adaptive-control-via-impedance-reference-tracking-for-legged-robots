@@ -17,8 +17,9 @@ if [ "${MODE}" = "smoke" ]; then
   python -u -m method.run_facet --output-dir outputs/timing_probe_mlp --teacher-updates 2 --student-updates 1 --estimator mlp --force
 fi
 
-if [ "${MODE}" = "full" ]; then rm -rf redteam/hardened/cases redteam/hardened/summary.json redteam/hardened/summary.md; fi
-FORCE=1 bash scripts/method.sh
+# Resumable: an existing checkpoints/facet/policy.pt is kept (training itself
+# also checkpoints every 10 updates) and already-scored cases are skipped.
+bash scripts/method.sh
 bash scripts/baseline.sh
 bash scripts/evaluate.sh
 bash scripts/evaluate_train.sh

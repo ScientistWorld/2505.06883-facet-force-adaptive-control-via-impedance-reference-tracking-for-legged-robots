@@ -1,0 +1,4166 @@
+{
+  "canonical": {
+    "case": "reference_s17",
+    "order": [
+      "reference_s7",
+      "reference_s27",
+      "reference_s17",
+      "reference_s37",
+      "reference_s47"
+    ],
+    "ranks_relative_to_first_seed": {
+      "reference_s17": 1.4189214420082044,
+      "reference_s27": 1.2043939478590897,
+      "reference_s37": 1.5666548948993353,
+      "reference_s47": 1.963685025308399,
+      "reference_s7": 0.0
+    },
+    "rule": "median reference seed by rank (trained cohort scales, test slice)",
+    "seed": 17
+  },
+  "cases": {
+    "alt_mlp_estimator_s17": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.1194040701780067,
+        "impedance_tracking/success_rate": 1.0,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.38158447653605526,
+        "large_lateral_impulse/impulse_recovery_score": 0.5912912276954567,
+        "large_lateral_impulse/success_rate": 0.859375,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 0.8539948611740487,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.20167164937835547,
+        "soft_wall_collision/entry_speed_error_mps": 0.11932853504660271,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.21736364897645966,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.24140063292533256,
+      "rank_genuine": 0.2595204785421233,
+      "rank_trained": -0.7227828463127332,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 12.9
+      }
+    },
+    "alt_mlp_estimator_s7": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.11578418377053157,
+        "impedance_tracking/success_rate": 1.0,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.3706527623366632,
+        "large_lateral_impulse/impulse_recovery_score": 0.545118678224916,
+        "large_lateral_impulse/success_rate": 0.8125,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 1.0766400337524216,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.14262583055892053,
+        "soft_wall_collision/entry_speed_error_mps": 0.04635890117556009,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.22330434428200907,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.12170821950341815,
+      "rank_genuine": 0.27813282670077544,
+      "rank_trained": 0.23235265679900616,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 21.6
+      }
+    },
+    "better_3x_s17": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.11755439760125538,
+        "impedance_tracking/success_rate": 0.97265625,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.3155030053789931,
+        "large_lateral_impulse/impulse_recovery_score": 0.5695597363439071,
+        "large_lateral_impulse/success_rate": 0.96875,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 0.4945575113125449,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.10882513217533732,
+        "soft_wall_collision/entry_speed_error_mps": 0.0956636707998772,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.22153604322040366,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.32906464148057907,
+      "rank_genuine": 0.5452722198710901,
+      "rank_trained": 0.5651321659414852,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 23.0
+      }
+    },
+    "better_3x_s27": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.14323444923246753,
+        "impedance_tracking/success_rate": 0.953125,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.3595639344658208,
+        "large_lateral_impulse/impulse_recovery_score": 0.5915424991164073,
+        "large_lateral_impulse/success_rate": 0.9375,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 0.5781820853748985,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.11045695696940822,
+        "soft_wall_collision/entry_speed_error_mps": 0.08248731091756557,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.22603182759753815,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.32277908439698566,
+      "rank_genuine": 0.5294578315379064,
+      "rank_trained": 0.7259344212013298,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 21.6
+      }
+    },
+    "better_3x_s37": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.1062943188656694,
+        "impedance_tracking/success_rate": 0.9765625,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.2945316301620996,
+        "large_lateral_impulse/impulse_recovery_score": 0.5627588713352394,
+        "large_lateral_impulse/success_rate": 0.7890625,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 1.171316057877894,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.09933005679151713,
+        "soft_wall_collision/entry_speed_error_mps": 0.02060808972503391,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.22567432545830313,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.1408912784463711,
+      "rank_genuine": 0.4073365671753875,
+      "rank_trained": 0.862742498568611,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 22.8
+      }
+    },
+    "better_3x_s47": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.08569691839754619,
+        "impedance_tracking/success_rate": 0.9921875,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.2565277196832275,
+        "large_lateral_impulse/impulse_recovery_score": 0.6030017457362016,
+        "large_lateral_impulse/success_rate": 0.91796875,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 0.6312170691750933,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.11489820228865935,
+        "soft_wall_collision/entry_speed_error_mps": 0.05853612455247213,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.22240852413799506,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.3714856137985402,
+      "rank_genuine": 0.7454143494251244,
+      "rank_trained": 1.27304547888685,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 21.9
+      }
+    },
+    "better_3x_s7": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.11623161794110569,
+        "impedance_tracking/success_rate": 0.9765625,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.313332999425195,
+        "large_lateral_impulse/impulse_recovery_score": 0.5665557732811953,
+        "large_lateral_impulse/success_rate": 0.87109375,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 0.8464186690290585,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.10551761112686045,
+        "soft_wall_collision/entry_speed_error_mps": 0.10094228589403742,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.22198733093584866,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.21991460678472016,
+      "rank_genuine": 0.3405544282303203,
+      "rank_trained": 0.34131398668338475,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 22.8
+      }
+    },
+    "better_6x_s17": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.13797088570673466,
+        "impedance_tracking/success_rate": 0.95703125,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.34506475297618067,
+        "large_lateral_impulse/impulse_recovery_score": 0.5967326116574377,
+        "large_lateral_impulse/success_rate": 0.90625,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 0.693745328487916,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.09882129340732819,
+        "soft_wall_collision/entry_speed_error_mps": 0.014978494313860988,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.22430133630434435,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.31372611242471493,
+      "rank_genuine": 0.6641057152341767,
+      "rank_trained": 0.7522578813371283,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 22.8
+      }
+    },
+    "better_6x_s27": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.08454978764342094,
+        "impedance_tracking/success_rate": 0.984375,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.2446510394647501,
+        "large_lateral_impulse/impulse_recovery_score": 0.6124230776397844,
+        "large_lateral_impulse/success_rate": 0.96484375,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 0.45089771327234385,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.10216855293315064,
+        "soft_wall_collision/entry_speed_error_mps": 0.022657665681460014,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.2215858598622974,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.44588505852526306,
+      "rank_genuine": 0.9569336277283534,
+      "rank_trained": 1.4838066924331408,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 22.4
+      }
+    },
+    "better_6x_s7": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.06701730578782657,
+        "impedance_tracking/success_rate": 0.99609375,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.20757713399836206,
+        "large_lateral_impulse/impulse_recovery_score": 0.5901273946485333,
+        "large_lateral_impulse/success_rate": 0.83203125,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 0.9651955091025632,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.10087026096995688,
+        "soft_wall_collision/entry_speed_error_mps": 0.05320250468248668,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.22393246404284384,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.2684149465832938,
+      "rank_genuine": 0.6181576258466999,
+      "rank_trained": 1.4863461440352514,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 22.8
+      }
+    },
+    "brute_force_grid_search": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.12869943311112567,
+        "impedance_tracking/success_rate": 1.0,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.41094410079740873,
+        "large_lateral_impulse/impulse_recovery_score": 0.5735042660914226,
+        "large_lateral_impulse/success_rate": 0.7578125,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 1.2758567652244188,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.23343842166104758,
+        "soft_wall_collision/entry_speed_error_mps": 0.046174066282042577,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.2210167248190792,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.09640007709921103,
+      "rank_genuine": 0.15446844216426253,
+      "rank_trained": -0.8025321947485039,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 6.6
+      }
+    },
+    "reference_s17": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "legacy_metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.10603561873922966,
+        "impedance_tracking/success_rate": 0.99609375,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.3310640526090374,
+        "large_lateral_impulse/impulse_recovery_score": 0.50925559983624,
+        "large_lateral_impulse/success_rate": 0.76171875,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 1.2926983861216075,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.09662667154323361,
+        "soft_wall_collision/entry_speed_error_mps": 0.09084875269717195,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.278926563416632,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "legacy_rank_all_vs_legacy_reference": 0.0,
+      "legacy_rank_genuine_vs_legacy_reference": 0.0,
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.10603561873922966,
+        "impedance_tracking/success_rate": 0.99609375,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.3310640526090374,
+        "large_lateral_impulse/impulse_recovery_score": 0.50925559983624,
+        "large_lateral_impulse/success_rate": 0.76171875,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 1.2926983861216075,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.09662667154323361,
+        "soft_wall_collision/entry_speed_error_mps": 0.09084875269717195,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.22216723055354348,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.0,
+      "rank_genuine": 0.0,
+      "rank_trained": 0.0,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 22.9
+      }
+    },
+    "reference_s27": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.1447875347949691,
+        "impedance_tracking/success_rate": 0.97265625,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.3981130875204741,
+        "large_lateral_impulse/impulse_recovery_score": 0.5342217165923703,
+        "large_lateral_impulse/success_rate": 0.74609375,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 1.3467155234259471,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.12339070440560983,
+        "soft_wall_collision/entry_speed_error_mps": 0.0276256305946242,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.22481305067546486,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.009450741204149295,
+      "rank_genuine": 0.08573845736660263,
+      "rank_trained": -0.21452749414911457,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 22.1
+      }
+    },
+    "reference_s37": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.11571815362186291,
+        "impedance_tracking/success_rate": 0.9921875,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.352204755080339,
+        "large_lateral_impulse/impulse_recovery_score": 0.5392645081349827,
+        "large_lateral_impulse/success_rate": 0.80859375,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 1.0896197158794185,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.12177488527766547,
+        "soft_wall_collision/entry_speed_error_mps": 0.06973230267296032,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.22275409437019245,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.10440444905411696,
+      "rank_genuine": 0.20348426332981717,
+      "rank_trained": 0.14773345289113096,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 21.6
+      }
+    },
+    "reference_s47": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.10719730374736061,
+        "impedance_tracking/success_rate": 0.99609375,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.332091972330015,
+        "large_lateral_impulse/impulse_recovery_score": 0.5537684305977607,
+        "large_lateral_impulse/success_rate": 0.77734375,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 1.1973754665699867,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.11421149562701999,
+        "soft_wall_collision/entry_speed_error_mps": 0.060254868508856294,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.2244901096060512,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.10748298212523326,
+      "rank_genuine": 0.24906847856294598,
+      "rank_trained": 0.5447635833001946,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 21.8
+      }
+    },
+    "reference_s7": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.12709461752884582,
+        "impedance_tracking/success_rate": 0.984375,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.37160681059473577,
+        "large_lateral_impulse/impulse_recovery_score": 0.45218778580042196,
+        "large_lateral_impulse/success_rate": 0.71484375,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 1.5180411140484118,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.1435291962261152,
+        "soft_wall_collision/entry_speed_error_mps": 0.02635348604307077,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.21801332152489739,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": -0.17367329444791177,
+      "rank_genuine": -0.21987669554665704,
+      "rank_trained": -1.4189214420082044,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 22.6
+      }
+    },
+    "shortcut_analytic_clipped": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.11658709667637257,
+        "impedance_tracking/success_rate": 1.0,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.3718485074988831,
+        "large_lateral_impulse/impulse_recovery_score": 0.5606675055219831,
+        "large_lateral_impulse/success_rate": 0.98828125,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 0.49203750292424225,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.09597049007053052,
+        "soft_wall_collision/entry_speed_error_mps": 0.010157069362697148,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.22325690296182987,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.3427392401838126,
+      "rank_genuine": 0.7699032244513588,
+      "rank_trained": 1.1956992703259584,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 20.6
+      }
+    },
+    "shortcut_analytic_impedance": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.12176592786718117,
+        "impedance_tracking/success_rate": 0.99609375,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.37963125964129074,
+        "large_lateral_impulse/impulse_recovery_score": 0.5921003270875714,
+        "large_lateral_impulse/success_rate": 0.7890625,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 1.1355037140750448,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.09597049007053052,
+        "soft_wall_collision/entry_speed_error_mps": 0.010157069362697148,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.22325690296182987,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.18997301968717376,
+      "rank_genuine": 0.4617483988492687,
+      "rank_trained": 0.602811327050522,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 21.0
+      }
+    },
+    "shortcut_baseline_tamper": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.10603561873922966,
+        "impedance_tracking/success_rate": 0.99609375,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.3310640526090374,
+        "large_lateral_impulse/impulse_recovery_score": 0.50925559983624,
+        "large_lateral_impulse/success_rate": 0.76171875,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 1.2926983861216075,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.09662667154323361,
+        "soft_wall_collision/entry_speed_error_mps": 0.09084875269717195,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.22216723055354348,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.0,
+      "rank_genuine": 0.0,
+      "rank_trained": 0.0,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 21.1
+      }
+    },
+    "shortcut_broken_policy": {
+      "evaluator_status": {
+        "reason": "RuntimeError: PytorchStreamReader failed reading zip archive: failed finding central directory. This is an internal miniz error. If you are seeing this error, there is a high likelihood that your checkpoint file is corrupted. This can happen if the checkpoint was not saved properly, was transferred incorrectly, or the file was modified after saving.",
+        "status": "failed"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 2.5,
+        "impedance_tracking/success_rate": 0.0,
+        "impedance_tracking/velocity_tracking_rmse_mps": 5.0,
+        "large_lateral_impulse/impulse_recovery_score": 0.0,
+        "large_lateral_impulse/success_rate": 0.0,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 5.0,
+        "soft_wall_collision/contact_tracking_rmse_mps": 5.0,
+        "soft_wall_collision/entry_speed_error_mps": 1.5,
+        "soft_wall_collision/post_contact_impulse_reduction": -1.0,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "rank_all": -5.234071688428476,
+      "rank_genuine": -23.806936625521463,
+      "rank_trained": -233.60121671093088,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 19.0
+      }
+    },
+    "shortcut_forged_traces": {
+      "evaluator_status": {
+        "reason": "PolicyError: missing policy file /home/user/outputs/hardening/cases/shortcut_forged_traces/root/facet/policy.pt",
+        "status": "failed"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 2.5,
+        "impedance_tracking/success_rate": 0.0,
+        "impedance_tracking/velocity_tracking_rmse_mps": 5.0,
+        "large_lateral_impulse/impulse_recovery_score": 0.0,
+        "large_lateral_impulse/success_rate": 0.0,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 5.0,
+        "soft_wall_collision/contact_tracking_rmse_mps": 5.0,
+        "soft_wall_collision/entry_speed_error_mps": 1.5,
+        "soft_wall_collision/post_contact_impulse_reduction": -1.0,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "rank_all": -5.234071688428476,
+      "rank_genuine": -23.806936625521463,
+      "rank_trained": -233.60121671093088,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 18.8
+      }
+    },
+    "shortcut_missing_policy": {
+      "evaluator_status": {
+        "reason": "PolicyError: missing policy file /home/user/outputs/hardening/cases/shortcut_missing_policy/root/facet/policy.pt",
+        "status": "failed"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 2.5,
+        "impedance_tracking/success_rate": 0.0,
+        "impedance_tracking/velocity_tracking_rmse_mps": 5.0,
+        "large_lateral_impulse/impulse_recovery_score": 0.0,
+        "large_lateral_impulse/success_rate": 0.0,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 5.0,
+        "soft_wall_collision/contact_tracking_rmse_mps": 5.0,
+        "soft_wall_collision/entry_speed_error_mps": 1.5,
+        "soft_wall_collision/post_contact_impulse_reduction": -1.0,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "rank_all": -5.234071688428476,
+      "rank_genuine": -23.806936625521463,
+      "rank_trained": -233.60121671093088,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 19.5
+      }
+    },
+    "shortcut_nan_policy": {
+      "evaluator_status": {
+        "reason": "PolicyError: policy returned a non-finite action",
+        "status": "failed"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 2.5,
+        "impedance_tracking/success_rate": 0.0,
+        "impedance_tracking/velocity_tracking_rmse_mps": 5.0,
+        "large_lateral_impulse/impulse_recovery_score": 0.0,
+        "large_lateral_impulse/success_rate": 0.0,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 5.0,
+        "soft_wall_collision/contact_tracking_rmse_mps": 5.0,
+        "soft_wall_collision/entry_speed_error_mps": 1.5,
+        "soft_wall_collision/post_contact_impulse_reduction": -1.0,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "rank_all": -5.234071688428476,
+      "rank_genuine": -23.806936625521463,
+      "rank_trained": -233.60121671093088,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 19.2
+      }
+    },
+    "shortcut_overspeed": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 1.654303360169303,
+        "impedance_tracking/success_rate": 1.0,
+        "impedance_tracking/velocity_tracking_rmse_mps": 4.362743300446756,
+        "large_lateral_impulse/impulse_recovery_score": 5.1374208470434715e-05,
+        "large_lateral_impulse/success_rate": 1.0,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 4.942902257407365,
+        "soft_wall_collision/contact_tracking_rmse_mps": 5.0,
+        "soft_wall_collision/entry_speed_error_mps": 1.5,
+        "soft_wall_collision/post_contact_impulse_reduction": -1.0,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "rank_all": -3.912410601699048,
+      "rank_genuine": -20.048967820105627,
+      "rank_trained": -215.26293074212688,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 20.9
+      }
+    },
+    "shortcut_passive": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "legacy_metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.21251114856639067,
+        "impedance_tracking/success_rate": 1.0,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.6752760031013383,
+        "large_lateral_impulse/impulse_recovery_score": 0.23083723065697936,
+        "large_lateral_impulse/success_rate": 1.0,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 1.1515588050273133,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.10457962698556375,
+        "soft_wall_collision/entry_speed_error_mps": 0.05501335178696351,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.2768748378540373,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "legacy_rank_all_vs_legacy_reference": -0.4160008566916811,
+      "legacy_rank_genuine_vs_legacy_reference": -0.7618145071764822,
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.21251114856639067,
+        "impedance_tracking/success_rate": 1.0,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.6752760031013383,
+        "large_lateral_impulse/impulse_recovery_score": 0.23083723065697936,
+        "large_lateral_impulse/success_rate": 1.0,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 1.1515588050273133,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.10457962698556375,
+        "soft_wall_collision/entry_speed_error_mps": 0.05501335178696351,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.22390309573731848,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": -0.41375395753667876,
+      "rank_genuine": -0.7373442347281406,
+      "rank_trained": -1.9547363999235428,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 20.2
+      }
+    },
+    "shortcut_reference_lateral_clip": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.10318337405989877,
+        "impedance_tracking/success_rate": 1.0,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.3289109117925982,
+        "large_lateral_impulse/impulse_recovery_score": 0.5268890021874129,
+        "large_lateral_impulse/success_rate": 1.0,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 0.49383939824059386,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.09662667154323361,
+        "soft_wall_collision/entry_speed_error_mps": 0.09084875269717195,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.22216723055354348,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.2848322644397448,
+      "rank_genuine": 0.5221825628934184,
+      "rank_trained": 0.9146311375416195,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 20.6
+      }
+    },
+    "shortcut_retreat_full": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "legacy_metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.10603561873922966,
+        "impedance_tracking/success_rate": 0.99609375,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.3310640526090374,
+        "large_lateral_impulse/impulse_recovery_score": 0.50925559983624,
+        "large_lateral_impulse/success_rate": 0.76171875,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 1.2926983861216075,
+        "soft_wall_collision/contact_tracking_rmse_mps": 2.6409585646681313,
+        "soft_wall_collision/entry_speed_error_mps": 0.09084875269717195,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.7202711360883072,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "legacy_rank_all_vs_legacy_reference": 0.07287753355572593,
+      "legacy_rank_genuine_vs_legacy_reference": 1.8012052080550343,
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.10603561873922966,
+        "impedance_tracking/success_rate": 0.99609375,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.3310640526090374,
+        "large_lateral_impulse/impulse_recovery_score": 0.50925559983624,
+        "large_lateral_impulse/success_rate": 0.76171875,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 1.2926983861216075,
+        "soft_wall_collision/contact_tracking_rmse_mps": 5.0,
+        "soft_wall_collision/entry_speed_error_mps": 0.09084875269717195,
+        "soft_wall_collision/post_contact_impulse_reduction": -1.0,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "rank_all": -1.4499446645158602,
+      "rank_genuine": -10.069837616461733,
+      "rank_trained": -188.72210868503396,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 21.9
+      }
+    },
+    "shortcut_retreat_mild": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "legacy_metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.10603561873922966,
+        "impedance_tracking/success_rate": 0.99609375,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.3310640526090374,
+        "large_lateral_impulse/impulse_recovery_score": 0.50925559983624,
+        "large_lateral_impulse/success_rate": 0.76171875,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 1.2926983861216075,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.17845494748478596,
+        "soft_wall_collision/entry_speed_error_mps": 0.09084875269717195,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.3503836568668216,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "legacy_rank_all_vs_legacy_reference": 0.036313747702883696,
+      "legacy_rank_genuine_vs_legacy_reference": 0.4278844343869005,
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.10603561873922966,
+        "impedance_tracking/success_rate": 0.99609375,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.3310640526090374,
+        "large_lateral_impulse/impulse_recovery_score": 0.50925559983624,
+        "large_lateral_impulse/success_rate": 0.76171875,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 1.2926983861216075,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.17845494748478596,
+        "soft_wall_collision/entry_speed_error_mps": 0.09084875269717195,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.18149055104813194,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": -0.03020697657088982,
+      "rank_genuine": -0.29657186478270736,
+      "rank_trained": -5.842300764095579,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 21.1
+      }
+    },
+    "shortcut_score_file": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.10603561873922966,
+        "impedance_tracking/success_rate": 0.99609375,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.3310640526090374,
+        "large_lateral_impulse/impulse_recovery_score": 0.50925559983624,
+        "large_lateral_impulse/success_rate": 0.76171875,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 1.2926983861216075,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.09662667154323361,
+        "soft_wall_collision/entry_speed_error_mps": 0.09084875269717195,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.22216723055354348,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.0,
+      "rank_genuine": 0.0,
+      "rank_trained": 0.0,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 22.1
+      }
+    },
+    "shortcut_wall_dodger": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.29280847098570284,
+        "impedance_tracking/success_rate": 0.99609375,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.9281276681448609,
+        "large_lateral_impulse/impulse_recovery_score": 0.50925559983624,
+        "large_lateral_impulse/success_rate": 0.76171875,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 1.2926983861216075,
+        "soft_wall_collision/contact_tracking_rmse_mps": 5.0,
+        "soft_wall_collision/entry_speed_error_mps": 1.5,
+        "soft_wall_collision/post_contact_impulse_reduction": -1.0,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "rank_all": -1.8116591589408761,
+      "rank_genuine": -14.201027025078796,
+      "rank_trained": -194.93777488680024,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 22.5
+      }
+    },
+    "shortcut_wrong_shape": {
+      "evaluator_status": {
+        "reason": "PolicyError: policy returned shape (64, 3), expected (64, 2)",
+        "status": "failed"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 2.5,
+        "impedance_tracking/success_rate": 0.0,
+        "impedance_tracking/velocity_tracking_rmse_mps": 5.0,
+        "large_lateral_impulse/impulse_recovery_score": 0.0,
+        "large_lateral_impulse/success_rate": 0.0,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 5.0,
+        "soft_wall_collision/contact_tracking_rmse_mps": 5.0,
+        "soft_wall_collision/entry_speed_error_mps": 1.5,
+        "soft_wall_collision/post_contact_impulse_reduction": -1.0,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "rank_all": -5.234071688428476,
+      "rank_genuine": -23.806936625521463,
+      "rank_trained": -233.60121671093088,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 19.2
+      }
+    },
+    "shortcut_zero_lateral": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.17560633428453615,
+        "impedance_tracking/success_rate": 1.0,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.5605646139661332,
+        "large_lateral_impulse/impulse_recovery_score": 0.233414817587078,
+        "large_lateral_impulse/success_rate": 1.0,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 1.148725232151531,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.23343842166104758,
+        "soft_wall_collision/entry_speed_error_mps": 0.046174066282042577,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.2210167248190792,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": -0.39164253218187745,
+      "rank_genuine": -0.660800700646263,
+      "rank_trained": -2.4665503352347544,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 20.6
+      }
+    },
+    "simple_baseline_robust": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 1.0126023731744114,
+        "impedance_tracking/success_rate": 0.5078125,
+        "impedance_tracking/velocity_tracking_rmse_mps": 2.1533075677701925,
+        "large_lateral_impulse/impulse_recovery_score": 0.06437472809248079,
+        "large_lateral_impulse/success_rate": 0.125,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 4.3165785352343224,
+        "soft_wall_collision/contact_tracking_rmse_mps": 1.8635301791038974,
+        "soft_wall_collision/entry_speed_error_mps": 0.013237973482924431,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.0,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": -2.539952659243219,
+      "rank_genuine": -7.548686258087168,
+      "rank_trained": -58.183608983871466,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 20.3
+      }
+    },
+    "weaker_open_loop_s17": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.14409381622076517,
+        "impedance_tracking/success_rate": 0.98828125,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.43584691067390025,
+        "large_lateral_impulse/impulse_recovery_score": 0.4433904559549421,
+        "large_lateral_impulse/success_rate": 0.6328125,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 1.7282335933011086,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.17860694263026056,
+        "soft_wall_collision/entry_speed_error_mps": 0.12122627396838458,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.22169659542773312,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": -0.29559083179704426,
+      "rank_genuine": -0.6725815448697051,
+      "rank_trained": -1.8637352767139772,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 21.2
+      }
+    },
+    "weaker_open_loop_s7": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.1169598713879228,
+        "impedance_tracking/success_rate": 1.0,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.3739708751141301,
+        "large_lateral_impulse/impulse_recovery_score": 0.39523403413219593,
+        "large_lateral_impulse/success_rate": 0.55859375,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 2.223547587803564,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.12236609351198943,
+        "soft_wall_collision/entry_speed_error_mps": 0.023752896776598358,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.2246640478211278,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": -0.4507271949617759,
+      "rank_genuine": -0.6423459126954079,
+      "rank_trained": -1.0461509294329672,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 22.1
+      }
+    },
+    "weaker_untrained_s7": {
+      "evaluator_status": {
+        "status": "ok"
+      },
+      "metrics": {
+        "impedance_tracking/position_tracking_rmse_m": 0.21757068641788507,
+        "impedance_tracking/success_rate": 1.0,
+        "impedance_tracking/velocity_tracking_rmse_mps": 0.6949288755173831,
+        "large_lateral_impulse/impulse_recovery_score": 0.22937249468050053,
+        "large_lateral_impulse/success_rate": 1.0,
+        "large_lateral_impulse/velocity_tracking_rmse_mps": 1.1480796881106132,
+        "soft_wall_collision/contact_tracking_rmse_mps": 0.14762610863630954,
+        "soft_wall_collision/entry_speed_error_mps": 0.11739164742400264,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.22176679187566573,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": -0.4346734451950479,
+      "rank_genuine": -0.9472121386990587,
+      "rank_trained": -2.7121257310208913,
+      "status": {
+        "returncode": 0,
+        "score_file_exists": true,
+        "seconds": 12.8
+      }
+    }
+  },
+  "cohorts": {
+    "all": [
+      "alt_mlp_estimator_s17",
+      "alt_mlp_estimator_s7",
+      "better_3x_s17",
+      "better_3x_s27",
+      "better_3x_s37",
+      "better_3x_s47",
+      "better_3x_s7",
+      "better_6x_s17",
+      "better_6x_s27",
+      "better_6x_s7",
+      "brute_force_grid_search",
+      "reference_s17",
+      "reference_s27",
+      "reference_s37",
+      "reference_s47",
+      "reference_s7",
+      "shortcut_analytic_clipped",
+      "shortcut_analytic_impedance",
+      "shortcut_baseline_tamper",
+      "shortcut_broken_policy",
+      "shortcut_forged_traces",
+      "shortcut_missing_policy",
+      "shortcut_nan_policy",
+      "shortcut_overspeed",
+      "shortcut_passive",
+      "shortcut_reference_lateral_clip",
+      "shortcut_retreat_full",
+      "shortcut_retreat_mild",
+      "shortcut_score_file",
+      "shortcut_wall_dodger",
+      "shortcut_wrong_shape",
+      "shortcut_zero_lateral",
+      "simple_baseline_robust",
+      "weaker_open_loop_s17",
+      "weaker_open_loop_s7",
+      "weaker_untrained_s7"
+    ],
+    "genuine": [
+      "alt_mlp_estimator_s17",
+      "alt_mlp_estimator_s7",
+      "better_3x_s17",
+      "better_3x_s27",
+      "better_3x_s37",
+      "better_3x_s47",
+      "better_3x_s7",
+      "better_6x_s17",
+      "better_6x_s27",
+      "better_6x_s7",
+      "reference_s17",
+      "reference_s27",
+      "reference_s37",
+      "reference_s47",
+      "reference_s7",
+      "weaker_open_loop_s17",
+      "weaker_open_loop_s7",
+      "weaker_untrained_s7",
+      "simple_baseline_robust",
+      "shortcut_passive",
+      "shortcut_analytic_impedance",
+      "brute_force_grid_search"
+    ],
+    "trained": [
+      "alt_mlp_estimator_s17",
+      "alt_mlp_estimator_s7",
+      "better_3x_s17",
+      "better_3x_s27",
+      "better_3x_s37",
+      "better_3x_s47",
+      "better_3x_s7",
+      "better_6x_s17",
+      "better_6x_s27",
+      "better_6x_s7",
+      "reference_s17",
+      "reference_s27",
+      "reference_s37",
+      "reference_s47",
+      "reference_s7",
+      "weaker_open_loop_s17",
+      "weaker_open_loop_s7",
+      "weaker_untrained_s7"
+    ]
+  },
+  "groups": {
+    "alt_mlp_estimator": {
+      "cases": [
+        "alt_mlp_estimator_s17",
+        "alt_mlp_estimator_s7"
+      ],
+      "impedance_tracking/position_tracking_rmse_m": {
+        "max": 0.1194040701780067,
+        "mean": 0.11759412697426913,
+        "min": 0.11578418377053157
+      },
+      "impedance_tracking/success_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "impedance_tracking/velocity_tracking_rmse_mps": {
+        "max": 0.38158447653605526,
+        "mean": 0.37611861943635927,
+        "min": 0.3706527623366632
+      },
+      "large_lateral_impulse/impulse_recovery_score": {
+        "max": 0.5912912276954567,
+        "mean": 0.5682049529601864,
+        "min": 0.545118678224916
+      },
+      "large_lateral_impulse/success_rate": {
+        "max": 0.859375,
+        "mean": 0.8359375,
+        "min": 0.8125
+      },
+      "large_lateral_impulse/velocity_tracking_rmse_mps": {
+        "max": 1.0766400337524216,
+        "mean": 0.9653174474632351,
+        "min": 0.8539948611740487
+      },
+      "rank_all": {
+        "max": 0.24140063292533256,
+        "mean": 0.18155442621437534,
+        "min": 0.12170821950341815,
+        "sd": 0.08463531718721942
+      },
+      "rank_genuine": {
+        "max": 0.27813282670077544,
+        "mean": 0.26882665262144934,
+        "min": 0.2595204785421233,
+        "sd": 0.013160917596787884
+      },
+      "rank_trained": {
+        "max": 0.23235265679900616,
+        "mean": -0.24521509475686348,
+        "min": -0.7227828463127332,
+        "sd": 0.6753827912023356
+      },
+      "soft_wall_collision/contact_tracking_rmse_mps": {
+        "max": 0.20167164937835547,
+        "mean": 0.172148739968638,
+        "min": 0.14262583055892053
+      },
+      "soft_wall_collision/entry_speed_error_mps": {
+        "max": 0.11932853504660271,
+        "mean": 0.0828437181110814,
+        "min": 0.04635890117556009
+      },
+      "soft_wall_collision/post_contact_impulse_reduction": {
+        "max": 0.22330434428200907,
+        "mean": 0.22033399662923436,
+        "min": 0.21736364897645966
+      },
+      "soft_wall_collision/wall_contact_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      }
+    },
+    "better_3x": {
+      "cases": [
+        "better_3x_s17",
+        "better_3x_s27",
+        "better_3x_s37",
+        "better_3x_s47",
+        "better_3x_s7"
+      ],
+      "impedance_tracking/position_tracking_rmse_m": {
+        "max": 0.14323444923246753,
+        "mean": 0.11380234040760884,
+        "min": 0.08569691839754619
+      },
+      "impedance_tracking/success_rate": {
+        "max": 0.9921875,
+        "mean": 0.97421875,
+        "min": 0.953125
+      },
+      "impedance_tracking/velocity_tracking_rmse_mps": {
+        "max": 0.3595639344658208,
+        "mean": 0.3078918578230672,
+        "min": 0.2565277196832275
+      },
+      "large_lateral_impulse/impulse_recovery_score": {
+        "max": 0.6030017457362016,
+        "mean": 0.5786837251625901,
+        "min": 0.5627588713352394
+      },
+      "large_lateral_impulse/success_rate": {
+        "max": 0.96875,
+        "mean": 0.896875,
+        "min": 0.7890625
+      },
+      "large_lateral_impulse/velocity_tracking_rmse_mps": {
+        "max": 1.171316057877894,
+        "mean": 0.7443382785538979,
+        "min": 0.4945575113125449
+      },
+      "rank_all": {
+        "max": 0.3714856137985402,
+        "mean": 0.27682704498143923,
+        "min": 0.1408912784463711,
+        "sd": 0.09423131022904309
+      },
+      "rank_genuine": {
+        "max": 0.7454143494251244,
+        "mean": 0.5136070792479658,
+        "min": 0.3405544282303203,
+        "sd": 0.15510414222888158
+      },
+      "rank_trained": {
+        "max": 1.27304547888685,
+        "mean": 0.7536337102563321,
+        "min": 0.34131398668338475,
+        "sd": 0.34928532403658286
+      },
+      "soft_wall_collision/contact_tracking_rmse_mps": {
+        "max": 0.11489820228865935,
+        "mean": 0.10780559187035649,
+        "min": 0.09933005679151713
+      },
+      "soft_wall_collision/entry_speed_error_mps": {
+        "max": 0.10094228589403742,
+        "mean": 0.07164749637779724,
+        "min": 0.02060808972503391
+      },
+      "soft_wall_collision/post_contact_impulse_reduction": {
+        "max": 0.22603182759753815,
+        "mean": 0.22352761027001772,
+        "min": 0.22153604322040366
+      },
+      "soft_wall_collision/wall_contact_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      }
+    },
+    "better_6x": {
+      "cases": [
+        "better_6x_s17",
+        "better_6x_s27",
+        "better_6x_s7"
+      ],
+      "impedance_tracking/position_tracking_rmse_m": {
+        "max": 0.13797088570673466,
+        "mean": 0.09651265971266072,
+        "min": 0.06701730578782657
+      },
+      "impedance_tracking/success_rate": {
+        "max": 0.99609375,
+        "mean": 0.9791666666666666,
+        "min": 0.95703125
+      },
+      "impedance_tracking/velocity_tracking_rmse_mps": {
+        "max": 0.34506475297618067,
+        "mean": 0.2657643088130976,
+        "min": 0.20757713399836206
+      },
+      "large_lateral_impulse/impulse_recovery_score": {
+        "max": 0.6124230776397844,
+        "mean": 0.5997610279819184,
+        "min": 0.5901273946485333
+      },
+      "large_lateral_impulse/success_rate": {
+        "max": 0.96484375,
+        "mean": 0.9010416666666666,
+        "min": 0.83203125
+      },
+      "large_lateral_impulse/velocity_tracking_rmse_mps": {
+        "max": 0.9651955091025632,
+        "mean": 0.7032795169542744,
+        "min": 0.45089771327234385
+      },
+      "rank_all": {
+        "max": 0.44588505852526306,
+        "mean": 0.3426753725110906,
+        "min": 0.2684149465832938,
+        "sd": 0.09220875719168567
+      },
+      "rank_genuine": {
+        "max": 0.9569336277283534,
+        "mean": 0.7463989896030767,
+        "min": 0.6181576258466999,
+        "sd": 0.18377005228680712
+      },
+      "rank_trained": {
+        "max": 1.4863461440352514,
+        "mean": 1.2408035726018403,
+        "min": 0.7522578813371283,
+        "sd": 0.42309488479961116
+      },
+      "soft_wall_collision/contact_tracking_rmse_mps": {
+        "max": 0.10216855293315064,
+        "mean": 0.10062003577014524,
+        "min": 0.09882129340732819
+      },
+      "soft_wall_collision/entry_speed_error_mps": {
+        "max": 0.05320250468248668,
+        "mean": 0.03027955489260256,
+        "min": 0.014978494313860988
+      },
+      "soft_wall_collision/post_contact_impulse_reduction": {
+        "max": 0.22430133630434435,
+        "mean": 0.22327322006982853,
+        "min": 0.2215858598622974
+      },
+      "soft_wall_collision/wall_contact_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      }
+    },
+    "reference": {
+      "cases": [
+        "reference_s17",
+        "reference_s27",
+        "reference_s37",
+        "reference_s47",
+        "reference_s7"
+      ],
+      "impedance_tracking/position_tracking_rmse_m": {
+        "max": 0.1447875347949691,
+        "mean": 0.12016664568645362,
+        "min": 0.10603561873922966
+      },
+      "impedance_tracking/success_rate": {
+        "max": 0.99609375,
+        "mean": 0.98828125,
+        "min": 0.97265625
+      },
+      "impedance_tracking/velocity_tracking_rmse_mps": {
+        "max": 0.3981130875204741,
+        "mean": 0.35701613562692025,
+        "min": 0.3310640526090374
+      },
+      "large_lateral_impulse/impulse_recovery_score": {
+        "max": 0.5537684305977607,
+        "mean": 0.5177396081923551,
+        "min": 0.45218778580042196
+      },
+      "large_lateral_impulse/success_rate": {
+        "max": 0.80859375,
+        "mean": 0.76171875,
+        "min": 0.71484375
+      },
+      "large_lateral_impulse/velocity_tracking_rmse_mps": {
+        "max": 1.5180411140484118,
+        "mean": 1.2888900412090742,
+        "min": 1.0896197158794185
+      },
+      "rank_all": {
+        "max": 0.10748298212523326,
+        "mean": 0.009532975587117548,
+        "min": -0.17367329444791177,
+        "sd": 0.11429153733413827
+      },
+      "rank_genuine": {
+        "max": 0.24906847856294598,
+        "mean": 0.06368290074254175,
+        "min": -0.21987669554665704,
+        "sd": 0.18631977720959939
+      },
+      "rank_trained": {
+        "max": 0.5447635833001946,
+        "mean": -0.18819037999319868,
+        "min": -1.4189214420082044,
+        "sd": 0.7417672383436434
+      },
+      "soft_wall_collision/contact_tracking_rmse_mps": {
+        "max": 0.1435291962261152,
+        "mean": 0.11990659061592882,
+        "min": 0.09662667154323361
+      },
+      "soft_wall_collision/entry_speed_error_mps": {
+        "max": 0.09084875269717195,
+        "mean": 0.05496300810333671,
+        "min": 0.02635348604307077
+      },
+      "soft_wall_collision/post_contact_impulse_reduction": {
+        "max": 0.22481305067546486,
+        "mean": 0.2224475613460299,
+        "min": 0.21801332152489739
+      },
+      "soft_wall_collision/wall_contact_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      }
+    },
+    "weaker_open_loop": {
+      "cases": [
+        "weaker_open_loop_s17",
+        "weaker_open_loop_s7"
+      ],
+      "impedance_tracking/position_tracking_rmse_m": {
+        "max": 0.14409381622076517,
+        "mean": 0.13052684380434398,
+        "min": 0.1169598713879228
+      },
+      "impedance_tracking/success_rate": {
+        "max": 1.0,
+        "mean": 0.994140625,
+        "min": 0.98828125
+      },
+      "impedance_tracking/velocity_tracking_rmse_mps": {
+        "max": 0.43584691067390025,
+        "mean": 0.40490889289401516,
+        "min": 0.3739708751141301
+      },
+      "large_lateral_impulse/impulse_recovery_score": {
+        "max": 0.4433904559549421,
+        "mean": 0.419312245043569,
+        "min": 0.39523403413219593
+      },
+      "large_lateral_impulse/success_rate": {
+        "max": 0.6328125,
+        "mean": 0.595703125,
+        "min": 0.55859375
+      },
+      "large_lateral_impulse/velocity_tracking_rmse_mps": {
+        "max": 2.223547587803564,
+        "mean": 1.9758905905523363,
+        "min": 1.7282335933011086
+      },
+      "rank_all": {
+        "max": -0.29559083179704426,
+        "mean": -0.37315901337941004,
+        "min": -0.4507271949617759,
+        "sd": 0.10969797440240064
+      },
+      "rank_genuine": {
+        "max": -0.6423459126954079,
+        "mean": -0.6574637287825564,
+        "min": -0.6725815448697051,
+        "sd": 0.021379820543907746
+      },
+      "rank_trained": {
+        "max": -1.0461509294329672,
+        "mean": -1.454943103073472,
+        "min": -1.8637352767139772,
+        "sd": 0.5781194361543794
+      },
+      "soft_wall_collision/contact_tracking_rmse_mps": {
+        "max": 0.17860694263026056,
+        "mean": 0.150486518071125,
+        "min": 0.12236609351198943
+      },
+      "soft_wall_collision/entry_speed_error_mps": {
+        "max": 0.12122627396838458,
+        "mean": 0.07248958537249146,
+        "min": 0.023752896776598358
+      },
+      "soft_wall_collision/post_contact_impulse_reduction": {
+        "max": 0.2246640478211278,
+        "mean": 0.22318032162443047,
+        "min": 0.22169659542773312
+      },
+      "soft_wall_collision/wall_contact_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      }
+    },
+    "weaker_untrained": {
+      "cases": [
+        "weaker_untrained_s7"
+      ],
+      "impedance_tracking/position_tracking_rmse_m": {
+        "max": 0.21757068641788507,
+        "mean": 0.21757068641788507,
+        "min": 0.21757068641788507
+      },
+      "impedance_tracking/success_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "impedance_tracking/velocity_tracking_rmse_mps": {
+        "max": 0.6949288755173831,
+        "mean": 0.6949288755173831,
+        "min": 0.6949288755173831
+      },
+      "large_lateral_impulse/impulse_recovery_score": {
+        "max": 0.22937249468050053,
+        "mean": 0.22937249468050053,
+        "min": 0.22937249468050053
+      },
+      "large_lateral_impulse/success_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      },
+      "large_lateral_impulse/velocity_tracking_rmse_mps": {
+        "max": 1.1480796881106132,
+        "mean": 1.1480796881106132,
+        "min": 1.1480796881106132
+      },
+      "rank_all": {
+        "max": -0.4346734451950479,
+        "mean": -0.4346734451950479,
+        "min": -0.4346734451950479,
+        "sd": 0.0
+      },
+      "rank_genuine": {
+        "max": -0.9472121386990587,
+        "mean": -0.9472121386990587,
+        "min": -0.9472121386990587,
+        "sd": 0.0
+      },
+      "rank_trained": {
+        "max": -2.7121257310208913,
+        "mean": -2.7121257310208913,
+        "min": -2.7121257310208913,
+        "sd": 0.0
+      },
+      "soft_wall_collision/contact_tracking_rmse_mps": {
+        "max": 0.14762610863630954,
+        "mean": 0.14762610863630954,
+        "min": 0.14762610863630954
+      },
+      "soft_wall_collision/entry_speed_error_mps": {
+        "max": 0.11739164742400264,
+        "mean": 0.11739164742400264,
+        "min": 0.11739164742400264
+      },
+      "soft_wall_collision/post_contact_impulse_reduction": {
+        "max": 0.22176679187566573,
+        "mean": 0.22176679187566573,
+        "min": 0.22176679187566573
+      },
+      "soft_wall_collision/wall_contact_rate": {
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0
+      }
+    }
+  },
+  "impulse_survival_by_peak_force_n": {
+    "alt_mlp_estimator_s17": {
+      "100": 1.0,
+      "1000": 0.6875,
+      "1200": 0.1875,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 1.0,
+      "800": 1.0
+    },
+    "alt_mlp_estimator_s7": {
+      "100": 1.0,
+      "1000": 0.53125,
+      "1200": 0.0625,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 1.0,
+      "800": 0.90625
+    },
+    "better_3x_s17": {
+      "100": 1.0,
+      "1000": 0.96875,
+      "1200": 0.78125,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 1.0,
+      "800": 1.0
+    },
+    "better_3x_s27": {
+      "100": 1.0,
+      "1000": 0.90625,
+      "1200": 0.625,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 1.0,
+      "800": 0.96875
+    },
+    "better_3x_s37": {
+      "100": 1.0,
+      "1000": 0.375,
+      "1200": 0.34375,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 0.96875,
+      "800": 0.625
+    },
+    "better_3x_s47": {
+      "100": 1.0,
+      "1000": 0.90625,
+      "1200": 0.53125,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 1.0,
+      "800": 0.90625
+    },
+    "better_3x_s7": {
+      "100": 1.0,
+      "1000": 0.78125,
+      "1200": 0.40625,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 0.9375,
+      "800": 0.84375
+    },
+    "better_6x_s17": {
+      "100": 1.0,
+      "1000": 0.84375,
+      "1200": 0.5,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 0.9375,
+      "800": 0.96875
+    },
+    "better_6x_s27": {
+      "100": 1.0,
+      "1000": 0.96875,
+      "1200": 0.8125,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 1.0,
+      "800": 0.9375
+    },
+    "better_6x_s7": {
+      "100": 1.0,
+      "1000": 0.625,
+      "1200": 0.25,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 1.0,
+      "800": 0.78125
+    },
+    "brute_force_grid_search": {
+      "100": 1.0,
+      "1000": 0.28125,
+      "1200": 0.03125,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 1.0,
+      "800": 0.75
+    },
+    "reference_s17": {
+      "100": 1.0,
+      "1000": 0.375,
+      "1200": 0.21875,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 0.9375,
+      "800": 0.5625
+    },
+    "reference_s27": {
+      "100": 1.0,
+      "1000": 0.375,
+      "1200": 0.15625,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 0.875,
+      "800": 0.5625
+    },
+    "reference_s37": {
+      "100": 1.0,
+      "1000": 0.40625,
+      "1200": 0.28125,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 1.0,
+      "800": 0.78125
+    },
+    "reference_s47": {
+      "100": 1.0,
+      "1000": 0.40625,
+      "1200": 0.09375,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 1.0,
+      "800": 0.71875
+    },
+    "reference_s7": {
+      "100": 1.0,
+      "1000": 0.21875,
+      "1200": 0.0,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 0.96875,
+      "800": 0.53125
+    },
+    "shortcut_analytic_clipped": {
+      "100": 1.0,
+      "1000": 1.0,
+      "1200": 0.90625,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 1.0,
+      "800": 1.0
+    },
+    "shortcut_analytic_impedance": {
+      "100": 1.0,
+      "1000": 0.4375,
+      "1200": 0.0625,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 1.0,
+      "800": 0.8125
+    },
+    "shortcut_baseline_tamper": {
+      "100": 1.0,
+      "1000": 0.375,
+      "1200": 0.21875,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 0.9375,
+      "800": 0.5625
+    },
+    "shortcut_overspeed": {
+      "100": 1.0,
+      "1000": 1.0,
+      "1200": 1.0,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 1.0,
+      "800": 1.0
+    },
+    "shortcut_passive": {
+      "100": 1.0,
+      "1000": 1.0,
+      "1200": 1.0,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 1.0,
+      "800": 1.0
+    },
+    "shortcut_reference_lateral_clip": {
+      "100": 1.0,
+      "1000": 1.0,
+      "1200": 1.0,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 1.0,
+      "800": 1.0
+    },
+    "shortcut_retreat_full": {
+      "100": 1.0,
+      "1000": 0.375,
+      "1200": 0.21875,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 0.9375,
+      "800": 0.5625
+    },
+    "shortcut_retreat_mild": {
+      "100": 1.0,
+      "1000": 0.375,
+      "1200": 0.21875,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 0.9375,
+      "800": 0.5625
+    },
+    "shortcut_score_file": {
+      "100": 1.0,
+      "1000": 0.375,
+      "1200": 0.21875,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 0.9375,
+      "800": 0.5625
+    },
+    "shortcut_wall_dodger": {
+      "100": 1.0,
+      "1000": 0.375,
+      "1200": 0.21875,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 0.9375,
+      "800": 0.5625
+    },
+    "shortcut_zero_lateral": {
+      "100": 1.0,
+      "1000": 1.0,
+      "1200": 1.0,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 1.0,
+      "800": 1.0
+    },
+    "simple_baseline_robust": {
+      "100": 1.0,
+      "1000": 0.0,
+      "1200": 0.0,
+      "200": 0.0,
+      "300": 0.0,
+      "400": 0.0,
+      "600": 0.0,
+      "800": 0.0
+    },
+    "weaker_open_loop_s17": {
+      "100": 1.0,
+      "1000": 0.0,
+      "1200": 0.0,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 0.8125,
+      "800": 0.25
+    },
+    "weaker_open_loop_s7": {
+      "100": 1.0,
+      "1000": 0.0,
+      "1200": 0.03125,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 0.875,
+      "600": 0.46875,
+      "800": 0.09375
+    },
+    "weaker_untrained_s7": {
+      "100": 1.0,
+      "1000": 1.0,
+      "1200": 1.0,
+      "200": 1.0,
+      "300": 1.0,
+      "400": 1.0,
+      "600": 1.0,
+      "800": 1.0
+    }
+  },
+  "paired_episode_comparisons": {
+    "alt_mlp_estimator_s17_vs_reference_s17": {
+      "impedance_tracking/vel_rmse_improvement": {
+        "ci95": [
+          -0.06646724987810376,
+          -0.02668422681964803
+        ],
+        "mean": -0.0505204239270179
+      },
+      "large_lateral_impulse/score_improvement": {
+        "ci95": [
+          0.06255498843297844,
+          0.10320459059503775
+        ],
+        "mean": 0.08203562785921667
+      },
+      "rank_diff": {
+        "all": {
+          "ci95": [
+            0.15639047101055728,
+            0.3225174488610304
+          ],
+          "estimate": 0.24140063292533256
+        },
+        "genuine": {
+          "ci95": [
+            0.11211341235659739,
+            0.4098677627712548
+          ],
+          "estimate": 0.2595204785421233
+        }
+      },
+      "soft_wall_collision/reduction_improvement": {
+        "ci95": [
+          -0.010110479135922458,
+          0.00368055662272209
+        ],
+        "mean": -0.0032359866303353834
+      }
+    },
+    "alt_mlp_estimator_s7_vs_reference_s7": {
+      "impedance_tracking/vel_rmse_improvement": {
+        "ci95": [
+          -0.04474585952633186,
+          0.05784563820884672
+        ],
+        "mean": 0.0009540482580725033
+      },
+      "large_lateral_impulse/score_improvement": {
+        "ci95": [
+          0.07396403918825764,
+          0.11271509232831799
+        ],
+        "mean": 0.09293089242449411
+      },
+      "rank_diff": {
+        "all": {
+          "ci95": [
+            0.22100741379354014,
+            0.3763989281526624
+          ],
+          "estimate": 0.29538151395133
+        },
+        "genuine": {
+          "ci95": [
+            0.32124589688386207,
+            0.6665333704307862
+          ],
+          "estimate": 0.4980095222474326
+        }
+      },
+      "soft_wall_collision/reduction_improvement": {
+        "ci95": [
+          0.0008440925805247813,
+          0.01192637535665729
+        ],
+        "mean": 0.006457565797223889
+      }
+    },
+    "better_3x_s17_vs_reference_s17": {
+      "impedance_tracking/vel_rmse_improvement": {
+        "ci95": [
+          -0.05891115547925737,
+          0.0817264889989462
+        ],
+        "mean": 0.01556104723004427
+      },
+      "large_lateral_impulse/score_improvement": {
+        "ci95": [
+          0.04208205700237466,
+          0.07771462023839419
+        ],
+        "mean": 0.06030413650766719
+      },
+      "rank_diff": {
+        "all": {
+          "ci95": [
+            0.2482653327360034,
+            0.41495569116854586
+          ],
+          "estimate": 0.32906464148057907
+        },
+        "genuine": {
+          "ci95": [
+            0.3637967307075496,
+            0.7172451673613012
+          ],
+          "estimate": 0.5452722198710901
+        }
+      },
+      "soft_wall_collision/reduction_improvement": {
+        "ci95": [
+          -0.0035090422790770583,
+          0.0018456514711767688
+        ],
+        "mean": -0.0008729057451608317
+      }
+    },
+    "better_3x_s27_vs_reference_s27": {
+      "impedance_tracking/vel_rmse_improvement": {
+        "ci95": [
+          -0.06891583978402671,
+          0.14409585146865483
+        ],
+        "mean": 0.038549153054653305
+      },
+      "large_lateral_impulse/score_improvement": {
+        "ci95": [
+          0.03928110664256753,
+          0.0760856128537327
+        ],
+        "mean": 0.05732078252403699
+      },
+      "rank_diff": {
+        "all": {
+          "ci95": [
+            0.2284789085520021,
+            0.4119990646836416
+          ],
+          "estimate": 0.3133283431928362
+        },
+        "genuine": {
+          "ci95": [
+            0.22507780180323678,
+            0.6688183376692112
+          ],
+          "estimate": 0.44371937417130375
+        }
+      },
+      "soft_wall_collision/reduction_improvement": {
+        "ci95": [
+          -0.0019667146395314864,
+          0.004137829237732073
+        ],
+        "mean": 0.0011119060933553748
+      }
+    },
+    "better_3x_s37_vs_reference_s37": {
+      "impedance_tracking/vel_rmse_improvement": {
+        "ci95": [
+          0.004692825176397078,
+          0.1069162947684626
+        ],
+        "mean": 0.057673124918239387
+      },
+      "large_lateral_impulse/score_improvement": {
+        "ci95": [
+          0.009027389995613373,
+          0.035977101773652057
+        ],
+        "mean": 0.023494363200256514
+      },
+      "rank_diff": {
+        "all": {
+          "ci95": [
+            -0.016782983108596286,
+            0.08749302068512844
+          ],
+          "estimate": 0.03648682939225411
+        },
+        "genuine": {
+          "ci95": [
+            0.07858585164023897,
+            0.3253855599146613
+          ],
+          "estimate": 0.2038523038455703
+        }
+      },
+      "soft_wall_collision/reduction_improvement": {
+        "ci95": [
+          0.00036761697628730336,
+          0.006235658201752631
+        ],
+        "mean": 0.0032672374005247775
+      }
+    },
+    "better_3x_s47_vs_reference_s47": {
+      "impedance_tracking/vel_rmse_improvement": {
+        "ci95": [
+          0.019869245572748072,
+          0.1275311899360848
+        ],
+        "mean": 0.07556425264678748
+      },
+      "large_lateral_impulse/score_improvement": {
+        "ci95": [
+          0.031889601834411675,
+          0.06839589855511559
+        ],
+        "mean": 0.0492333151384409
+      },
+      "rank_diff": {
+        "all": {
+          "ci95": [
+            0.1889243772900901,
+            0.35255662569986146
+          ],
+          "estimate": 0.264002631673307
+        },
+        "genuine": {
+          "ci95": [
+            0.32037758458234217,
+            0.6692725170162135
+          ],
+          "estimate": 0.4963458708621785
+        }
+      },
+      "soft_wall_collision/reduction_improvement": {
+        "ci95": [
+          -0.00550575777229526,
+          0.001805606324764213
+        ],
+        "mean": -0.0018122969125027172
+      }
+    },
+    "better_3x_s7_vs_reference_s7": {
+      "impedance_tracking/vel_rmse_improvement": {
+        "ci95": [
+          -0.034938113936474426,
+          0.142933974542775
+        ],
+        "mean": 0.05827381116954069
+      },
+      "large_lateral_impulse/score_improvement": {
+        "ci95": [
+          0.09135574406736337,
+          0.13926810210170149
+        ],
+        "mean": 0.1143679874807734
+      },
+      "rank_diff": {
+        "all": {
+          "ci95": [
+            0.2924199792948358,
+            0.49888729582881014
+          ],
+          "estimate": 0.3935879012326319
+        },
+        "genuine": {
+          "ci95": [
+            0.3499868690965679,
+            0.7719275169837646
+          ],
+          "estimate": 0.5604311237769773
+        }
+      },
+      "soft_wall_collision/reduction_improvement": {
+        "ci95": [
+          0.0009390364629175825,
+          0.007902200363878646
+        ],
+        "mean": 0.004369527719508803
+      }
+    },
+    "better_6x_s17_vs_better_3x_s17": {
+      "impedance_tracking/vel_rmse_improvement": {
+        "ci95": [
+          -0.11662420176762982,
+          0.050735201298395365
+        ],
+        "mean": -0.029561747597187556
+      },
+      "large_lateral_impulse/score_improvement": {
+        "ci95": [
+          0.013729157304634993,
+          0.03990136468816766
+        ],
+        "mean": 0.027172875313530513
+      },
+      "rank_diff": {
+        "all": {
+          "ci95": [
+            -0.07619151373314242,
+            0.04130303980251627
+          ],
+          "estimate": -0.015338529055864171
+        },
+        "genuine": {
+          "ci95": [
+            -0.04050844197074975,
+            0.27603805746172855
+          ],
+          "estimate": 0.11883349536308656
+        }
+      },
+      "soft_wall_collision/reduction_improvement": {
+        "ci95": [
+          -0.0002937637496286908,
+          0.007097643186921206
+        ],
+        "mean": 0.0034176691412860045
+      }
+    },
+    "better_6x_s17_vs_reference_s17": {
+      "impedance_tracking/vel_rmse_improvement": {
+        "ci95": [
+          -0.10545645200282186,
+          0.06601657957341156
+        ],
+        "mean": -0.014000700367143307
+      },
+      "large_lateral_impulse/score_improvement": {
+        "ci95": [
+          0.06597307695453,
+          0.10950958640283746
+        ],
+        "mean": 0.08747701182119771
+      },
+      "rank_diff": {
+        "all": {
+          "ci95": [
+            0.212702271227656,
+            0.40632643555570125
+          ],
+          "estimate": 0.31372611242471493
+        },
+        "genuine": {
+          "ci95": [
+            0.45415567747424723,
+            0.8761601637238811
+          ],
+          "estimate": 0.6641057152341767
+        }
+      },
+      "soft_wall_collision/reduction_improvement": {
+        "ci95": [
+          -0.0004201978935449562,
+          0.005374902689640819
+        ],
+        "mean": 0.002544763396125173
+      }
+    },
+    "better_6x_s27_vs_better_3x_s27": {
+      "impedance_tracking/vel_rmse_improvement": {
+        "ci95": [
+          0.0252195525679332,
+          0.21617818498201236
+        ],
+        "mean": 0.11491289500107071
+      },
+      "large_lateral_impulse/score_improvement": {
+        "ci95": [
+          0.010669263807250728,
+          0.033192794654788985
+        ],
+        "mean": 0.020880578523377134
+      },
+      "rank_diff": {
+        "all": {
+          "ci95": [
+            0.06420589291089755,
+            0.1872159056222506
+          ],
+          "estimate": 0.12310597412827737
+        },
+        "genuine": {
+          "ci95": [
+            0.24369554546598857,
+            0.6204737225829587
+          ],
+          "estimate": 0.42747579619044723
+        }
+      },
+      "soft_wall_collision/reduction_improvement": {
+        "ci95": [
+          -0.008527912010627683,
+          -0.000668471296818671
+        ],
+        "mean": -0.004505334985721408
+      }
+    },
+    "better_6x_s27_vs_reference_s27": {
+      "impedance_tracking/vel_rmse_improvement": {
+        "ci95": [
+          0.07649327253747917,
+          0.24574371344927015
+        ],
+        "mean": 0.153462048055724
+      },
+      "large_lateral_impulse/score_improvement": {
+        "ci95": [
+          0.05708076705654873,
+          0.09953055970037268
+        ],
+        "mean": 0.07820136104741413
+      },
+      "rank_diff": {
+        "all": {
+          "ci95": [
+            0.3465565350325628,
+            0.541586422026587
+          ],
+          "estimate": 0.43643431732111365
+        },
+        "genuine": {
+          "ci95": [
+            0.6755896005893122,
+            1.0750998385515185
+          ],
+          "estimate": 0.8711951703617511
+        }
+      },
+      "soft_wall_collision/reduction_improvement": {
+        "ci95": [
+          -0.005955455178328759,
+          -0.0006715507735918722
+        ],
+        "mean": -0.003393428892366033
+      }
+    },
+    "better_6x_s7_vs_better_3x_s7": {
+      "impedance_tracking/vel_rmse_improvement": {
+        "ci95": [
+          0.03755346502306557,
+          0.18971538053691
+        ],
+        "mean": 0.10575586542683296
+      },
+      "large_lateral_impulse/score_improvement": {
+        "ci95": [
+          0.005037243521384939,
+          0.04223048161588443
+        ],
+        "mean": 0.023571621367337946
+      },
+      "rank_diff": {
+        "all": {
+          "ci95": [
+            -0.02896497628195815,
+            0.12688228037548457
+          ],
+          "estimate": 0.0485003397985736
+        },
+        "genuine": {
+          "ci95": [
+            0.11314176576191294,
+            0.4425453369951258
+          ],
+          "estimate": 0.2776031976163795
+        }
+      },
+      "soft_wall_collision/reduction_improvement": {
+        "ci95": [
+          -0.0013791385356632204,
+          0.0063806663822473875
+        ],
+        "mean": 0.0025832916890124935
+      }
+    },
+    "better_6x_s7_vs_reference_s7": {
+      "impedance_tracking/vel_rmse_improvement": {
+        "ci95": [
+          0.12274070271796894,
+          0.21609853772300247
+        ],
+        "mean": 0.16402967659637363
+      },
+      "large_lateral_impulse/score_improvement": {
+        "ci95": [
+          0.11603102523206144,
+          0.15996262552504842
+        ],
+        "mean": 0.13793960884811135
+      },
+      "rank_diff": {
+        "all": {
+          "ci95": [
+            0.3627015117037186,
+            0.530159250850637
+          ],
+          "estimate": 0.44208824103120553
+        },
+        "genuine": {
+          "ci95": [
+            0.6762374475944622,
+            1.0094452731243877
+          ],
+          "estimate": 0.8380343213933567
+        }
+      },
+      "soft_wall_collision/reduction_improvement": {
+        "ci95": [
+          0.0021317488607113166,
+          0.011829718256501663
+        ],
+        "mean": 0.0069528194085212965
+      }
+    },
+    "shortcut_retreat_full_vs_reference_s17": {
+      "impedance_tracking/vel_rmse_improvement": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "mean": 0.0
+      },
+      "large_lateral_impulse/score_improvement": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "mean": 0.0
+      },
+      "rank_diff": {
+        "all": {
+          "ci95": [
+            -1.456559037745968,
+            -1.442824136126123
+          ],
+          "estimate": -1.4499446645158602
+        },
+        "genuine": {
+          "ci95": [
+            -10.14131810554791,
+            -9.99639688628398
+          ],
+          "estimate": -10.069837616461733
+        }
+      },
+      "soft_wall_collision/reduction_improvement": {
+        "ci95": [
+          -1.2304785447891593,
+          -1.2078212891180287
+        ],
+        "mean": -1.2191633929432633
+      }
+    },
+    "shortcut_retreat_mild_vs_reference_s17": {
+      "impedance_tracking/vel_rmse_improvement": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "mean": 0.0
+      },
+      "large_lateral_impulse/score_improvement": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "mean": 0.0
+      },
+      "rank_diff": {
+        "all": {
+          "ci95": [
+            -0.03537222413950013,
+            -0.02487765054163248
+          ],
+          "estimate": -0.03020697657088982
+        },
+        "genuine": {
+          "ci95": [
+            -0.34774465335596194,
+            -0.248872741770734
+          ],
+          "estimate": -0.29657186478270736
+        }
+      },
+      "soft_wall_collision/reduction_improvement": {
+        "ci95": [
+          -0.04887782726464354,
+          -0.034798672972903996
+        ],
+        "mean": -0.04194507909552038
+      }
+    },
+    "shortcut_wall_dodger_vs_reference_s17": {
+      "impedance_tracking/vel_rmse_improvement": {
+        "ci95": [
+          -0.7673651149535426,
+          -0.43002768756930654
+        ],
+        "mean": -0.5970636155358235
+      },
+      "large_lateral_impulse/score_improvement": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "mean": 0.0
+      },
+      "rank_diff": {
+        "all": {
+          "ci95": [
+            -1.8502521199775646,
+            -1.777374137290105
+          ],
+          "estimate": -1.8116591589408761
+        },
+        "genuine": {
+          "ci95": [
+            -14.387820678466309,
+            -14.020100734100774
+          ],
+          "estimate": -14.201027025078796
+        }
+      },
+      "soft_wall_collision/reduction_improvement": {
+        "ci95": [
+          -1.23056273654278,
+          -1.207437751115046
+        ],
+        "mean": -1.2191633929432633
+      }
+    },
+    "weaker_open_loop_s17_vs_reference_s17": {
+      "impedance_tracking/vel_rmse_improvement": {
+        "ci95": [
+          -0.15064587180165984,
+          -0.07098964339355837
+        ],
+        "mean": -0.10478285806486287
+      },
+      "large_lateral_impulse/score_improvement": {
+        "ci95": [
+          -0.08856130289813227,
+          -0.044853561248886155
+        ],
+        "mean": -0.06586514388129795
+      },
+      "rank_diff": {
+        "all": {
+          "ci95": [
+            -0.3906373620291941,
+            -0.20814670805022914
+          ],
+          "estimate": -0.29559083179704426
+        },
+        "genuine": {
+          "ci95": [
+            -0.8395322845644271,
+            -0.503315066704125
+          ],
+          "estimate": -0.6725815448697051
+        }
+      },
+      "soft_wall_collision/reduction_improvement": {
+        "ci95": [
+          -0.0051626898821131376,
+          0.00690584717958925
+        ],
+        "mean": 0.0007539267516560588
+      }
+    },
+    "weaker_open_loop_s7_vs_reference_s7": {
+      "impedance_tracking/vel_rmse_improvement": {
+        "ci95": [
+          -0.0484532044342011,
+          0.05714127402146236
+        ],
+        "mean": -0.0023640645193943755
+      },
+      "large_lateral_impulse/score_improvement": {
+        "ci95": [
+          -0.0814947826381734,
+          -0.03351686627315788
+        ],
+        "mean": -0.05695375166822601
+      },
+      "rank_diff": {
+        "all": {
+          "ci95": [
+            -0.3718794375429872,
+            -0.1779577796504432
+          ],
+          "estimate": -0.27705390051386414
+        },
+        "genuine": {
+          "ci95": [
+            -0.6119469267968916,
+            -0.2302925835416149
+          ],
+          "estimate": -0.42246921714875085
+        }
+      },
+      "soft_wall_collision/reduction_improvement": {
+        "ci95": [
+          0.002556800728826782,
+          0.012500520833181735
+        ],
+        "mean": 0.007505718112135287
+      }
+    },
+    "weaker_untrained_s7_vs_reference_s7": {
+      "impedance_tracking/vel_rmse_improvement": {
+        "ci95": [
+          -0.39131600386667,
+          -0.24961655647940648
+        ],
+        "mean": -0.3233220649226475
+      },
+      "large_lateral_impulse/score_improvement": {
+        "ci95": [
+          -0.25051218434060185,
+          -0.19573617954133926
+        ],
+        "mean": -0.22281529111992143
+      },
+      "rank_diff": {
+        "all": {
+          "ci95": [
+            -0.36083315887968836,
+            -0.15538288022486763
+          ],
+          "estimate": -0.26100015074713606
+        },
+        "genuine": {
+          "ci95": [
+            -0.9312369868513642,
+            -0.5141859124138697
+          ],
+          "estimate": -0.7273354431524017
+        }
+      },
+      "soft_wall_collision/reduction_improvement": {
+        "ci95": [
+          -0.0014247275021760945,
+          0.012369566555014698
+        ],
+        "mean": 0.005306995588780575
+      }
+    }
+  },
+  "paired_rank_vs_canonical": {
+    "alt_mlp_estimator_s17": {
+      "all": {
+        "ci95": [
+          0.1631804776282474,
+          0.3242357969134231
+        ],
+        "estimate": 0.24140063292533256
+      },
+      "genuine": {
+        "ci95": [
+          0.1215530821977302,
+          0.41308050462201024
+        ],
+        "estimate": 0.2595204785421233
+      }
+    },
+    "alt_mlp_estimator_s7": {
+      "all": {
+        "ci95": [
+          0.04175740212132339,
+          0.1995784557591313
+        ],
+        "estimate": 0.12170821950341815
+      },
+      "genuine": {
+        "ci95": [
+          0.1369808899943169,
+          0.4257360372501028
+        ],
+        "estimate": 0.27813282670077544
+      }
+    },
+    "better_3x_s17": {
+      "all": {
+        "ci95": [
+          0.2479873663301494,
+          0.40655680113882786
+        ],
+        "estimate": 0.32906464148057907
+      },
+      "genuine": {
+        "ci95": [
+          0.34921925357970773,
+          0.7066224659703843
+        ],
+        "estimate": 0.5452722198710901
+      }
+    },
+    "better_3x_s27": {
+      "all": {
+        "ci95": [
+          0.23318276319837267,
+          0.4114509331090462
+        ],
+        "estimate": 0.32277908439698566
+      },
+      "genuine": {
+        "ci95": [
+          0.3295041552748547,
+          0.7383074733637327
+        ],
+        "estimate": 0.5294578315379064
+      }
+    },
+    "better_3x_s37": {
+      "all": {
+        "ci95": [
+          0.07304119049142978,
+          0.20051783529908027
+        ],
+        "estimate": 0.1408912784463711
+      },
+      "genuine": {
+        "ci95": [
+          0.24591709581350657,
+          0.5422623858433276
+        ],
+        "estimate": 0.4073365671753875
+      }
+    },
+    "better_3x_s47": {
+      "all": {
+        "ci95": [
+          0.28782438710686803,
+          0.45555326562402304
+        ],
+        "estimate": 0.3714856137985402
+      },
+      "genuine": {
+        "ci95": [
+          0.5767779652282106,
+          0.9058202688407319
+        ],
+        "estimate": 0.7454143494251244
+      }
+    },
+    "better_3x_s7": {
+      "all": {
+        "ci95": [
+          0.11688518677240864,
+          0.31559205565000525
+        ],
+        "estimate": 0.21991460678472016
+      },
+      "genuine": {
+        "ci95": [
+          0.13950603763497882,
+          0.5467022717593355
+        ],
+        "estimate": 0.3405544282303203
+      }
+    },
+    "better_6x_s17": {
+      "all": {
+        "ci95": [
+          0.21251289209923285,
+          0.40970876717472066
+        ],
+        "estimate": 0.31372611242471493
+      },
+      "genuine": {
+        "ci95": [
+          0.4478577549288025,
+          0.8837379275289405
+        ],
+        "estimate": 0.6641057152341767
+      }
+    },
+    "better_6x_s27": {
+      "all": {
+        "ci95": [
+          0.3569823301423107,
+          0.5432276970120231
+        ],
+        "estimate": 0.44588505852526306
+      },
+      "genuine": {
+        "ci95": [
+          0.7826320607793771,
+          1.123312334590632
+        ],
+        "estimate": 0.9569336277283534
+      }
+    },
+    "better_6x_s7": {
+      "all": {
+        "ci95": [
+          0.1940665892131895,
+          0.34460627951056083
+        ],
+        "estimate": 0.2684149465832938
+      },
+      "genuine": {
+        "ci95": [
+          0.4855539104407223,
+          0.7571192927278858
+        ],
+        "estimate": 0.6181576258466999
+      }
+    },
+    "brute_force_grid_search": {
+      "all": {
+        "ci95": [
+          0.013618828794703669,
+          0.1762479397584943
+        ],
+        "estimate": 0.09640007709921103
+      },
+      "genuine": {
+        "ci95": [
+          0.00832843287802301,
+          0.32217705909787253
+        ],
+        "estimate": 0.15446844216426253
+      }
+    },
+    "reference_s27": {
+      "all": {
+        "ci95": [
+          -0.050203742339281,
+          0.07003377897165682
+        ],
+        "estimate": 0.009450741204149295
+      },
+      "genuine": {
+        "ci95": [
+          -0.06391769405680833,
+          0.23863613449121904
+        ],
+        "estimate": 0.08573845736660263
+      }
+    },
+    "reference_s37": {
+      "all": {
+        "ci95": [
+          0.05679889846026689,
+          0.15703167248120356
+        ],
+        "estimate": 0.10440444905411696
+      },
+      "genuine": {
+        "ci95": [
+          0.09813724927851156,
+          0.30304724728865573
+        ],
+        "estimate": 0.20348426332981717
+      }
+    },
+    "reference_s47": {
+      "all": {
+        "ci95": [
+          0.02759792309553745,
+          0.19362808332325834
+        ],
+        "estimate": 0.10748298212523326
+      },
+      "genuine": {
+        "ci95": [
+          0.07775404317889455,
+          0.40935526658902666
+        ],
+        "estimate": 0.24906847856294598
+      }
+    },
+    "reference_s7": {
+      "all": {
+        "ci95": [
+          -0.2780103807434876,
+          -0.07545536233027487
+        ],
+        "estimate": -0.17367329444791177
+      },
+      "genuine": {
+        "ci95": [
+          -0.4216734496959575,
+          -0.0414242377903696
+        ],
+        "estimate": -0.21987669554665704
+      }
+    },
+    "shortcut_analytic_clipped": {
+      "all": {
+        "ci95": [
+          0.2626368827894042,
+          0.4193713793479844
+        ],
+        "estimate": 0.3427392401838126
+      },
+      "genuine": {
+        "ci95": [
+          0.6262020948052621,
+          0.9193573807658989
+        ],
+        "estimate": 0.7699032244513588
+      }
+    },
+    "shortcut_analytic_impedance": {
+      "all": {
+        "ci95": [
+          0.10874092573661696,
+          0.27079878926126
+        ],
+        "estimate": 0.18997301968717376
+      },
+      "genuine": {
+        "ci95": [
+          0.32259021919488545,
+          0.6193600367159855
+        ],
+        "estimate": 0.4617483988492687
+      }
+    },
+    "shortcut_baseline_tamper": {
+      "all": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "estimate": 0.0
+      },
+      "genuine": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "estimate": 0.0
+      }
+    },
+    "shortcut_overspeed": {
+      "all": {
+        "ci95": [
+          -4.040129627016699,
+          -3.77524623358096
+        ],
+        "estimate": -3.912410601699048
+      },
+      "genuine": {
+        "ci95": [
+          -20.28996691497278,
+          -19.796237462715386
+        ],
+        "estimate": -20.048967820105627
+      }
+    },
+    "shortcut_passive": {
+      "all": {
+        "ci95": [
+          -0.5156744472620542,
+          -0.32108373841098825
+        ],
+        "estimate": -0.41375395753667876
+      },
+      "genuine": {
+        "ci95": [
+          -0.9122567019432375,
+          -0.5700602435254849
+        ],
+        "estimate": -0.7373442347281406
+      }
+    },
+    "shortcut_reference_lateral_clip": {
+      "all": {
+        "ci95": [
+          0.2122805425981334,
+          0.37118472151600745
+        ],
+        "estimate": 0.2848322644397448
+      },
+      "genuine": {
+        "ci95": [
+          0.39748903772354643,
+          0.6705421699733121
+        ],
+        "estimate": 0.5221825628934184
+      }
+    },
+    "shortcut_retreat_full": {
+      "all": {
+        "ci95": [
+          -1.4570367608066999,
+          -1.4429153634722363
+        ],
+        "estimate": -1.4499446645158602
+      },
+      "genuine": {
+        "ci95": [
+          -10.142451199957673,
+          -9.9973839914918
+        ],
+        "estimate": -10.069837616461733
+      }
+    },
+    "shortcut_retreat_mild": {
+      "all": {
+        "ci95": [
+          -0.0350145931135431,
+          -0.02488745487763672
+        ],
+        "estimate": -0.03020697657088982
+      },
+      "genuine": {
+        "ci95": [
+          -0.3481211047698862,
+          -0.24276055355182233
+        ],
+        "estimate": -0.29657186478270736
+      }
+    },
+    "shortcut_score_file": {
+      "all": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "estimate": 0.0
+      },
+      "genuine": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "estimate": 0.0
+      }
+    },
+    "shortcut_wall_dodger": {
+      "all": {
+        "ci95": [
+          -1.851153785076145,
+          -1.774684491236645
+        ],
+        "estimate": -1.8116591589408761
+      },
+      "genuine": {
+        "ci95": [
+          -14.38461389810293,
+          -14.020383553928392
+        ],
+        "estimate": -14.201027025078796
+      }
+    },
+    "shortcut_zero_lateral": {
+      "all": {
+        "ci95": [
+          -0.4850643059717483,
+          -0.2949690988237866
+        ],
+        "estimate": -0.39164253218187745
+      },
+      "genuine": {
+        "ci95": [
+          -0.825273562656625,
+          -0.4968929449443167
+        ],
+        "estimate": -0.660800700646263
+      }
+    },
+    "simple_baseline_robust": {
+      "all": {
+        "ci95": [
+          -2.6941144079511137,
+          -2.3859052493296464
+        ],
+        "estimate": -2.539952659243219
+      },
+      "genuine": {
+        "ci95": [
+          -7.962919359943254,
+          -7.1617254808996105
+        ],
+        "estimate": -7.548686258087168
+      }
+    },
+    "weaker_open_loop_s17": {
+      "all": {
+        "ci95": [
+          -0.3904194292822848,
+          -0.20862503947358213
+        ],
+        "estimate": -0.29559083179704426
+      },
+      "genuine": {
+        "ci95": [
+          -0.8422009059657657,
+          -0.5188606849185924
+        ],
+        "estimate": -0.6725815448697051
+      }
+    },
+    "weaker_open_loop_s7": {
+      "all": {
+        "ci95": [
+          -0.5470018836663362,
+          -0.3526809441697553
+        ],
+        "estimate": -0.4507271949617759
+      },
+      "genuine": {
+        "ci95": [
+          -0.8055425254384863,
+          -0.46565634400073747
+        ],
+        "estimate": -0.6423459126954079
+      }
+    },
+    "weaker_untrained_s7": {
+      "all": {
+        "ci95": [
+          -0.5265202637683583,
+          -0.34422138924143575
+        ],
+        "estimate": -0.4346734451950479
+      },
+      "genuine": {
+        "ci95": [
+          -1.1084199054944144,
+          -0.7571568590610249
+        ],
+        "estimate": -0.9472121386990587
+      }
+    }
+  },
+  "rank_rule": "sum weight*|coef|*direction*(value - canonical reference)/cohort population std",
+  "scales": {
+    "all": {
+      "impedance_tracking/position_tracking_rmse_m": 0.8435307486202452,
+      "impedance_tracking/success_rate": 0.3465149011727415,
+      "impedance_tracking/velocity_tracking_rmse_mps": 1.688819738521367,
+      "large_lateral_impulse/impulse_recovery_score": 0.21972568398573342,
+      "large_lateral_impulse/success_rate": 0.3237605763449827,
+      "large_lateral_impulse/velocity_tracking_rmse_mps": 1.551861709899347,
+      "soft_wall_collision/contact_tracking_rmse_mps": 2.019954877614695,
+      "soft_wall_collision/entry_speed_error_mps": 0.5701472389336563,
+      "soft_wall_collision/post_contact_impulse_reduction": 0.5057090441203044,
+      "soft_wall_collision/wall_contact_rate": 0.41573970964154905
+    },
+    "genuine": {
+      "impedance_tracking/position_tracking_rmse_m": 0.18788314997083466,
+      "impedance_tracking/success_rate": 0.10081287742886878,
+      "impedance_tracking/velocity_tracking_rmse_mps": 0.3872948369049767,
+      "large_lateral_impulse/impulse_recovery_score": 0.14207141731062084,
+      "large_lateral_impulse/success_rate": 0.18406913791279686,
+      "large_lateral_impulse/velocity_tracking_rmse_mps": 0.7836760565791562,
+      "soft_wall_collision/contact_tracking_rmse_mps": 0.36341901105756974,
+      "soft_wall_collision/entry_speed_error_mps": 0.036033651127611206,
+      "soft_wall_collision/post_contact_impulse_reduction": 0.04643500501719648,
+      "soft_wall_collision/wall_contact_rate": 1.0
+    },
+    "trained": {
+      "impedance_tracking/position_tracking_rmse_m": 0.031155216469847338,
+      "impedance_tracking/success_rate": 0.014192442870436158,
+      "impedance_tracking/velocity_tracking_rmse_mps": 0.09925049577733555,
+      "large_lateral_impulse/impulse_recovery_score": 0.09278677747632025,
+      "large_lateral_impulse/success_rate": 0.11459073129526978,
+      "large_lateral_impulse/velocity_tracking_rmse_mps": 0.4423284801020907,
+      "soft_wall_collision/contact_tracking_rmse_mps": 0.028133233807382727,
+      "soft_wall_collision/entry_speed_error_mps": 0.036114470717329934,
+      "soft_wall_collision/post_contact_impulse_reduction": 0.0022573028074687113,
+      "soft_wall_collision/wall_contact_rate": 1.0
+    }
+  },
+  "train_vs_test": {
+    "alt_mlp_estimator_s17": {
+      "impedance_tracking/position_tracking_rmse_m": [
+        0.11750992905363729,
+        0.1194040701780067
+      ],
+      "impedance_tracking/success_rate": [
+        1.0,
+        1.0
+      ],
+      "impedance_tracking/velocity_tracking_rmse_mps": [
+        0.3761457534295901,
+        0.38158447653605526
+      ],
+      "large_lateral_impulse/impulse_recovery_score": [
+        0.5929729324221975,
+        0.5912912276954567
+      ],
+      "large_lateral_impulse/success_rate": [
+        0.86328125,
+        0.859375
+      ],
+      "large_lateral_impulse/velocity_tracking_rmse_mps": [
+        0.8339194542893724,
+        0.8539948611740487
+      ],
+      "soft_wall_collision/contact_tracking_rmse_mps": [
+        0.18825889190735215,
+        0.20167164937835547
+      ],
+      "soft_wall_collision/entry_speed_error_mps": [
+        0.11873393104235036,
+        0.11932853504660271
+      ],
+      "soft_wall_collision/post_contact_impulse_reduction": [
+        0.21457531896003712,
+        0.21736364897645966
+      ],
+      "soft_wall_collision/wall_contact_rate": [
+        1.0,
+        1.0
+      ]
+    },
+    "alt_mlp_estimator_s7": {
+      "impedance_tracking/position_tracking_rmse_m": [
+        0.11475085760686252,
+        0.11578418377053157
+      ],
+      "impedance_tracking/success_rate": [
+        1.0,
+        1.0
+      ],
+      "impedance_tracking/velocity_tracking_rmse_mps": [
+        0.3673870645652817,
+        0.3706527623366632
+      ],
+      "large_lateral_impulse/impulse_recovery_score": [
+        0.5376634126469718,
+        0.545118678224916
+      ],
+      "large_lateral_impulse/success_rate": [
+        0.80859375,
+        0.8125
+      ],
+      "large_lateral_impulse/velocity_tracking_rmse_mps": [
+        1.0957268601671781,
+        1.0766400337524216
+      ],
+      "soft_wall_collision/contact_tracking_rmse_mps": [
+        0.13574151121976286,
+        0.14262583055892053
+      ],
+      "soft_wall_collision/entry_speed_error_mps": [
+        0.0471761935568841,
+        0.04635890117556009
+      ],
+      "soft_wall_collision/post_contact_impulse_reduction": [
+        0.21906351748681918,
+        0.22330434428200907
+      ],
+      "soft_wall_collision/wall_contact_rate": [
+        1.0,
+        1.0
+      ]
+    },
+    "better_3x_s17": {
+      "impedance_tracking/position_tracking_rmse_m": [
+        0.15921607690737913,
+        0.11755439760125538
+      ],
+      "impedance_tracking/success_rate": [
+        0.94921875,
+        0.97265625
+      ],
+      "impedance_tracking/velocity_tracking_rmse_mps": [
+        0.3959569664717252,
+        0.3155030053789931
+      ],
+      "large_lateral_impulse/impulse_recovery_score": [
+        0.5840873950497762,
+        0.5695597363439071
+      ],
+      "large_lateral_impulse/success_rate": [
+        0.98046875,
+        0.96875
+      ],
+      "large_lateral_impulse/velocity_tracking_rmse_mps": [
+        0.41111751753876624,
+        0.4945575113125449
+      ],
+      "soft_wall_collision/contact_tracking_rmse_mps": [
+        0.11447773272047987,
+        0.10882513217533732
+      ],
+      "soft_wall_collision/entry_speed_error_mps": [
+        0.09687421481527925,
+        0.0956636707998772
+      ],
+      "soft_wall_collision/post_contact_impulse_reduction": [
+        0.21312681276383483,
+        0.22153604322040366
+      ],
+      "soft_wall_collision/wall_contact_rate": [
+        1.0,
+        1.0
+      ]
+    },
+    "better_3x_s27": {
+      "impedance_tracking/position_tracking_rmse_m": [
+        0.1599607361381948,
+        0.14323444923246753
+      ],
+      "impedance_tracking/success_rate": [
+        0.94921875,
+        0.953125
+      ],
+      "impedance_tracking/velocity_tracking_rmse_mps": [
+        0.39452288821863274,
+        0.3595639344658208
+      ],
+      "large_lateral_impulse/impulse_recovery_score": [
+        0.6141691104983993,
+        0.5915424991164073
+      ],
+      "large_lateral_impulse/success_rate": [
+        0.94921875,
+        0.9375
+      ],
+      "large_lateral_impulse/velocity_tracking_rmse_mps": [
+        0.49732196017683217,
+        0.5781820853748985
+      ],
+      "soft_wall_collision/contact_tracking_rmse_mps": [
+        0.11105307936507405,
+        0.11045695696940822
+      ],
+      "soft_wall_collision/entry_speed_error_mps": [
+        0.08115818682035097,
+        0.08248731091756557
+      ],
+      "soft_wall_collision/post_contact_impulse_reduction": [
+        0.21842421142431345,
+        0.22603182759753815
+      ],
+      "soft_wall_collision/wall_contact_rate": [
+        1.0,
+        1.0
+      ]
+    },
+    "better_3x_s37": {
+      "impedance_tracking/position_tracking_rmse_m": [
+        0.15781099110996316,
+        0.1062943188656694
+      ],
+      "impedance_tracking/success_rate": [
+        0.94921875,
+        0.9765625
+      ],
+      "impedance_tracking/velocity_tracking_rmse_mps": [
+        0.3939723336544513,
+        0.2945316301620996
+      ],
+      "large_lateral_impulse/impulse_recovery_score": [
+        0.5685105483868471,
+        0.5627588713352394
+      ],
+      "large_lateral_impulse/success_rate": [
+        0.80859375,
+        0.7890625
+      ],
+      "large_lateral_impulse/velocity_tracking_rmse_mps": [
+        1.0835157632818893,
+        1.171316057877894
+      ],
+      "soft_wall_collision/contact_tracking_rmse_mps": [
+        0.1028959921723622,
+        0.09933005679151713
+      ],
+      "soft_wall_collision/entry_speed_error_mps": [
+        0.019922368425281257,
+        0.02060808972503391
+      ],
+      "soft_wall_collision/post_contact_impulse_reduction": [
+        0.21821945695513034,
+        0.22567432545830313
+      ],
+      "soft_wall_collision/wall_contact_rate": [
+        1.0,
+        1.0
+      ]
+    },
+    "better_3x_s47": {
+      "impedance_tracking/position_tracking_rmse_m": [
+        0.11540449509806378,
+        0.08569691839754619
+      ],
+      "impedance_tracking/success_rate": [
+        0.9765625,
+        0.9921875
+      ],
+      "impedance_tracking/velocity_tracking_rmse_mps": [
+        0.315044710375954,
+        0.2565277196832275
+      ],
+      "large_lateral_impulse/impulse_recovery_score": [
+        0.6207357871131784,
+        0.6030017457362016
+      ],
+      "large_lateral_impulse/success_rate": [
+        0.9375,
+        0.91796875
+      ],
+      "large_lateral_impulse/velocity_tracking_rmse_mps": [
+        0.5290245797518901,
+        0.6312170691750933
+      ],
+      "soft_wall_collision/contact_tracking_rmse_mps": [
+        0.11291738491755388,
+        0.11489820228865935
+      ],
+      "soft_wall_collision/entry_speed_error_mps": [
+        0.059054821150602066,
+        0.05853612455247213
+      ],
+      "soft_wall_collision/post_contact_impulse_reduction": [
+        0.21834240795333404,
+        0.22240852413799506
+      ],
+      "soft_wall_collision/wall_contact_rate": [
+        1.0,
+        1.0
+      ]
+    },
+    "better_3x_s7": {
+      "impedance_tracking/position_tracking_rmse_m": [
+        0.15968758675629627,
+        0.11623161794110569
+      ],
+      "impedance_tracking/success_rate": [
+        0.9453125,
+        0.9765625
+      ],
+      "impedance_tracking/velocity_tracking_rmse_mps": [
+        0.3962920024761638,
+        0.313332999425195
+      ],
+      "large_lateral_impulse/impulse_recovery_score": [
+        0.5862104967394667,
+        0.5665557732811953
+      ],
+      "large_lateral_impulse/success_rate": [
+        0.87890625,
+        0.87109375
+      ],
+      "large_lateral_impulse/velocity_tracking_rmse_mps": [
+        0.7937888801270462,
+        0.8464186690290585
+      ],
+      "soft_wall_collision/contact_tracking_rmse_mps": [
+        0.11301863291735456,
+        0.10551761112686045
+      ],
+      "soft_wall_collision/entry_speed_error_mps": [
+        0.10094865411624895,
+        0.10094228589403742
+      ],
+      "soft_wall_collision/post_contact_impulse_reduction": [
+        0.2157691282852341,
+        0.22198733093584866
+      ],
+      "soft_wall_collision/wall_contact_rate": [
+        1.0,
+        1.0
+      ]
+    },
+    "better_6x_s17": {
+      "impedance_tracking/position_tracking_rmse_m": [
+        0.22922687949211504,
+        0.13797088570673466
+      ],
+      "impedance_tracking/success_rate": [
+        0.8984375,
+        0.95703125
+      ],
+      "impedance_tracking/velocity_tracking_rmse_mps": [
+        0.5199324505955647,
+        0.34506475297618067
+      ],
+      "large_lateral_impulse/impulse_recovery_score": [
+        0.61912296839627,
+        0.5967326116574377
+      ],
+      "large_lateral_impulse/success_rate": [
+        0.91015625,
+        0.90625
+      ],
+      "large_lateral_impulse/velocity_tracking_rmse_mps": [
+        0.6508703529857374,
+        0.693745328487916
+      ],
+      "soft_wall_collision/contact_tracking_rmse_mps": [
+        0.09936470786544838,
+        0.09882129340732819
+      ],
+      "soft_wall_collision/entry_speed_error_mps": [
+        0.01559060200334832,
+        0.014978494313860988
+      ],
+      "soft_wall_collision/post_contact_impulse_reduction": [
+        0.218357016773587,
+        0.22430133630434435
+      ],
+      "soft_wall_collision/wall_contact_rate": [
+        1.0,
+        1.0
+      ]
+    },
+    "better_6x_s27": {
+      "impedance_tracking/position_tracking_rmse_m": [
+        0.12537787313077264,
+        0.08454978764342094
+      ],
+      "impedance_tracking/success_rate": [
+        0.96484375,
+        0.984375
+      ],
+      "impedance_tracking/velocity_tracking_rmse_mps": [
+        0.32442714543452966,
+        0.2446510394647501
+      ],
+      "large_lateral_impulse/impulse_recovery_score": [
+        0.6333263633437514,
+        0.6124230776397844
+      ],
+      "large_lateral_impulse/success_rate": [
+        0.97265625,
+        0.96484375
+      ],
+      "large_lateral_impulse/velocity_tracking_rmse_mps": [
+        0.38476851921932387,
+        0.45089771327234385
+      ],
+      "soft_wall_collision/contact_tracking_rmse_mps": [
+        0.10476001673180221,
+        0.10216855293315064
+      ],
+      "soft_wall_collision/entry_speed_error_mps": [
+        0.021837022199379753,
+        0.022657665681460014
+      ],
+      "soft_wall_collision/post_contact_impulse_reduction": [
+        0.2184779856374367,
+        0.2215858598622974
+      ],
+      "soft_wall_collision/wall_contact_rate": [
+        1.0,
+        1.0
+      ]
+    },
+    "better_6x_s7": {
+      "impedance_tracking/position_tracking_rmse_m": [
+        0.07475468046539169,
+        0.06701730578782657
+      ],
+      "impedance_tracking/success_rate": [
+        0.9921875,
+        0.99609375
+      ],
+      "impedance_tracking/velocity_tracking_rmse_mps": [
+        0.22267639098191067,
+        0.20757713399836206
+      ],
+      "large_lateral_impulse/impulse_recovery_score": [
+        0.5961040922634873,
+        0.5901273946485333
+      ],
+      "large_lateral_impulse/success_rate": [
+        0.83984375,
+        0.83203125
+      ],
+      "large_lateral_impulse/velocity_tracking_rmse_mps": [
+        0.9249431047070636,
+        0.9651955091025632
+      ],
+      "soft_wall_collision/contact_tracking_rmse_mps": [
+        0.10064348859578781,
+        0.10087026096995688
+      ],
+      "soft_wall_collision/entry_speed_error_mps": [
+        0.05431567118244806,
+        0.05320250468248668
+      ],
+      "soft_wall_collision/post_contact_impulse_reduction": [
+        0.21835403568263279,
+        0.22393246404284384
+      ],
+      "soft_wall_collision/wall_contact_rate": [
+        1.0,
+        1.0
+      ]
+    },
+    "reference_s17": {
+      "impedance_tracking/position_tracking_rmse_m": [
+        0.10515324045743982,
+        0.10603561873922966
+      ],
+      "impedance_tracking/success_rate": [
+        0.99609375,
+        0.99609375
+      ],
+      "impedance_tracking/velocity_tracking_rmse_mps": [
+        0.329840795703186,
+        0.3310640526090374
+      ],
+      "large_lateral_impulse/impulse_recovery_score": [
+        0.5052291982017723,
+        0.50925559983624
+      ],
+      "large_lateral_impulse/success_rate": [
+        0.765625,
+        0.76171875
+      ],
+      "large_lateral_impulse/velocity_tracking_rmse_mps": [
+        1.2760127272564465,
+        1.2926983861216075
+      ],
+      "soft_wall_collision/contact_tracking_rmse_mps": [
+        0.10343023731955484,
+        0.09662667154323361
+      ],
+      "soft_wall_collision/entry_speed_error_mps": [
+        0.091234184585514,
+        0.09084875269717195
+      ],
+      "soft_wall_collision/post_contact_impulse_reduction": [
+        0.21367341684670516,
+        0.22216723055354348
+      ],
+      "soft_wall_collision/wall_contact_rate": [
+        1.0,
+        1.0
+      ]
+    },
+    "reference_s27": {
+      "impedance_tracking/position_tracking_rmse_m": [
+        0.10682346522073546,
+        0.1447875347949691
+      ],
+      "impedance_tracking/success_rate": [
+        0.9921875,
+        0.97265625
+      ],
+      "impedance_tracking/velocity_tracking_rmse_mps": [
+        0.3258544177556183,
+        0.3981130875204741
+      ],
+      "large_lateral_impulse/impulse_recovery_score": [
+        0.5261399741867328,
+        0.5342217165923703
+      ],
+      "large_lateral_impulse/success_rate": [
+        0.734375,
+        0.74609375
+      ],
+      "large_lateral_impulse/velocity_tracking_rmse_mps": [
+        1.397792573701903,
+        1.3467155234259471
+      ],
+      "soft_wall_collision/contact_tracking_rmse_mps": [
+        0.12528386031483243,
+        0.12339070440560983
+      ],
+      "soft_wall_collision/entry_speed_error_mps": [
+        0.02834957735785132,
+        0.0276256305946242
+      ],
+      "soft_wall_collision/post_contact_impulse_reduction": [
+        0.2192811990540472,
+        0.22481305067546486
+      ],
+      "soft_wall_collision/wall_contact_rate": [
+        1.0,
+        1.0
+      ]
+    },
+    "reference_s37": {
+      "impedance_tracking/position_tracking_rmse_m": [
+        0.09967515673608968,
+        0.11571815362186291
+      ],
+      "impedance_tracking/success_rate": [
+        1.0,
+        0.9921875
+      ],
+      "impedance_tracking/velocity_tracking_rmse_mps": [
+        0.3198892664962449,
+        0.352204755080339
+      ],
+      "large_lateral_impulse/impulse_recovery_score": [
+        0.5408493268493035,
+        0.5392645081349827
+      ],
+      "large_lateral_impulse/success_rate": [
+        0.828125,
+        0.80859375
+      ],
+      "large_lateral_impulse/velocity_tracking_rmse_mps": [
+        1.0054045440972752,
+        1.0896197158794185
+      ],
+      "soft_wall_collision/contact_tracking_rmse_mps": [
+        0.12629697751940805,
+        0.12177488527766547
+      ],
+      "soft_wall_collision/entry_speed_error_mps": [
+        0.06867314690379098,
+        0.06973230267296032
+      ],
+      "soft_wall_collision/post_contact_impulse_reduction": [
+        0.21850210721210095,
+        0.22275409437019245
+      ],
+      "soft_wall_collision/wall_contact_rate": [
+        1.0,
+        1.0
+      ]
+    },
+    "reference_s47": {
+      "impedance_tracking/position_tracking_rmse_m": [
+        0.10571689199488099,
+        0.10719730374736061
+      ],
+      "impedance_tracking/success_rate": [
+        0.99609375,
+        0.99609375
+      ],
+      "impedance_tracking/velocity_tracking_rmse_mps": [
+        0.3294120037603947,
+        0.332091972330015
+      ],
+      "large_lateral_impulse/impulse_recovery_score": [
+        0.576664034938031,
+        0.5537684305977607
+      ],
+      "large_lateral_impulse/success_rate": [
+        0.8046875,
+        0.77734375
+      ],
+      "large_lateral_impulse/velocity_tracking_rmse_mps": [
+        1.0711576942943184,
+        1.1973754665699867
+      ],
+      "soft_wall_collision/contact_tracking_rmse_mps": [
+        0.11901847409912733,
+        0.11421149562701999
+      ],
+      "soft_wall_collision/entry_speed_error_mps": [
+        0.05940790151018596,
+        0.060254868508856294
+      ],
+      "soft_wall_collision/post_contact_impulse_reduction": [
+        0.21752301485670078,
+        0.2244901096060512
+      ],
+      "soft_wall_collision/wall_contact_rate": [
+        1.0,
+        1.0
+      ]
+    },
+    "reference_s7": {
+      "impedance_tracking/position_tracking_rmse_m": [
+        0.10750370585234723,
+        0.12709461752884582
+      ],
+      "impedance_tracking/success_rate": [
+        0.99609375,
+        0.984375
+      ],
+      "impedance_tracking/velocity_tracking_rmse_mps": [
+        0.33640163507533016,
+        0.37160681059473577
+      ],
+      "large_lateral_impulse/impulse_recovery_score": [
+        0.4634100485677198,
+        0.45218778580042196
+      ],
+      "large_lateral_impulse/success_rate": [
+        0.73828125,
+        0.71484375
+      ],
+      "large_lateral_impulse/velocity_tracking_rmse_mps": [
+        1.41112494250906,
+        1.5180411140484118
+      ],
+      "soft_wall_collision/contact_tracking_rmse_mps": [
+        0.15443818218502206,
+        0.1435291962261152
+      ],
+      "soft_wall_collision/entry_speed_error_mps": [
+        0.027541617486843063,
+        0.02635348604307077
+      ],
+      "soft_wall_collision/post_contact_impulse_reduction": [
+        0.2100713467631221,
+        0.21801332152489739
+      ],
+      "soft_wall_collision/wall_contact_rate": [
+        1.0,
+        1.0
+      ]
+    },
+    "weaker_open_loop_s17": {
+      "impedance_tracking/position_tracking_rmse_m": [
+        0.13209624094441585,
+        0.14409381622076517
+      ],
+      "impedance_tracking/success_rate": [
+        0.99609375,
+        0.98828125
+      ],
+      "impedance_tracking/velocity_tracking_rmse_mps": [
+        0.41573590034613794,
+        0.43584691067390025
+      ],
+      "large_lateral_impulse/impulse_recovery_score": [
+        0.45996117882743365,
+        0.4433904559549421
+      ],
+      "large_lateral_impulse/success_rate": [
+        0.67578125,
+        0.6328125
+      ],
+      "large_lateral_impulse/velocity_tracking_rmse_mps": [
+        1.5595104747654698,
+        1.7282335933011086
+      ],
+      "soft_wall_collision/contact_tracking_rmse_mps": [
+        0.1704317229613764,
+        0.17860694263026056
+      ],
+      "soft_wall_collision/entry_speed_error_mps": [
+        0.12045628756585339,
+        0.12122627396838458
+      ],
+      "soft_wall_collision/post_contact_impulse_reduction": [
+        0.21632623030942677,
+        0.22169659542773312
+      ],
+      "soft_wall_collision/wall_contact_rate": [
+        1.0,
+        1.0
+      ]
+    },
+    "weaker_open_loop_s7": {
+      "impedance_tracking/position_tracking_rmse_m": [
+        0.11459794359392372,
+        0.1169598713879228
+      ],
+      "impedance_tracking/success_rate": [
+        1.0,
+        1.0
+      ],
+      "impedance_tracking/velocity_tracking_rmse_mps": [
+        0.36686205108085734,
+        0.3739708751141301
+      ],
+      "large_lateral_impulse/impulse_recovery_score": [
+        0.39964372935229386,
+        0.39523403413219593
+      ],
+      "large_lateral_impulse/success_rate": [
+        0.578125,
+        0.55859375
+      ],
+      "large_lateral_impulse/velocity_tracking_rmse_mps": [
+        2.144310441970041,
+        2.223547587803564
+      ],
+      "soft_wall_collision/contact_tracking_rmse_mps": [
+        0.12235777995783215,
+        0.12236609351198943
+      ],
+      "soft_wall_collision/entry_speed_error_mps": [
+        0.02297692129095695,
+        0.023752896776598358
+      ],
+      "soft_wall_collision/post_contact_impulse_reduction": [
+        0.2153475626347393,
+        0.2246640478211278
+      ],
+      "soft_wall_collision/wall_contact_rate": [
+        1.0,
+        1.0
+      ]
+    },
+    "weaker_untrained_s7": {
+      "impedance_tracking/position_tracking_rmse_m": [
+        0.21925300591397204,
+        0.21757068641788507
+      ],
+      "impedance_tracking/success_rate": [
+        1.0,
+        1.0
+      ],
+      "impedance_tracking/velocity_tracking_rmse_mps": [
+        0.7043700969544009,
+        0.6949288755173831
+      ],
+      "large_lateral_impulse/impulse_recovery_score": [
+        0.23950402139464472,
+        0.22937249468050053
+      ],
+      "large_lateral_impulse/success_rate": [
+        1.0,
+        1.0
+      ],
+      "large_lateral_impulse/velocity_tracking_rmse_mps": [
+        1.0937186894776865,
+        1.1480796881106132
+      ],
+      "soft_wall_collision/contact_tracking_rmse_mps": [
+        0.13991302175261372,
+        0.14762610863630954
+      ],
+      "soft_wall_collision/entry_speed_error_mps": [
+        0.11659277793989953,
+        0.11739164742400264
+      ],
+      "soft_wall_collision/post_contact_impulse_reduction": [
+        0.21822189586565843,
+        0.22176679187566573
+      ],
+      "soft_wall_collision/wall_contact_rate": [
+        1.0,
+        1.0
+      ]
+    }
+  },
+  "wall_retreat_rms_per_episode": {
+    "alt_mlp_estimator_s17": {
+      "max": 0.09795376882319234,
+      "mean": 0.013696789435969263,
+      "measured_over_commanded": {
+        "mean": 1.0381108663709895,
+        "p05": 0.9065966392327398,
+        "p95": 1.1388072937942253
+      },
+      "p95": 0.07739218368899342
+    },
+    "alt_mlp_estimator_s7": {
+      "max": 0.1340618834745164,
+      "mean": 0.027463098366772916,
+      "measured_over_commanded": {
+        "mean": 1.009058977443417,
+        "p05": 0.8920718722750023,
+        "p95": 1.1028823623059234
+      },
+      "p95": 0.1103761923857781
+    },
+    "better_3x_s17": {
+      "max": 0.19333753947159174,
+      "mean": 0.06024670179412561,
+      "measured_over_commanded": {
+        "mean": 0.972915080377988,
+        "p05": 0.8506788911071238,
+        "p95": 1.0644851282381718
+      },
+      "p95": 0.17501888242232586
+    },
+    "better_3x_s27": {
+      "max": 0.17872658785918927,
+      "mean": 0.04141956596360888,
+      "measured_over_commanded": {
+        "mean": 0.9928489115035994,
+        "p05": 0.8675800973083346,
+        "p95": 1.0920928928610438
+      },
+      "p95": 0.16097423798449959
+    },
+    "better_3x_s37": {
+      "max": 0.19034660647899126,
+      "mean": 0.04854434271972285,
+      "measured_over_commanded": {
+        "mean": 0.9942292534972592,
+        "p05": 0.8845773760965946,
+        "p95": 1.0959625687577512
+      },
+      "p95": 0.16700136718289746
+    },
+    "better_3x_s47": {
+      "max": 0.1647868404157845,
+      "mean": 0.03595236916921408,
+      "measured_over_commanded": {
+        "mean": 1.0125060304822282,
+        "p05": 0.9019610055717944,
+        "p95": 1.1103793055734428
+      },
+      "p95": 0.1331426249253579
+    },
+    "better_3x_s7": {
+      "max": 0.209718117589773,
+      "mean": 0.06795050882802964,
+      "measured_over_commanded": {
+        "mean": 0.9787523887897697,
+        "p05": 0.8669237367350902,
+        "p95": 1.0804619597740188
+      },
+      "p95": 0.18670735337619745
+    },
+    "better_6x_s17": {
+      "max": 0.16841275447516094,
+      "mean": 0.03891343798172277,
+      "measured_over_commanded": {
+        "mean": 0.9944216164994757,
+        "p05": 0.8782694301365366,
+        "p95": 1.0851170547905966
+      },
+      "p95": 0.14759944756136123
+    },
+    "better_6x_s27": {
+      "max": 0.1911990382239733,
+      "mean": 0.04968751017952466,
+      "measured_over_commanded": {
+        "mean": 0.9914988183167577,
+        "p05": 0.8771142451488105,
+        "p95": 1.09643092271919
+      },
+      "p95": 0.16274498778959526
+    },
+    "better_6x_s7": {
+      "max": 0.1716312520142685,
+      "mean": 0.039408393998156314,
+      "measured_over_commanded": {
+        "mean": 1.0009622691784879,
+        "p05": 0.8853747871731711,
+        "p95": 1.092118090241968
+      },
+      "p95": 0.1416622200928977
+    },
+    "brute_force_grid_search": {
+      "max": 0.09722118193841056,
+      "mean": 0.019702681440684874,
+      "measured_over_commanded": {
+        "mean": 1.0274004740873186,
+        "p05": 0.9106977178440214,
+        "p95": 1.1217392461944324
+      },
+      "p95": 0.08036601162397033
+    },
+    "reference_s17": {
+      "max": 0.19760324618317643,
+      "mean": 0.05994319480092986,
+      "measured_over_commanded": {
+        "mean": 0.9824405717061173,
+        "p05": 0.8596183750368241,
+        "p95": 1.0800817453481866
+      },
+      "p95": 0.1767394514436557
+    },
+    "reference_s27": {
+      "max": 0.18360218600490044,
+      "mean": 0.045330200262099406,
+      "measured_over_commanded": {
+        "mean": 0.9945601806772897,
+        "p05": 0.8801504019122692,
+        "p95": 1.0933097144016413
+      },
+      "p95": 0.15924426415798115
+    },
+    "reference_s37": {
+      "max": 0.20531855395087326,
+      "mean": 0.06006639660847708,
+      "measured_over_commanded": {
+        "mean": 0.9842576684157635,
+        "p05": 0.8683642708619195,
+        "p95": 1.0913272024611484
+      },
+      "p95": 0.19292949190605846
+    },
+    "reference_s47": {
+      "max": 0.20709596515789663,
+      "mean": 0.05704634580862277,
+      "measured_over_commanded": {
+        "mean": 1.0016544285998694,
+        "p05": 0.8752041141021906,
+        "p95": 1.0975764415851648
+      },
+      "p95": 0.182931191875402
+    },
+    "reference_s7": {
+      "max": 0.27590942092978266,
+      "mean": 0.110411260110001,
+      "measured_over_commanded": {
+        "mean": 0.9656460561097227,
+        "p05": 0.8354326230414447,
+        "p95": 1.0615234167681258
+      },
+      "p95": 0.2465876261588939
+    },
+    "shortcut_analytic_clipped": {
+      "max": 0.17009835607904616,
+      "mean": 0.03739454792990331,
+      "measured_over_commanded": {
+        "mean": 1.003717063113379,
+        "p05": 0.8853394922089657,
+        "p95": 1.1006111321853138
+      },
+      "p95": 0.1483387747355996
+    },
+    "shortcut_analytic_impedance": {
+      "max": 0.17009835607904616,
+      "mean": 0.03739454792990331,
+      "measured_over_commanded": {
+        "mean": 1.003717063113379,
+        "p05": 0.8853394922089657,
+        "p95": 1.1006111321853138
+      },
+      "p95": 0.1483387747355996
+    },
+    "shortcut_baseline_tamper": {
+      "max": 0.19760324618317643,
+      "mean": 0.05994319480092986,
+      "measured_over_commanded": {
+        "mean": 0.9824405717061173,
+        "p05": 0.8596183750368241,
+        "p95": 1.0800817453481866
+      },
+      "p95": 0.1767394514436557
+    },
+    "shortcut_overspeed": {
+      "max": 0.0,
+      "mean": 0.0,
+      "measured_over_commanded": {
+        "mean": 1.4321855130780046,
+        "p05": 1.2369347802205712,
+        "p95": 1.598237364654088
+      },
+      "p95": 0.0
+    },
+    "shortcut_passive": {
+      "max": 0.21622281744968078,
+      "mean": 0.07526030694327104,
+      "measured_over_commanded": {
+        "mean": 0.9865828110020483,
+        "p05": 0.8682707717266887,
+        "p95": 1.0819946802277665
+      },
+      "p95": 0.19238552704930495
+    },
+    "shortcut_reference_lateral_clip": {
+      "max": 0.19760324618317643,
+      "mean": 0.05994319480092986,
+      "measured_over_commanded": {
+        "mean": 0.9824405717061173,
+        "p05": 0.8596183750368241,
+        "p95": 1.0800817453481866
+      },
+      "p95": 0.1767394514436557
+    },
+    "shortcut_retreat_full": {
+      "max": 2.7525044284691265,
+      "mean": 2.3915458438050576,
+      "measured_over_commanded": {
+        "mean": 0.38095501028309814,
+        "p05": 0.31332649653317574,
+        "p95": 0.4572757101491025
+      },
+      "p95": 2.70334550968084
+    },
+    "shortcut_retreat_mild": {
+      "max": 0.2945385017703199,
+      "mean": 0.15766057581285384,
+      "measured_over_commanded": {
+        "mean": 0.8850685982692355,
+        "p05": 0.7678549801634688,
+        "p95": 0.9821343303735569
+      },
+      "p95": 0.27494696794502593
+    },
+    "shortcut_score_file": {
+      "max": 0.19760324618317643,
+      "mean": 0.05994319480092986,
+      "measured_over_commanded": {
+        "mean": 0.9824405717061173,
+        "p05": 0.8596183750368241,
+        "p95": 1.0800817453481866
+      },
+      "p95": 0.1767394514436557
+    },
+    "shortcut_wall_dodger": {
+      "max": 5.0,
+      "mean": 5.0,
+      "measured_over_commanded": {
+        "mean": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "p95": 5.0
+    },
+    "shortcut_zero_lateral": {
+      "max": 0.09722118193841056,
+      "mean": 0.019702681440684874,
+      "measured_over_commanded": {
+        "mean": 1.0274004740873186,
+        "p05": 0.9106977178440214,
+        "p95": 1.1217392461944324
+      },
+      "p95": 0.08036601162397033
+    },
+    "simple_baseline_robust": {
+      "max": 0.010344894310636175,
+      "mean": 0.0016106924715289656,
+      "measured_over_commanded": {
+        "mean": 1.3680971274340044,
+        "p05": 1.2422650834376912,
+        "p95": 1.468830546335215
+      },
+      "p95": 0.0077649334962115995
+    },
+    "weaker_open_loop_s17": {
+      "max": 0.13299367263001938,
+      "mean": 0.0217790515947548,
+      "measured_over_commanded": {
+        "mean": 1.027081990304816,
+        "p05": 0.9065027779764071,
+        "p95": 1.122529849206199
+      },
+      "p95": 0.11249856116200707
+    },
+    "weaker_open_loop_s7": {
+      "max": 0.1774291616817666,
+      "mean": 0.042834644745922065,
+      "measured_over_commanded": {
+        "mean": 0.994474844029134,
+        "p05": 0.8721326731544387,
+        "p95": 1.102602360163243
+      },
+      "p95": 0.15252446999762484
+    },
+    "weaker_untrained_s7": {
+      "max": 0.1406557363367993,
+      "mean": 0.023366158233240612,
+      "measured_over_commanded": {
+        "mean": 1.0245894364273846,
+        "p05": 0.9073405300446914,
+        "p95": 1.1192774208155325
+      },
+      "p95": 0.11540821864473706
+    }
+  }
+}

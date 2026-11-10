@@ -1,0 +1,179 @@
+{
+  "experiments": {
+    "impedance_tracking": {
+      "results": {
+        "facet": {
+          "position_tracking_rmse_m": 2.5,
+          "success_rate": 0.0,
+          "velocity_tracking_rmse_mps": 5.0
+        },
+        "gain_0.5_0.0": {
+          "position_tracking_rmse_m": 0.16823760192283926,
+          "success_rate": 1.0,
+          "velocity_tracking_rmse_mps": 0.5394375150450267
+        },
+        "gain_1.0_0.1": {
+          "position_tracking_rmse_m": 0.15735867498548842,
+          "success_rate": 1.0,
+          "velocity_tracking_rmse_mps": 0.5035618004782196
+        },
+        "gain_2.0_0.3": {
+          "position_tracking_rmse_m": 0.16283540554082174,
+          "success_rate": 1.0,
+          "velocity_tracking_rmse_mps": 0.520534747561773
+        },
+        "gain_4.0_1.0": {
+          "position_tracking_rmse_m": 0.19337885743611608,
+          "success_rate": 1.0,
+          "velocity_tracking_rmse_mps": 0.617363681889069
+        },
+        "gain_5.5_4.0": {
+          "position_tracking_rmse_m": 0.903878137493112,
+          "success_rate": 0.5390625,
+          "velocity_tracking_rmse_mps": 1.9440129144701588
+        },
+        "velocity_robust": {
+          "position_tracking_rmse_m": 0.903878137493112,
+          "success_rate": 0.5390625,
+          "velocity_tracking_rmse_mps": 1.9440129144701588
+        },
+        "velocity_vanilla": {
+          "position_tracking_rmse_m": 1.2596224238408178,
+          "success_rate": 0.31640625,
+          "velocity_tracking_rmse_mps": 2.592367908702684
+        }
+      }
+    },
+    "large_lateral_impulse": {
+      "results": {
+        "facet": {
+          "impulse_recovery_score": 0.0,
+          "success_rate": 0.0,
+          "velocity_tracking_rmse_mps": 5.0
+        },
+        "gain_0.5_0.0": {
+          "impulse_recovery_score": 0.2354484968255514,
+          "success_rate": 1.0,
+          "velocity_tracking_rmse_mps": 1.1016894810474334
+        },
+        "gain_1.0_0.1": {
+          "impulse_recovery_score": 0.3874556757889416,
+          "success_rate": 1.0,
+          "velocity_tracking_rmse_mps": 0.6166548793499463
+        },
+        "gain_2.0_0.3": {
+          "impulse_recovery_score": 0.5833132484997772,
+          "success_rate": 0.78515625,
+          "velocity_tracking_rmse_mps": 1.1584119367718184
+        },
+        "gain_4.0_1.0": {
+          "impulse_recovery_score": 0.19316624661902482,
+          "success_rate": 0.34375,
+          "velocity_tracking_rmse_mps": 3.2797046452132532
+        },
+        "gain_5.5_4.0": {
+          "impulse_recovery_score": 0.06405100493371461,
+          "success_rate": 0.125,
+          "velocity_tracking_rmse_mps": 4.316138821010714
+        },
+        "velocity_robust": {
+          "impulse_recovery_score": 0.06405100493371461,
+          "success_rate": 0.125,
+          "velocity_tracking_rmse_mps": 4.316138821010714
+        },
+        "velocity_vanilla": {
+          "impulse_recovery_score": 0.02918637794109313,
+          "success_rate": 0.0625,
+          "velocity_tracking_rmse_mps": 4.61673560596487
+        }
+      }
+    },
+    "soft_wall_collision": {
+      "results": {
+        "facet": {
+          "contact_tracking_rmse_mps": 5.0,
+          "entry_speed_error_mps": 1.5,
+          "post_contact_impulse_reduction": -1.0,
+          "wall_contact_rate": 0.0
+        },
+        "gain_0.5_0.0": {
+          "contact_tracking_rmse_mps": 0.22114692918977336,
+          "entry_speed_error_mps": 0.04688233670100731,
+          "post_contact_impulse_reduction": 0.24990363029989182,
+          "wall_contact_rate": 1.0
+        },
+        "gain_1.0_0.1": {
+          "contact_tracking_rmse_mps": 0.4425089314907396,
+          "entry_speed_error_mps": 0.03977056352428436,
+          "post_contact_impulse_reduction": 0.22179924523062844,
+          "wall_contact_rate": 1.0
+        },
+        "gain_2.0_0.3": {
+          "contact_tracking_rmse_mps": 0.8372972054686157,
+          "entry_speed_error_mps": 0.029457472867158108,
+          "post_contact_impulse_reduction": 0.16941126111600535,
+          "wall_contact_rate": 1.0
+        },
+        "gain_4.0_1.0": {
+          "contact_tracking_rmse_mps": 1.4554726485414502,
+          "entry_speed_error_mps": 0.017975492123750242,
+          "post_contact_impulse_reduction": 0.06952761031482235,
+          "wall_contact_rate": 1.0
+        },
+        "gain_5.5_4.0": {
+          "contact_tracking_rmse_mps": 1.8263383398614847,
+          "entry_speed_error_mps": 0.013462566539494854,
+          "post_contact_impulse_reduction": 0.0,
+          "wall_contact_rate": 1.0
+        },
+        "velocity_robust": {
+          "contact_tracking_rmse_mps": 1.8263383398614847,
+          "entry_speed_error_mps": 0.013462566539494854,
+          "post_contact_impulse_reduction": 0.0,
+          "wall_contact_rate": 1.0
+        },
+        "velocity_vanilla": {
+          "contact_tracking_rmse_mps": 1.8263383398614847,
+          "entry_speed_error_mps": 0.013462566539494854,
+          "post_contact_impulse_reduction": 0.0,
+          "wall_contact_rate": 1.0
+        }
+      }
+    }
+  },
+  "metadata": {
+    "episodes": {
+      "impedance_tracking": 256,
+      "large_lateral_impulse": 256,
+      "soft_wall_collision": 128
+    },
+    "methods": {
+      "facet": {
+        "reason": "PolicyError: missing policy file /home/user/outputs/hardening/grid_root_5/facet/policy.pt",
+        "status": "failed"
+      },
+      "gain_0.5_0.0": {
+        "status": "ok"
+      },
+      "gain_1.0_0.1": {
+        "status": "ok"
+      },
+      "gain_2.0_0.3": {
+        "status": "ok"
+      },
+      "gain_4.0_1.0": {
+        "status": "ok"
+      },
+      "gain_5.5_4.0": {
+        "status": "ok"
+      },
+      "velocity_robust": {
+        "status": "ok"
+      },
+      "velocity_vanilla": {
+        "status": "ok"
+      }
+    },
+    "slice": "train"
+  }
+}

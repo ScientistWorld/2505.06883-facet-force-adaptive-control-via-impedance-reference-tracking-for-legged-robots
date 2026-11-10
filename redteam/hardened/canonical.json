@@ -1,0 +1,19 @@
+{
+  "case": "reference_s47",
+  "order": [
+    "reference_s27",
+    "reference_s7",
+    "reference_s47",
+    "reference_s17",
+    "reference_s37"
+  ],
+  "ranks_relative_to_first_seed": {
+    "reference_s17": 0.490388279830147,
+    "reference_s27": -0.15725215124059008,
+    "reference_s37": 0.5942160585092741,
+    "reference_s47": 0.4299454152967869,
+    "reference_s7": 0.0
+  },
+  "rule": "median reference seed by rank (trained cohort scales, test slice)",
+  "seed": 47
+}

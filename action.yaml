@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Resume the hardening run after preemptions: keep trained reference + 8 variant policies, train the remaining 3x-budget variant (seed 17) with checkpoint/resume, re-score all cases through the hidden-test evaluator, analyze."
+notes: "Final hardening job (resumable): train 5 reference seeds (200/50), 3x budget x5, 6x budget x3, open-loop x2, MLP-estimator x2, untrained, all single-threaded in parallel; ship the median reference seed as checkpoints/facet; score shortcut probes (incl. new wall-retreat and clipped-analytic probes, plus pre-gate legacy scores) through the hidden test; paired bootstrap analysis; official scores + validate."

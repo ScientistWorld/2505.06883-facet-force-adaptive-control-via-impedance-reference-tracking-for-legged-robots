@@ -1,19 +1,20 @@
 #!/bin/bash
-# Run the paper's proposed method.
+# Train the paper's method (reduced-scale FACET teacher/student PPO) and export
+# the deployable student to checkpoints/facet/policy.pt.
 #
-# This script trains/runs the paper's method using code in method/.
-#
-# Usage:
-#   bash scripts/method.sh
+# Usage: bash scripts/method.sh   (FORCE=1 retrains even if a policy exists)
 
-set -e
+set -euo pipefail
 
 cd /home/user
 
-python -m method.run_facet \
-  --episodes "${EPISODES:-96}" \
-  --output-dir checkpoints/facet_planar \
-  --teacher-updates "${TEACHER_UPDATES:-60}" \
-  --student-updates "${STUDENT_UPDATES:-30}" \
-  --n-envs "${N_ENVS:-128}" \
-  --rollout-steps "${ROLLOUT_STEPS:-96}"
+EXTRA=()
+if [ "${FORCE:-0}" = "1" ]; then EXTRA+=(--force); fi
+python -u -m method.run_facet \
+  --output-dir checkpoints/facet \
+  --seed "${SEED:-7}" \
+  --teacher-updates "${TEACHER_UPDATES:-160}" \
+  --student-updates "${STUDENT_UPDATES:-40}" \
+  --n-envs "${N_ENVS:-256}" \
+  --rollout-steps "${ROLLOUT_STEPS:-96}" \
+  "${EXTRA[@]}"

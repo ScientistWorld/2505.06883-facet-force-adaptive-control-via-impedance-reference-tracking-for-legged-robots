@@ -1,8 +1,19 @@
-"""FACET impedance reference model and smoothed target controller."""
+"""FACET impedance reference model and temporally smoothed tracking targets.
+
+Implements paper Sec. 4.1-4.2: the virtual mass-spring-damper
+
+    m x_ref'' = Kp (x_des - x_ref) + Kd (xdot_des - xdot_ref) + f_ext       (Eq. 2)
+
+is integrated from the robot's own states ``L`` control steps in the past
+(Eq. 6). With the fixed-target-velocity command x_des = x_sim + (Kd/Kp) v_target
+and xdot_des = 0 the spring term becomes Kp (x_sim - x_ref) + Kd (v_target - v_ref).
+Rewards (Eq. 7) average per-target exponentials over the starts
+t' in {t - 8dt, t - 16dt, t - 32dt}. ``mode="open_loop"`` keeps a single target
+integrated from the episode start (the paper's open-loop ablation).
+"""
 
 from __future__ import annotations
 
-from collections import deque
 from dataclasses import dataclass
 
 import numpy as np
@@ -10,139 +21,123 @@ import numpy as np
 
 @dataclass
 class ImpedanceCommand:
-    kp: float | np.ndarray
-    kd: float | np.ndarray
-    virtual_mass: float | np.ndarray
-    target_velocity: np.ndarray
+    kp: np.ndarray                # [n]
+    kd: np.ndarray                # [n]
+    virtual_mass: np.ndarray      # [n]
+    target_velocity: np.ndarray   # [n, 2]
 
 
-class SmoothedImpedanceReference:
-    """Integrates Eq. (2) from multiple starts, matching FACET Sec. 4.2."""
+def reference_substep(
+    x_ref: np.ndarray,
+    v_ref: np.ndarray,
+    x_sim: np.ndarray,
+    force: np.ndarray,
+    command: ImpedanceCommand,
+    dt: float,
+) -> tuple[np.ndarray, np.ndarray]:
+    """One semi-implicit Euler step of Eq. (2) in fixed-target-velocity mode."""
+    spring = command.kp[:, None] * (x_sim - x_ref) + command.kd[:, None] * (command.target_velocity - v_ref)
+    acc = (spring + force) / command.virtual_mass[:, None]
+    v_new = v_ref + acc * dt
+    x_new = x_ref + v_new * dt
+    return x_new, v_new
 
-    def __init__(self, n_envs: int, dt: float, lags: tuple[int, ...] = (8, 16, 32)):
-        self.n_envs = n_envs
+
+class ReferenceTargets:
+    """Per-environment history of robot states and external forces.
+
+    ``pos[h]``/``vel[h]`` hold states with ``h = H - 1`` the latest; ``force[h]``
+    is the force applied while moving from state ``h`` to ``h + 1``.
+    """
+
+    def __init__(self, n_envs: int, dt: float, lags: tuple[int, ...] = (8, 16, 32), mode: str = "smoothed"):
+        if mode not in ("smoothed", "open_loop"):
+            raise ValueError(f"unknown target mode {mode}")
+        self.n = n_envs
         self.dt = dt
-        self.lags = lags
-        self.max_lag = max(lags)
-        self.history: deque[tuple[np.ndarray, np.ndarray, np.ndarray]] = deque(maxlen=self.max_lag + 1)
+        self.lags = tuple(lags)
+        self.mode = mode
+        self.H = max(self.lags) + 1
+        self.pos = np.zeros((self.H, n_envs, 2))
+        self.vel = np.zeros((self.H, n_envs, 2))
+        self.force = np.zeros((self.H, n_envs, 2))
+        self.age = np.zeros(n_envs, dtype=np.int64)
+        self.ol_pos = np.zeros((n_envs, 2))
+        self.ol_vel = np.zeros((n_envs, 2))
 
-    def reset(self, pos: np.ndarray, vel: np.ndarray) -> None:
-        self.history.clear()
-        zero_force = np.zeros_like(pos)
-        for _ in range(self.max_lag + 1):
-            self.history.append((pos.copy(), vel.copy(), zero_force.copy()))
+    @property
+    def n_targets(self) -> int:
+        return 1 if self.mode == "open_loop" else len(self.lags)
 
-    def push_state(self, pos: np.ndarray, vel: np.ndarray, force_ext: np.ndarray | None = None) -> None:
-        if force_ext is None:
-            force_ext = np.zeros_like(pos)
-        self.history.append((pos.copy(), vel.copy(), force_ext.copy()))
+    def reset(self, idx: np.ndarray, pos: np.ndarray, vel: np.ndarray) -> None:
+        self.pos[:, idx] = pos[idx]
+        self.vel[:, idx] = vel[idx]
+        self.force[:, idx] = 0.0
+        self.age[idx] = 0
+        self.ol_pos[idx] = pos[idx]
+        self.ol_vel[idx] = vel[idx]
 
-    def desired_position(self, pos: np.ndarray, command: ImpedanceCommand) -> np.ndarray:
-        # Paper's fixed target velocity mode: x_des = Kd/Kp * v_target + x_sim.
-        kp = np.asarray(command.kp, dtype=np.float32)
-        kd = np.asarray(command.kd, dtype=np.float32)
-        ratio = kd / np.maximum(kp, 1e-6)
-        if ratio.ndim == 0:
-            ratio = ratio[None]
-        target_velocity = np.asarray(command.target_velocity, dtype=np.float32)
-        if target_velocity.ndim == 1:
-            target_velocity = np.tile(target_velocity[None, :], (pos.shape[0], 1))
-        return pos + ratio[:, None] * target_velocity
+    def push(self, prev_pos: np.ndarray, force: np.ndarray, pos: np.ndarray, vel: np.ndarray, command: ImpedanceCommand) -> None:
+        """Record one simulator transition (force applied from the previous state)."""
+        if self.mode == "open_loop":
+            self.ol_pos, self.ol_vel = reference_substep(self.ol_pos, self.ol_vel, prev_pos, force, command, self.dt)
+        self.pos = np.roll(self.pos, -1, axis=0)
+        self.vel = np.roll(self.vel, -1, axis=0)
+        self.force = np.roll(self.force, -1, axis=0)
+        self.pos[-1] = pos
+        self.vel[-1] = vel
+        self.force[-2] = force
+        self.force[-1] = 0.0
+        self.age += 1
 
-    def integrate_from(
+    def _integrate(
         self,
-        start_pos: np.ndarray,
-        start_vel: np.ndarray,
-        current_pos: np.ndarray,
-        force_ext: np.ndarray,
+        pos_w: np.ndarray,
+        vel_w: np.ndarray,
+        force_w: np.ndarray,
+        effective: np.ndarray,
         command: ImpedanceCommand,
-        steps: int,
-        force_sequence: list[np.ndarray] | None = None,
-    ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-        ref_pos = start_pos.copy()
-        ref_vel = start_vel.copy()
-        x_des = self.desired_position(current_pos, command)
-        kp = np.asarray(command.kp, dtype=np.float32)
-        kd = np.asarray(command.kd, dtype=np.float32)
-        virtual_mass = np.asarray(command.virtual_mass, dtype=np.float32)
-        if kp.ndim == 0:
-            kp = np.full(ref_pos.shape[0], float(kp), dtype=np.float32)
-        if kd.ndim == 0:
-            kd = np.full(ref_pos.shape[0], float(kd), dtype=np.float32)
-        if virtual_mass.ndim == 0:
-            virtual_mass = np.full(ref_pos.shape[0], float(virtual_mass), dtype=np.float32)
-        acc = np.zeros_like(ref_pos)
-        if force_sequence is None:
-            force_sequence = [force_ext for _ in range(max(1, steps))]
-        for step_force in force_sequence[-max(1, steps) :]:
-            spring = kp[:, None] * (x_des - ref_pos) - kd[:, None] * ref_vel
-            acc = (spring + step_force) / virtual_mass[:, None]
-            ref_vel = ref_vel + acc * self.dt
-            ref_pos = ref_pos + ref_vel * self.dt
-        return ref_pos, ref_vel, acc
+    ) -> tuple[np.ndarray, np.ndarray]:
+        steps = force_w.shape[0]
+        begin = steps - effective
+        x = pos_w[0].copy()
+        v = vel_w[0].copy()
+        for j in range(steps):
+            started = (j >= begin)[:, None]
+            x_new, v_new = reference_substep(x, v, pos_w[j], force_w[j], command, self.dt)
+            nxt = min(j + 1, pos_w.shape[0] - 1)
+            x = np.where(started, x_new, pos_w[nxt])
+            v = np.where(started, v_new, vel_w[nxt])
+        return x, v
 
-    def targets(
-        self, current_pos: np.ndarray, force_ext: np.ndarray, command: ImpedanceCommand
-    ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-        pos_targets = []
-        vel_targets = []
-        acc_targets = []
-        hist = list(self.history)
+    def current_targets(self, command: ImpedanceCommand) -> tuple[np.ndarray, np.ndarray]:
+        """Targets for the latest state: arrays [n_targets, n, 2]."""
+        if self.mode == "open_loop":
+            return self.ol_pos[None].copy(), self.ol_vel[None].copy()
+        H = self.H
+        xs, vs = [], []
         for lag in self.lags:
-            idx = max(0, len(hist) - 1 - lag)
-            start_pos, start_vel, _ = hist[idx]
-            force_sequence = [entry[2] for entry in hist[idx + 1 :]]
-            force_sequence.append(force_ext)
-            ref_pos, ref_vel, ref_acc = self.integrate_from(
-                start_pos, start_vel, current_pos, force_ext, command, lag, force_sequence
+            effective = np.minimum(lag, self.age)
+            x, v = self._integrate(
+                self.pos[H - 1 - lag :], self.vel[H - 1 - lag :], self.force[H - 1 - lag : H - 1], effective, command
             )
-            pos_targets.append(ref_pos)
-            vel_targets.append(ref_vel)
-            acc_targets.append(ref_acc)
-        return np.stack(pos_targets), np.stack(vel_targets), np.stack(acc_targets)
+            xs.append(x)
+            vs.append(v)
+        return np.stack(xs), np.stack(vs)
 
-
-class FACETController:
-    """Teacher-style policy that tracks smoothed impedance reference targets."""
-
-    def __init__(
-        self,
-        n_envs: int,
-        dt: float,
-        kp: float = 16.0,
-        virtual_mass: float = 12.0,
-        pos_gain: float = 1.0,
-        vel_gain: float = 0.5,
-    ):
-        kd = 2.0 * np.sqrt(kp)
-        self.pos_gain = pos_gain
-        self.vel_gain = vel_gain
-        self.command = ImpedanceCommand(
-            kp=kp,
-            kd=kd,
-            virtual_mass=virtual_mass,
-            target_velocity=np.array([1.5, 0.0], dtype=np.float32),
-        )
-        self.ref = SmoothedImpedanceReference(n_envs=n_envs, dt=dt)
-
-    def reset(self, pos: np.ndarray, vel: np.ndarray) -> None:
-        self.ref.reset(pos, vel)
-
-    def act(self, pos: np.ndarray, vel: np.ndarray, force_ext: np.ndarray) -> tuple[np.ndarray, dict]:
-        pos_targets, vel_targets, acc_targets = self.ref.targets(pos, force_ext, self.command)
-        ref_pos = pos_targets.mean(axis=0)
-        ref_vel = vel_targets.mean(axis=0)
-        x_des = self.ref.desired_position(pos, self.command)
-        spring_acc = (
-            self.command.kp * (x_des - ref_pos) - self.command.kd * ref_vel
-        ) / self.command.virtual_mass
-        # Eq. (2) gives ref_acc = (spring + external_force) / m. Since the
-        # simulated robot receives the same external force directly, its ground
-        # reaction action should reproduce only the virtual spring component.
-        action = spring_acc + self.pos_gain * (ref_pos - pos) + self.vel_gain * (ref_vel - vel)
-        self.ref.push_state(pos, vel)
-        return action.astype(np.float32), {
-            "ref_pos": ref_pos,
-            "ref_vel": ref_vel,
-            "ref_acc": acc_targets.mean(axis=0),
-        }
+    def predicted_targets(self, force_now: np.ndarray, command: ImpedanceCommand) -> tuple[np.ndarray, np.ndarray]:
+        """Targets for the next state given the force acting now: [n_targets, n, 2]."""
+        if self.mode == "open_loop":
+            x, v = reference_substep(self.ol_pos, self.ol_vel, self.pos[-1], force_now, command, self.dt)
+            return x[None], v[None]
+        H = self.H
+        xs, vs = [], []
+        for lag in self.lags:
+            effective = np.minimum(lag, self.age + 1)
+            pos_w = np.concatenate([self.pos[H - lag :], self.pos[H - 1 :]], axis=0)
+            vel_w = np.concatenate([self.vel[H - lag :], self.vel[H - 1 :]], axis=0)
+            force_w = np.concatenate([self.force[H - lag : H - 1], force_now[None]], axis=0)
+            x, v = self._integrate(pos_w, vel_w, force_w, effective, command)
+            xs.append(x)
+            vs.append(v)
+        return np.stack(xs), np.stack(vs)

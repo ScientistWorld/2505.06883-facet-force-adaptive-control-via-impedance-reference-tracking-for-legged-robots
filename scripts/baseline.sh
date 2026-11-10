@@ -1,20 +1,16 @@
 #!/bin/bash
-# Run a baseline method from the paper.
+# Velocity-tracking baselines.
 #
-# Baselines are simple reference methods the paper compares against. 
-# Implement this only if applicable, i.e. the paper has baselines.
-# You do not need to implement all baselines to begin — 
-# just enough to validate that the evaluation pipeline works 
-# and provide a reference point. You can decide to expand more baselines later.
-# Each baseline must be actually run and scored through evaluate.sh
-# so the numbers are verified, not self-reported.
-# You can decide what this baseline script should do yourself.
-#
-# Usage:
-#   bash scripts/baseline.sh <name>
+# The evaluators run their own copies of both baselines on every call (they are
+# the fixed comparison side), so the official baseline numbers come from
+# scripts/evaluate*.sh. This script additionally exports the same controllers
+# as TorchScript policies (an example of the policy interface) and scores them
+# on the visible train scenarios, which must reproduce the evaluator's own
+# baseline rows.
 
-set -e
+set -euo pipefail
 
 cd /home/user
 
-python -m baseline.run_baseline --episodes "${EPISODES:-96}" --output-dir checkpoints/facet_planar
+python -m baseline.velocity_controllers --output-root outputs/baselines
+python -u eval/train/evaluate.py outputs/baselines --output outputs/baselines/scores_train.json

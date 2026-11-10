@@ -1,14 +1,24 @@
-"""Small-scale PPO implementation for FACET-style impedance tracking.
+"""Reduced-scale FACET training (paper Sec. 4.3 and Appendix 10.1).
 
-The full paper trains legged policies in Isaac Lab. This module keeps the
-algorithmic pieces that matter for the reduced benchmark: a policy is optimized
-with PPO to track temporally smoothed impedance-reference targets, first with a
-privileged feature encoder and then with a deployable estimator.
+A policy is trained with PPO to imitate a virtual mass-spring-damper:
+rewards follow Eq. (7), averaging position/velocity exponentials over targets
+integrated from the robot's states 8/16/32 control steps in the past, plus the
+quadratic velocity cost and survival term of Sec. 10.1.3. Training is two-stage
+(Fig. 3): a teacher acts on a privileged-feature encoder while a GRU estimator
+learns to predict that feature from deployable observation history; the
+student actor is initialised from the teacher and fine-tuned with PPO using
+the estimator. The critic is asymmetric (sees privileged information) and all
+inputs use running empirical normalisation. The deployed student is exported
+as a TorchScript policy matching the benchmark interface in data/.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+import copy
+import json
+import math
+import time
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 import numpy as np
@@ -17,484 +27,438 @@ from torch import nn
 from torch.distributions import Normal
 from torch.nn import functional as F
 
-from data.facet_planar_env import PlanarForceEnv
-from method.facet_reference import ImpedanceCommand, SmoothedImpedanceReference
+from data.facet_planar_env import (
+    ACTION_LIMIT,
+    DT,
+    NOMINAL_MASS,
+    PlanarForceSim,
+    Scenario,
+    blank_scenario,
+    randomize_body,
+    set_stiffness,
+)
+from method.facet_reference import ImpedanceCommand, ReferenceTargets
+
+EPISODE_STEPS = 350
 
 
 @dataclass
 class PPOConfig:
-    n_envs: int = 128
+    n_envs: int = 256
     rollout_steps: int = 96
-    teacher_updates: int = 60
-    student_updates: int = 30
+    teacher_updates: int = 160
+    student_updates: int = 40
+    epochs: int = 4
     minibatches: int = 4
-    epochs: int = 3
     gamma: float = 0.98
     gae_lambda: float = 0.95
     clip_ratio: float = 0.2
-    entropy_coef: float = 0.01
-    value_coef: float = 0.5
-    estimator_coef: float = 0.2
-    max_grad_norm: float = 0.7
-    lr: float = 3.0e-4
+    actor_lr: float = 3.0e-4
+    critic_lr: float = 1.0e-3
+    estimator_lr: float = 1.0e-3
+    estimator_epochs: int = 2
+    entropy_coef: float = 0.005
+    max_grad_norm: float = 1.0
     seed: int = 7
-    dt: float = 0.02
+    estimator: str = "gru"          # "gru" (paper) or "mlp" (current observation only)
+    target_mode: str = "smoothed"   # "smoothed" (paper, lags 8/16/32) or "open_loop"
+    lags: tuple[int, ...] = (8, 16, 32)
+    latent_dim: int = 32
+    estimator_hidden: int = 128
+    encoder_hidden: int = 128
+    actor_hidden: tuple[int, ...] = (128, 128, 128)
+    critic_hidden: tuple[int, ...] = (256, 128, 128)
+    action_scale: float = 4.0
+    init_log_std: float = -1.0
+    threads: int = 1
 
 
-def mlp(in_dim: int, hidden: tuple[int, ...], out_dim: int, activation: type[nn.Module] = nn.Tanh) -> nn.Sequential:
+# ---------------------------------------------------------------------------
+# Training distribution (paper Sec. 10.1.4, on the benchmark's scale).
+# ---------------------------------------------------------------------------
+def sample_training_scenarios(rng: np.random.Generator, n: int) -> Scenario:
+    sc = blank_scenario(n)
+    randomize_body(rng, sc)
+    set_stiffness(sc, np.exp(rng.uniform(math.log(0.5), math.log(32.0), size=n)))
+    sc.virtual_mass[:] = NOMINAL_MASS
+    sc.target_velocity[:, 0] = rng.uniform(-0.5, 2.0, size=n)
+    sc.target_velocity[:, 1] = rng.uniform(-0.5, 0.5, size=n)
+    sc.init_vel[:, 0] = rng.uniform(-0.5, 2.0, size=n)
+    sc.init_vel[:, 1] = rng.uniform(-0.5, 0.5, size=n)
+    has_const = rng.random(n) < 0.5
+    sc.const_force[:] = rng.uniform(-40.0, 40.0, size=(n, 2)) * has_const[:, None]
+    sc.const_start[:] = rng.uniform(0.0, 5.0, size=n)
+    sc.const_duration[:] = rng.uniform(1.0, 4.0, size=n)
+    has_push = rng.random(n) < 0.8
+    sc.impulse_peak[:, 0] = rng.uniform(0.0, 200.0, size=n) * rng.choice([-1.0, 1.0], size=n) * has_push
+    sc.impulse_peak[:, 1] = rng.uniform(80.0, 600.0, size=n) * rng.choice([-1.0, 1.0], size=n) * has_push
+    sc.impulse_start[:] = rng.uniform(0.3, 6.0, size=n)
+    sc.impulse_duration[:] = rng.uniform(0.4, 0.6, size=n)
+    has_wall = rng.random(n) < 0.3
+    sc.wall_x[:] = np.where(has_wall, sc.init_pos[:, 0] + rng.uniform(0.5, 3.0, size=n), np.inf)
+    return sc
+
+
+class TrainingTask:
+    """Vectorised training environments with FACET rewards and privileged observations."""
+
+    def __init__(self, config: PPOConfig):
+        n = config.n_envs
+        self.n = n
+        self.rng = np.random.default_rng(config.seed)
+        self.scenario = sample_training_scenarios(self.rng, n)
+        self.sim = PlanarForceSim(self.scenario)
+        self.ref = ReferenceTargets(n, DT, config.lags, config.target_mode)
+        self.ref.reset(np.arange(n), self.sim.pos, self.sim.vel)
+        # Stagger the first episodes so resets are not synchronised.
+        self.limit = self.rng.integers(EPISODE_STEPS // 4, EPISODE_STEPS + 1, size=n)
+        self.prev_action = np.zeros((n, 2))
+
+    def command(self) -> ImpedanceCommand:
+        sc = self.scenario
+        return ImpedanceCommand(sc.kp, sc.kd, sc.virtual_mass, sc.target_velocity)
+
+    def observe(self) -> tuple[np.ndarray, np.ndarray]:
+        sim, sc = self.sim, self.scenario
+        obs = sim.observation()
+        force_now, _ = sim.external_forces()
+        xs, vs = self.ref.predicted_targets(force_now, self.command())
+        priv = np.concatenate(
+            [
+                force_now / 200.0,
+                ((sc.body_mass - NOMINAL_MASS) / 2.0)[:, None],
+                ((sc.actuator_gain - 1.0) / 0.15)[:, None],
+                ((sc.actuator_tau - 0.05) / 0.03)[:, None],
+                sim.acc_eff / ACTION_LIMIT,
+                (xs - sim.pos[None]).transpose(1, 0, 2).reshape(self.n, -1),
+                (vs - sim.vel[None]).transpose(1, 0, 2).reshape(self.n, -1),
+            ],
+            axis=1,
+        )
+        return obs, priv.astype(np.float32)
+
+    def step(self, action: np.ndarray) -> tuple[np.ndarray, np.ndarray, dict[str, float]]:
+        sim = self.sim
+        prev_pos = sim.pos.copy()
+        info = sim.step(action)
+        command = self.command()
+        self.ref.push(prev_pos, info["force"], sim.pos, sim.vel, command)
+        xs, vs = self.ref.current_targets(command)
+        pos_err = np.sum((sim.pos[None] - xs) ** 2, axis=-1)
+        vel_err = np.sum((sim.vel[None] - vs) ** 2, axis=-1)
+        # Eq. (7): mean over targets of per-target rewards (weights of Sec. 10.1.3).
+        tracking = (
+            0.75 * np.exp(-pos_err / 0.25) + 1.5 * (np.exp(-vel_err / 0.25) - 0.5 * np.minimum(vel_err, 16.0))
+        ).mean(axis=0)
+        clipped = np.clip(action, -ACTION_LIMIT, ACTION_LIMIT)
+        action_rate = np.sum((clipped - self.prev_action) ** 2, axis=-1)
+        newly_failed = info["newly_failed"]
+        reward = tracking + 1.0 - 0.002 * action_rate - 2.0 * newly_failed
+        self.prev_action = clipped
+        done = newly_failed | (sim.k >= self.limit)
+        stats = {
+            "tracking": float(tracking.mean()),
+            "vel_err": float(np.sqrt(vel_err.mean())),
+            "falls": float(newly_failed.mean()),
+        }
+        idx = np.flatnonzero(done)
+        if idx.size:
+            self.scenario.assign(idx, sample_training_scenarios(self.rng, idx.size))
+            sim.reset(idx)
+            self.ref.reset(idx, sim.pos, sim.vel)
+            self.prev_action[idx] = 0.0
+            self.limit[idx] = EPISODE_STEPS
+        return reward.astype(np.float32), done, stats
+
+
+# ---------------------------------------------------------------------------
+# Networks.
+# ---------------------------------------------------------------------------
+class RunningNorm(nn.Module):
+    def __init__(self, dim: int):
+        super().__init__()
+        self.register_buffer("mean", torch.zeros(dim))
+        self.register_buffer("var", torch.ones(dim))
+        self.register_buffer("count", torch.tensor(1e-4))
+
+    @torch.no_grad()
+    def update(self, x: torch.Tensor) -> None:
+        batch_mean = x.mean(0)
+        batch_var = x.var(0, unbiased=False)
+        batch_count = x.shape[0]
+        delta = batch_mean - self.mean
+        total = self.count + batch_count
+        self.mean += delta * batch_count / total
+        m2 = self.var * self.count + batch_var * batch_count + delta.pow(2) * self.count * batch_count / total
+        self.var.copy_(m2 / total)
+        self.count.copy_(total)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return torch.clamp((x - self.mean) / torch.sqrt(self.var + 1e-8), -5.0, 5.0)
+
+
+def mlp(in_dim: int, hidden: tuple[int, ...], out_dim: int) -> nn.Sequential:
     layers: list[nn.Module] = []
     prev = in_dim
     for width in hidden:
-        layers.append(nn.Linear(prev, width))
-        layers.append(activation())
+        layers += [nn.Linear(prev, width), nn.ELU()]
         prev = width
     layers.append(nn.Linear(prev, out_dim))
     return nn.Sequential(*layers)
 
 
-class FACETPolicy(nn.Module):
-    """Asymmetric actor-critic with privileged teacher and student estimator."""
-
-    def __init__(self, obs_dim: int, priv_dim: int, action_dim: int):
+class FACETAgent(nn.Module):
+    def __init__(self, obs_dim: int, priv_dim: int, config: PPOConfig):
         super().__init__()
-        latent_dim = 64
-        self.obs_encoder = mlp(obs_dim, (128,), latent_dim)
-        self.priv_encoder = mlp(priv_dim, (128,), latent_dim)
-        self.estimator = mlp(obs_dim, (128,), latent_dim)
-        self.actor = mlp(2 * latent_dim, (256, 256), action_dim)
-        self.critic = mlp(obs_dim + priv_dim, (256, 256), 1)
-        self.log_std = nn.Parameter(torch.full((action_dim,), -0.6))
-
-    def latent(self, obs: torch.Tensor, priv: torch.Tensor, stage: str) -> tuple[torch.Tensor, torch.Tensor]:
-        obs_latent = self.obs_encoder(obs)
-        priv_latent = self.priv_encoder(priv)
-        if stage == "teacher":
-            actor_latent = priv_latent
-        elif stage == "student":
-            actor_latent = self.estimator(obs)
+        self.config = config
+        self.obs_norm = RunningNorm(obs_dim)
+        self.priv_norm = RunningNorm(priv_dim)
+        self.priv_encoder = mlp(obs_dim + priv_dim, (config.encoder_hidden,), config.latent_dim)
+        if config.estimator == "gru":
+            self.gru = nn.GRUCell(obs_dim, config.estimator_hidden)
+            self.est_head = nn.Linear(config.estimator_hidden, config.latent_dim)
+        elif config.estimator == "mlp":
+            self.est_mlp = mlp(obs_dim, (config.estimator_hidden,), config.latent_dim)
         else:
-            raise ValueError(f"unknown stage: {stage}")
-        return torch.cat([obs_latent, actor_latent], dim=-1), priv_latent
+            raise ValueError(f"unknown estimator {config.estimator}")
+        self.actor = mlp(obs_dim + config.latent_dim, config.actor_hidden, 2)
+        self.critic = mlp(obs_dim + priv_dim, config.critic_hidden, 1)
+        self.log_std = nn.Parameter(torch.full((2,), config.init_log_std))
 
-    def distribution(self, obs: torch.Tensor, priv: torch.Tensor, stage: str) -> Normal:
-        actor_input, _ = self.latent(obs, priv, stage)
-        mean = self.actor(actor_input)
-        return Normal(mean, self.log_std.exp())
+    def hidden_size(self) -> int:
+        return self.config.estimator_hidden if self.config.estimator == "gru" else 1
 
-    def value(self, obs: torch.Tensor, priv: torch.Tensor) -> torch.Tensor:
-        return self.critic(torch.cat([obs, priv], dim=-1)).squeeze(-1)
+    def estimator_parameters(self) -> list[nn.Parameter]:
+        if self.config.estimator == "gru":
+            return [*self.gru.parameters(), *self.est_head.parameters()]
+        return list(self.est_mlp.parameters())
 
-    def act(self, obs: torch.Tensor, priv: torch.Tensor, stage: str) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-        dist = self.distribution(obs, priv, stage)
-        action = dist.sample()
-        logp = dist.log_prob(action).sum(dim=-1)
-        value = self.value(obs, priv)
-        return action, logp, value
+    def teacher_latent(self, on: torch.Tensor, pn: torch.Tensor) -> torch.Tensor:
+        return self.priv_encoder(torch.cat([on, pn], dim=-1))
 
-    def deterministic(self, obs: torch.Tensor, priv: torch.Tensor, stage: str = "student") -> torch.Tensor:
-        actor_input, _ = self.latent(obs, priv, stage)
-        return self.actor(actor_input)
+    def estimate(self, on: torch.Tensor, h: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+        if self.config.estimator == "gru":
+            h = self.gru(on, h)
+            return self.est_head(h), h
+        return self.est_mlp(on), h
 
+    def distribution(self, on: torch.Tensor, latent: torch.Tensor) -> Normal:
+        mean = self.actor(torch.cat([on, latent], dim=-1))
+        return Normal(mean, self.log_std.exp().expand_as(mean))
 
-class FACETTrainingEnv:
-    """Vectorized planar task with FACET reward targets."""
-
-    def __init__(self, n_envs: int, seed: int, device: torch.device):
-        self.n_envs = n_envs
-        self.device = device
-        self.rng = np.random.default_rng(seed)
-        self.env = PlanarForceEnv(n_envs, mode="impulse", seed=seed)
-        self.ref = SmoothedImpedanceReference(n_envs=n_envs, dt=self.env.cfg.dt)
-        self.last_actions = np.zeros((n_envs, 3, 2), dtype=np.float32)
-        self.command = self._sample_command(n_envs)
-        self.modes = np.zeros(n_envs, dtype=np.int32)
-        self.reset()
-
-    def _sample_command(self, count: int) -> ImpedanceCommand:
-        kp = np.exp(self.rng.uniform(np.log(0.5), np.log(32.0), size=count)).astype(np.float32)
-        target_velocity = np.zeros((count, 2), dtype=np.float32)
-        target_velocity[:, 0] = self.rng.uniform(1.2, 1.8, size=count).astype(np.float32)
-        return ImpedanceCommand(
-            kp=kp,
-            kd=2.0 * np.sqrt(kp),
-            virtual_mass=np.full(count, self.env.cfg.mass, dtype=np.float32),
-            target_velocity=target_velocity,
-        )
-
-    def reset(self) -> tuple[torch.Tensor, torch.Tensor]:
-        self.env.reset()
-        self.modes = self.rng.integers(0, 2, size=self.n_envs, dtype=np.int32)
-        self.last_actions.fill(0.0)
-        self.command = self._sample_command(self.n_envs)
-        self.ref.reset(self.env.pos, self.env.vel)
-        return self.observations(np.zeros((self.n_envs, 2), dtype=np.float32))
-
-    def reset_indices(self, done: np.ndarray) -> None:
-        idx = np.flatnonzero(done)
-        if len(idx) == 0:
-            return
-        self.env.t[idx] = 0.0
-        self.env.step_count[idx] = 0
-        self.env.pos[idx] = 0.0
-        self.env.vel[idx] = 0.0
-        self.env.tilt[idx] = 0.0
-        self.env.failed[idx] = False
-        self.env.done[idx] = False
-        self.env.push_peak[idx] = self.rng.uniform(320.0, 430.0, size=len(idx)).astype(np.float32)
-        self.env.push_duration[idx] = self.rng.uniform(0.45, 0.55, size=len(idx)).astype(np.float32)
-        self.modes[idx] = self.rng.integers(0, 2, size=len(idx), dtype=np.int32)
-        command = self._sample_command(len(idx))
-        self.command.kp[idx] = command.kp
-        self.command.kd[idx] = command.kd
-        self.command.virtual_mass[idx] = command.virtual_mass
-        self.command.target_velocity[idx] = command.target_velocity
-        self.last_actions[idx] = 0.0
-        for pos, vel, force in self.ref.history:
-            pos[idx] = 0.0
-            vel[idx] = 0.0
-            force[idx] = 0.0
-
-    def external_forces(self) -> tuple[np.ndarray, np.ndarray]:
-        forces = np.zeros((self.n_envs, 2), dtype=np.float32)
-        wall_forces = np.zeros((self.n_envs, 2), dtype=np.float32)
-        impulse_mask = self.modes == 0
-        if impulse_mask.any():
-            tau = self.env.t[impulse_mask] - self.env.cfg.push_start
-            duration = self.env.push_duration[impulse_mask]
-            half = 0.5 * duration
-            rising = tau / np.maximum(half, 1e-6)
-            falling = (duration - tau) / np.maximum(half, 1e-6)
-            scale = np.where(tau <= half, rising, falling)
-            active = (tau >= 0.0) & (tau <= duration)
-            forces[impulse_mask, 1] = self.env.push_peak[impulse_mask] * np.maximum(0.0, scale) * active
-
-        wall_mask = self.modes == 1
-        if wall_mask.any():
-            penetration = self.env.pos[wall_mask, 0] - self.env.cfg.wall_x
-            active = penetration > 0.0
-            local_wall = np.zeros_like(penetration, dtype=np.float32)
-            local_wall[active] = (
-                -self.env.cfg.wall_kp * penetration[active]
-                - self.env.cfg.wall_kd * np.maximum(self.env.vel[wall_mask, 0][active], 0.0)
-            )
-            wall_forces[wall_mask, 0] = local_wall
-        return forces + wall_forces, wall_forces
-
-    def observations(self, force_ext: np.ndarray) -> tuple[torch.Tensor, torch.Tensor]:
-        t = self.env.t[:, None]
-        phase = np.concatenate([np.sin(t), np.cos(t)], axis=1).astype(np.float32)
-        command = np.column_stack(
-            [
-                self.command.target_velocity[:, 0],
-                self.command.target_velocity[:, 1],
-                self.command.kp / 40.0,
-                self.command.kd / 20.0,
-                self.command.virtual_mass / 20.0,
-            ]
-        ).astype(np.float32)
-        deploy = np.concatenate(
-            [
-                self.env.vel,
-                self.env.tilt[:, None],
-                phase,
-                command,
-                self.last_actions.reshape(self.n_envs, -1),
-            ],
-            axis=1,
-        )
-        pos_targets, vel_targets, acc_targets = self.ref.targets(self.env.pos, force_ext, self.command)
-        ref_pos = pos_targets.mean(axis=0)
-        ref_vel = vel_targets.mean(axis=0)
-        ref_acc = acc_targets.mean(axis=0)
-        priv = np.concatenate(
-            [
-                force_ext / 400.0,
-                ref_pos - self.env.pos,
-                ref_vel - self.env.vel,
-                ref_acc / 40.0,
-            ],
-            axis=1,
-        ).astype(np.float32)
-        return (
-            torch.as_tensor(deploy, dtype=torch.float32, device=self.device),
-            torch.as_tensor(priv, dtype=torch.float32, device=self.device),
-        )
-
-    def step(self, action_t: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, dict[str, float]]:
-        action = action_t.detach().cpu().numpy().astype(np.float32)
-        action = np.clip(action, -self.env.cfg.action_limit, self.env.cfg.action_limit)
-        force_ext, _ = self.external_forces()
-        self.env.mode = "impulse"
-        # Inline the environment step so mixed impulse/wall modes can share one
-        # vectorized state array while preserving PlanarForceEnv dynamics.
-        acc = action + force_ext / self.env.cfg.mass - self.env.cfg.damping * self.env.vel
-        self.env.vel += acc * self.env.cfg.dt
-        self.env.pos += self.env.vel * self.env.cfg.dt
-        lateral_reaction = np.abs(action[:, 1])
-        self.env.tilt = 0.93 * self.env.tilt + 0.03 * lateral_reaction + 0.0002 * np.abs(force_ext[:, 1])
-        new_fail = (lateral_reaction > self.env.cfg.fall_reaction_threshold) & (np.abs(force_ext[:, 1]) > 80.0)
-        new_fail |= self.env.tilt > self.env.cfg.fall_tilt_threshold
-        self.env.failed |= new_fail
-        self.env.step_count += 1
-        self.env.t += self.env.cfg.dt
-        done_np = (self.env.step_count >= self.env.cfg.episode_steps) | self.env.failed
-
-        next_force, _ = self.external_forces()
-        pos_targets, vel_targets, _ = self.ref.targets(self.env.pos, next_force, self.command)
-        ref_pos = pos_targets.mean(axis=0)
-        ref_vel = vel_targets.mean(axis=0)
-        pos_err = np.sum((self.env.pos - ref_pos) ** 2, axis=1)
-        vel_err = np.sum((self.env.vel - ref_vel) ** 2, axis=1)
-        forward_err = (self.env.vel[:, 0] - self.env.cfg.target_vx) ** 2
-        reward_np = (
-            1.2 * np.exp(-pos_err / 0.25)
-            + 1.8 * np.exp(-vel_err / 0.25)
-            - 0.20 * pos_err
-            - 0.50 * vel_err
-            - 0.03 * np.sum(action * action, axis=1)
-            - 0.08 * forward_err
-            - 2.0 * self.env.failed.astype(np.float32)
-        ).astype(np.float32)
-
-        self.ref.push_state(self.env.pos, self.env.vel, next_force)
-        self.last_actions = np.roll(self.last_actions, shift=-1, axis=1)
-        self.last_actions[:, -1, :] = action
-        obs, priv = self.observations(next_force)
-        done = torch.as_tensor(done_np.astype(np.float32), device=self.device)
-        reward = torch.as_tensor(reward_np, device=self.device)
-        reset_count = int(done_np.sum())
-        if reset_count:
-            self.reset_indices(done_np)
-            obs, priv = self.observations(np.zeros((self.n_envs, 2), dtype=np.float32))
-        info = {
-            "mean_reward": float(reward_np.mean()),
-            "failure_rate": float(self.env.failed.mean()),
-            "reset_count": float(reset_count),
-        }
-        return obs, priv, reward, done, info
+    def value(self, on: torch.Tensor, pn: torch.Tensor) -> torch.Tensor:
+        return self.critic(torch.cat([on, pn], dim=-1)).squeeze(-1)
 
 
-def compute_gae(
-    rewards: torch.Tensor,
-    dones: torch.Tensor,
-    values: torch.Tensor,
-    next_value: torch.Tensor,
-    gamma: float,
-    gae_lambda: float,
-) -> tuple[torch.Tensor, torch.Tensor]:
+class GRUStudentPolicy(nn.Module):
+    """Deployable student: GRU estimator over observation history + actor."""
+
+    def __init__(self, agent: FACETAgent):
+        super().__init__()
+        self.register_buffer("obs_mean", agent.obs_norm.mean.detach().clone())
+        self.register_buffer("obs_std", torch.sqrt(agent.obs_norm.var.detach() + 1e-8).clone())
+        self.gru = copy.deepcopy(agent.gru)
+        self.head = copy.deepcopy(agent.est_head)
+        self.actor = copy.deepcopy(agent.actor)
+        self.action_scale = float(agent.config.action_scale)
+        self.hidden_size = int(agent.config.estimator_hidden)
+        self.register_buffer("hidden", torch.zeros(1, self.hidden_size))
+
+    @torch.jit.export
+    def reset(self, n: int) -> None:
+        self.hidden = torch.zeros(n, self.hidden_size)
+
+    def forward(self, obs: torch.Tensor) -> torch.Tensor:
+        on = torch.clamp((obs - self.obs_mean) / self.obs_std, -5.0, 5.0)
+        if self.hidden.shape[0] != obs.shape[0]:
+            self.hidden = torch.zeros(obs.shape[0], self.hidden_size)
+        self.hidden = self.gru(on, self.hidden)
+        latent = self.head(self.hidden)
+        action = self.action_scale * self.actor(torch.cat([on, latent], dim=-1))
+        return torch.clamp(action, -8.0, 8.0)
+
+
+class MLPStudentPolicy(nn.Module):
+    """Deployable student whose estimator only sees the current observation."""
+
+    def __init__(self, agent: FACETAgent):
+        super().__init__()
+        self.register_buffer("obs_mean", agent.obs_norm.mean.detach().clone())
+        self.register_buffer("obs_std", torch.sqrt(agent.obs_norm.var.detach() + 1e-8).clone())
+        self.est = copy.deepcopy(agent.est_mlp)
+        self.actor = copy.deepcopy(agent.actor)
+        self.action_scale = float(agent.config.action_scale)
+
+    @torch.jit.export
+    def reset(self, n: int) -> None:
+        pass
+
+    def forward(self, obs: torch.Tensor) -> torch.Tensor:
+        on = torch.clamp((obs - self.obs_mean) / self.obs_std, -5.0, 5.0)
+        latent = self.est(on)
+        action = self.action_scale * self.actor(torch.cat([on, latent], dim=-1))
+        return torch.clamp(action, -8.0, 8.0)
+
+
+def export_student(agent: FACETAgent, path: Path) -> None:
+    agent = copy.deepcopy(agent).cpu().eval()
+    module = GRUStudentPolicy(agent) if agent.config.estimator == "gru" else MLPStudentPolicy(agent)
+    scripted = torch.jit.script(module.eval())
+    path.parent.mkdir(parents=True, exist_ok=True)
+    scripted.save(str(path))
+
+
+# ---------------------------------------------------------------------------
+# PPO.
+# ---------------------------------------------------------------------------
+def compute_gae(rewards, dones, values, next_value, gamma, lam):
     steps = rewards.shape[0]
     advantages = torch.zeros_like(rewards)
-    last_gae = torch.zeros_like(next_value)
+    last = torch.zeros_like(next_value)
     for t in reversed(range(steps)):
-        next_nonterminal = 1.0 - dones[t]
-        next_values = next_value if t == steps - 1 else values[t + 1]
-        delta = rewards[t] + gamma * next_values * next_nonterminal - values[t]
-        last_gae = delta + gamma * gae_lambda * next_nonterminal * last_gae
-        advantages[t] = last_gae
-    returns = advantages + values
-    return advantages, returns
+        nonterminal = 1.0 - dones[t]
+        nxt = next_value if t == steps - 1 else values[t + 1]
+        delta = rewards[t] + gamma * nxt * nonterminal - values[t]
+        last = delta + gamma * lam * nonterminal * last
+        advantages[t] = last
+    return advantages, advantages + values
 
 
-def train_policy(output_dir: Path, config: PPOConfig) -> Path:
+def train(output_dir: Path, config: PPOConfig) -> dict:
     torch.manual_seed(config.seed)
     np.random.seed(config.seed)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    runner = FACETTrainingEnv(config.n_envs, config.seed, device)
-    obs, priv = runner.reset()
-    policy = FACETPolicy(obs.shape[-1], priv.shape[-1], 2).to(device)
-    optimizer = torch.optim.Adam(policy.parameters(), lr=config.lr)
+    torch.set_num_threads(max(1, config.threads))
     output_dir.mkdir(parents=True, exist_ok=True)
+    task = TrainingTask(config)
+    obs_np, priv_np = task.observe()
+    agent = FACETAgent(obs_np.shape[1], priv_np.shape[1], config)
+    actor_params = [*agent.priv_encoder.parameters(), *agent.actor.parameters(), agent.log_std]
+    critic_params = list(agent.critic.parameters())
+    est_params = agent.estimator_parameters()
+    actor_opt = torch.optim.Adam(actor_params, lr=config.actor_lr)
+    critic_opt = torch.optim.Adam(critic_params, lr=config.critic_lr)
+    est_opt = torch.optim.Adam(est_params, lr=config.estimator_lr)
+    n, T = config.n_envs, config.rollout_steps
+    batch = n * T
+    mini = batch // config.minibatches
+    h = torch.zeros(n, agent.hidden_size())
+    history: list[dict] = []
+    started = time.time()
     print(
-        f"Training FACET PPO on {device} with {config.n_envs} envs, "
-        f"{config.teacher_updates} teacher updates and {config.student_updates} student updates",
+        f"[facet] seed={config.seed} estimator={config.estimator} targets={config.target_mode} "
+        f"envs={n} steps/update={batch} teacher={config.teacher_updates} student={config.student_updates}",
         flush=True,
     )
 
-    def run_stage(stage: str, updates: int) -> None:
-        nonlocal obs, priv
-        batch_size = config.rollout_steps * config.n_envs
-        mini_size = batch_size // config.minibatches
+    for stage, updates in (("teacher", config.teacher_updates), ("student", config.student_updates)):
         for update in range(updates):
-            obs_buf = []
-            priv_buf = []
-            action_buf = []
-            logp_buf = []
-            reward_buf = []
-            done_buf = []
-            value_buf = []
-            for _ in range(config.rollout_steps):
+            on_buf, pn_buf, lat_buf, u_buf, logp_buf, val_buf, rew_buf, done_buf = ([] for _ in range(8))
+            h0 = h.clone()
+            stat_acc = {"tracking": 0.0, "vel_err": 0.0, "falls": 0.0}
+            for _ in range(T):
+                obs_t = torch.from_numpy(obs_np)
+                priv_t = torch.from_numpy(priv_np)
+                agent.obs_norm.update(obs_t)
+                agent.priv_norm.update(priv_t)
                 with torch.no_grad():
-                    action, logp, value = policy.act(obs, priv, stage)
-                next_obs, next_priv, reward, done, _ = runner.step(action)
-                obs_buf.append(obs)
-                priv_buf.append(priv)
-                action_buf.append(action)
+                    on = agent.obs_norm(obs_t)
+                    pn = agent.priv_norm(priv_t)
+                    est, h = agent.estimate(on, h)
+                    latent = agent.teacher_latent(on, pn) if stage == "teacher" else est
+                    dist = agent.distribution(on, latent)
+                    u = dist.sample()
+                    logp = dist.log_prob(u).sum(-1)
+                    value = agent.value(on, pn)
+                reward, done, stats = task.step(config.action_scale * u.numpy().astype(np.float64))
+                for key in stat_acc:
+                    stat_acc[key] += stats[key] / T
+                done_t = torch.from_numpy(done.astype(np.float32))
+                on_buf.append(on)
+                pn_buf.append(pn)
+                lat_buf.append(latent)
+                u_buf.append(u)
                 logp_buf.append(logp)
-                reward_buf.append(reward)
-                done_buf.append(done)
-                value_buf.append(value)
-                obs, priv = next_obs, next_priv
+                val_buf.append(value)
+                rew_buf.append(torch.from_numpy(reward))
+                done_buf.append(done_t)
+                h = h * (1.0 - done_t)[:, None]
+                obs_np, priv_np = task.observe()
             with torch.no_grad():
-                next_value = policy.value(obs, priv)
-            obs_b = torch.stack(obs_buf)
-            priv_b = torch.stack(priv_buf)
-            actions_b = torch.stack(action_buf)
-            old_logp_b = torch.stack(logp_buf)
-            rewards_b = torch.stack(reward_buf)
-            dones_b = torch.stack(done_buf)
-            values_b = torch.stack(value_buf)
-            adv_b, ret_b = compute_gae(
-                rewards_b, dones_b, values_b, next_value, config.gamma, config.gae_lambda
-            )
-            adv_b = (adv_b - adv_b.mean()) / (adv_b.std() + 1e-8)
+                next_value = agent.value(agent.obs_norm(torch.from_numpy(obs_np)), agent.priv_norm(torch.from_numpy(priv_np)))
+            on_seq = torch.stack(on_buf)
+            pn_seq = torch.stack(pn_buf)
+            done_seq = torch.stack(done_buf)
+            rewards = torch.stack(rew_buf)
+            values = torch.stack(val_buf)
+            adv, ret = compute_gae(rewards, done_seq, values, next_value, config.gamma, config.gae_lambda)
+            adv = (adv - adv.mean()) / (adv.std() + 1e-8)
 
-            flat_obs = obs_b.reshape(batch_size, -1)
-            flat_priv = priv_b.reshape(batch_size, -1)
-            flat_actions = actions_b.reshape(batch_size, -1)
-            flat_old_logp = old_logp_b.reshape(batch_size)
-            flat_adv = adv_b.reshape(batch_size)
-            flat_ret = ret_b.reshape(batch_size)
-            indices = torch.randperm(batch_size, device=device)
+            flat_on = on_seq.reshape(batch, -1)
+            flat_pn = pn_seq.reshape(batch, -1)
+            flat_lat = torch.stack(lat_buf).reshape(batch, -1)
+            flat_u = torch.stack(u_buf).reshape(batch, -1)
+            flat_logp = torch.stack(logp_buf).reshape(batch)
+            flat_adv = adv.reshape(batch)
+            flat_ret = ret.reshape(batch)
             for _ in range(config.epochs):
-                for start in range(0, batch_size, mini_size):
-                    mb = indices[start : start + mini_size]
-                    dist = policy.distribution(flat_obs[mb], flat_priv[mb], stage)
-                    new_logp = dist.log_prob(flat_actions[mb]).sum(dim=-1)
-                    ratio = (new_logp - flat_old_logp[mb]).exp()
-                    unclipped = ratio * flat_adv[mb]
-                    clipped = torch.clamp(ratio, 1.0 - config.clip_ratio, 1.0 + config.clip_ratio) * flat_adv[mb]
-                    policy_loss = -torch.min(unclipped, clipped).mean()
-                    value_loss = F.mse_loss(policy.value(flat_obs[mb], flat_priv[mb]), flat_ret[mb])
-                    entropy = dist.entropy().sum(dim=-1).mean()
-                    _, teacher_latent = policy.latent(flat_obs[mb], flat_priv[mb], "teacher")
-                    estimator_loss = F.mse_loss(policy.estimator(flat_obs[mb]), teacher_latent.detach())
-                    # The estimator is trained during the teacher stage, then
-                    # PPO fine-tunes the student with the estimated feature.
-                    loss = (
-                        policy_loss
-                        + config.value_coef * value_loss
-                        - config.entropy_coef * entropy
-                        + config.estimator_coef * estimator_loss
+                perm = torch.randperm(batch)
+                for start in range(0, batch, mini):
+                    mb = perm[start : start + mini]
+                    if stage == "teacher":
+                        latent_mb = agent.teacher_latent(flat_on[mb], flat_pn[mb])
+                    else:
+                        latent_mb = flat_lat[mb]
+                    dist = agent.distribution(flat_on[mb], latent_mb)
+                    new_logp = dist.log_prob(flat_u[mb]).sum(-1)
+                    ratio = (new_logp - flat_logp[mb]).exp()
+                    surrogate = torch.min(
+                        ratio * flat_adv[mb],
+                        torch.clamp(ratio, 1.0 - config.clip_ratio, 1.0 + config.clip_ratio) * flat_adv[mb],
                     )
-                    optimizer.zero_grad(set_to_none=True)
-                    loss.backward()
-                    nn.utils.clip_grad_norm_(policy.parameters(), config.max_grad_norm)
-                    optimizer.step()
-            if (update + 1) % 10 == 0 or update == updates - 1:
-                print(
-                    f"{stage} update {update + 1}/{updates}: "
-                    f"reward={float(rewards_b.mean()):.3f} done={float(dones_b.mean()):.3f}",
-                    flush=True,
-                )
-                torch.save(
-                    {
-                        "model": policy.state_dict(),
-                        "config": config.__dict__,
-                        "obs_dim": flat_obs.shape[-1],
-                        "priv_dim": flat_priv.shape[-1],
-                    },
-                    output_dir / "facet_student.pt",
-                )
+                    actor_loss = -surrogate.mean() - config.entropy_coef * dist.entropy().sum(-1).mean()
+                    value_loss = F.mse_loss(agent.value(flat_on[mb], flat_pn[mb]), flat_ret[mb])
+                    actor_opt.zero_grad(set_to_none=True)
+                    critic_opt.zero_grad(set_to_none=True)
+                    (actor_loss + value_loss).backward()
+                    nn.utils.clip_grad_norm_(actor_params, config.max_grad_norm)
+                    nn.utils.clip_grad_norm_(critic_params, config.max_grad_norm)
+                    actor_opt.step()
+                    critic_opt.step()
 
-    run_stage("teacher", config.teacher_updates)
-    run_stage("student", config.student_updates)
-    checkpoint = output_dir / "facet_student.pt"
-    torch.save(
-        {
-            "model": policy.state_dict(),
-            "config": config.__dict__,
-            "obs_dim": obs.shape[-1],
-            "priv_dim": priv.shape[-1],
-        },
-        checkpoint,
-    )
-    return checkpoint
+            # Estimator regression onto the privileged feature (both stages).
+            with torch.no_grad():
+                target = agent.teacher_latent(on_seq, pn_seq)
+            est_loss_value = 0.0
+            for _ in range(config.estimator_epochs):
+                hh = h0
+                preds = []
+                for t in range(T):
+                    est, hh = agent.estimate(on_seq[t], hh)
+                    preds.append(est)
+                    hh = hh * (1.0 - done_seq[t])[:, None]
+                est_loss = F.mse_loss(torch.stack(preds), target)
+                est_opt.zero_grad(set_to_none=True)
+                est_loss.backward()
+                nn.utils.clip_grad_norm_(est_params, config.max_grad_norm)
+                est_opt.step()
+                est_loss_value = float(est_loss)
 
-
-def load_policy(checkpoint: Path, device: torch.device) -> FACETPolicy:
-    payload = torch.load(checkpoint, map_location=device)
-    policy = FACETPolicy(payload["obs_dim"], payload["priv_dim"], 2).to(device)
-    policy.load_state_dict(payload["model"])
-    policy.eval()
-    return policy
-
-
-def policy_rollout(mode: str, episodes: int, seed: int, kp: float, name: str, checkpoint: Path) -> dict:
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    env = PlanarForceEnv(episodes, mode=mode, seed=seed)
-    ref = SmoothedImpedanceReference(n_envs=episodes, dt=env.cfg.dt)
-    command = ImpedanceCommand(
-        kp=kp,
-        kd=2.0 * np.sqrt(kp),
-        virtual_mass=env.cfg.mass,
-        target_velocity=np.array([env.cfg.target_vx, 0.0], dtype=np.float32),
-    )
-    policy = load_policy(checkpoint, device)
-    env.reset()
-    ref.reset(env.pos, env.vel)
-    last_actions = np.zeros((episodes, 3, 2), dtype=np.float32)
-    records = []
-    wall_impulse = np.zeros(episodes, dtype=np.float32)
-
-    def make_obs(force_ext: np.ndarray) -> tuple[torch.Tensor, torch.Tensor]:
-        t = env.t[:, None]
-        phase = np.concatenate([np.sin(t), np.cos(t)], axis=1).astype(np.float32)
-        command_arr = np.tile(
-            np.array(
-                [command.target_velocity[0], command.target_velocity[1], kp / 40.0, command.kd / 20.0, env.cfg.mass / 20.0],
-                dtype=np.float32,
-            ),
-            (episodes, 1),
-        )
-        deploy = np.concatenate(
-            [env.vel, env.tilt[:, None], phase, command_arr, last_actions.reshape(episodes, -1)],
-            axis=1,
-        )
-        pos_targets, vel_targets, acc_targets = ref.targets(env.pos, force_ext, command)
-        priv = np.concatenate(
-            [
-                np.zeros_like(force_ext),
-                pos_targets.mean(axis=0) - env.pos,
-                vel_targets.mean(axis=0) - env.vel,
-                acc_targets.mean(axis=0) / 40.0,
-            ],
-            axis=1,
-        ).astype(np.float32)
-        return torch.as_tensor(deploy, dtype=torch.float32, device=device), torch.as_tensor(
-            priv, dtype=torch.float32, device=device
-        )
-
-    for _ in range(env.cfg.episode_steps):
-        force_ext, _ = env.external_forces()
-        obs_t, priv_t = make_obs(force_ext)
-        with torch.no_grad():
-            action = policy.deterministic(obs_t, priv_t, "student").cpu().numpy().astype(np.float32)
-        _, _, done, info = env.step(action)
-        wall_impulse += np.abs(info["wall_force"][:, 0]) * env.cfg.dt
-        ref.push_state(env.pos, env.vel, info["force_ext"])
-        last_actions = np.roll(last_actions, shift=-1, axis=1)
-        last_actions[:, -1, :] = np.clip(action, -env.cfg.action_limit, env.cfg.action_limit)
-        records.append(
-            {
-                "t": info["time"].tolist(),
-                "pos": env.pos.tolist(),
-                "vel": env.vel.tolist(),
-                "action": action.tolist(),
-                "force_ext": info["force_ext"].tolist(),
-                "wall_force": info["wall_force"].tolist(),
-                "failed": info["failed"].astype(int).tolist(),
+            record = {
+                "stage": stage,
+                "update": update + 1,
+                "reward": float(rewards.mean()),
+                "done": float(done_seq.mean()),
+                "estimator_loss": est_loss_value,
+                "std": float(agent.log_std.exp().mean()),
+                "elapsed_s": round(time.time() - started, 1),
+                **{key: round(val, 5) for key, val in stat_acc.items()},
             }
-        )
-        if done.all():
-            break
-    return {
-        "method": name,
-        "mode": mode,
-        "episodes": episodes,
-        "kp": kp,
-        "success_rate": float(1.0 - env.failed.mean()),
-        "mean_wall_impulse": float(wall_impulse.mean()),
-        "mean_abs_lateral_displacement": float(np.abs(env.pos[:, 1]).mean()),
-        "mean_final_forward_speed": float(env.vel[:, 0].mean()),
-        "records": records,
-    }
+            history.append(record)
+            if (update + 1) % 10 == 0 or update + 1 == updates:
+                print(f"[facet] {json.dumps(record)}", flush=True)
+
+    export_student(agent, output_dir / "policy.pt")
+    torch.save({"agent": agent.state_dict(), "config": asdict(config)}, output_dir / "agent_state.pt")
+    summary = {"config": asdict(config), "history": history, "train_seconds": round(time.time() - started, 1)}
+    (output_dir / "train_log.json").write_text(json.dumps(summary, indent=1))
+    return summary

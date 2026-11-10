@@ -1,29 +1,17 @@
 #!/bin/bash
-# Evaluation script — the standard way to evaluate work in this environment.
+# Standard evaluation entry point (visible train scenarios).
 #
-# This script must be SELF-CONTAINED using only code in eval/.
-# Do NOT import from method/ — evaluate.sh must work even when the
-# paper's method code is hidden from a scientist agent.
+# Uses only code in eval/: every TorchScript policy at
+# <root>/<method>/policy.pt is rolled out by the evaluator in its own simulator
+# copy, together with the evaluator-owned velocity baselines, and the results
+# are written to scoring/scores.json (same metrics as scoring/reference.json).
 #
-# Design it so that anyone following the same output format can run
-# this script to evaluate their results.
-#
-# OUTPUT CONTRACT: This script MUST write scoring/scores.json containing
-# a JSON dict nested by experiment, e.g.:
-#   {"imagenet_classification": {"top1_accuracy": 82.1, "top5_accuracy": 94.8}}
-# Experiment and metric names must match the keys in scoring/reference.json.
-# This file is read by the system for automated comparison.
-#
-# Example usage:
-#   ./evaluate.sh <method_and_run_name>                             # evaluate with defaults
-#   ./evaluate.sh <method_and_run_name> checkpoints/epoch_10.pt     # evaluate a specific checkpoint
-#
-# Called from run.sh after training, or independently.
+# Usage: bash scripts/evaluate.sh [checkpoint_root]
 
-set -e
+set -euo pipefail
 
 cd /home/user
 
 mkdir -p scoring
-
-python -m eval.evaluate_rollouts --input-dir "${1:-checkpoints/facet_planar}" --output scoring/scores.json
+CHECKPOINT_ROOT="${1:-/home/user/checkpoints}"
+python -u eval/train/evaluate.py "${CHECKPOINT_ROOT}" --output scoring/scores.json

@@ -3,6 +3,6 @@
 # only after your turn ends.
 action: submit
 gpus: 0
-test: true
+test: false
 milestone: core_claim
-notes: "Smoke test of the hardened gym: tiny-budget training of reference/variants, TorchScript export, train/test evaluators, shortcut probes, consistency checks, analysis, validate; plus a full-scale per-update timing probe."
+notes: "Resume the hardening run after preemptions: keep trained reference + 8 variant policies, train the remaining 3x-budget variant (seed 17) with checkpoint/resume, re-score all cases through the hidden-test evaluator, analyze."

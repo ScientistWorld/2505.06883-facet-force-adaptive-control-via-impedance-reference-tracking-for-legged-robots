@@ -1,5 +1,5 @@
 {
-  "_notes": "Reduced-scale planar benchmark (see briefing/method.md). Experiment protocols follow paper Sec. 5, 6 and Appendix 10.2-10.3 on the benchmark's own physical scale, so the paper's numbers are kept under '_paper_reported' rather than as results the gym must match. 'results' rows are this gym's measured values for the evaluator-owned velocity baselines and the reproduced FACET reference (TorchScript policy checkpoints/facet/policy.pt, training seed 7), held-out test slice.",
+  "_notes": "Reduced-scale planar benchmark (see briefing/method.md). Experiment protocols follow paper Sec. 5, 6 and Appendix 10.2-10.3 on the benchmark's own physical scale, so the paper's numbers are kept under '_paper_reported' rather than as results the gym must match. 'results' rows are this gym's measured held-out test values for the evaluator-owned velocity baselines and the reproduced FACET reference (TorchScript policy checkpoints/facet/policy.pt: teacher/student PPO, 600 + 150 updates of 256 envs x 96 steps = 18.4M env steps versus the paper's 250M; training seed 27, the median of five seeds 7/17/27/37/47). Rank: sum over metrics of weight * |coefficient| * improvement (in the higher_is_better direction) over the facet row, divided by the metric's spread across ranked attempts.",
   "experiments": {
     "large_lateral_impulse": {
       "description": "Forward locomotion commanded at 1.5 m/s (impedance Kp=4, Kd=4, virtual mass 12 kg, starting from steady 1.5 m/s motion) under a lateral triangular ramp push of 0.4-0.6 s starting at 1.5-2.5 s. Peak force is swept over 100-1200 N (32 episodes per level, body/actuator randomisation, random push sign), extending beyond the 80-600 N training range.",
@@ -32,21 +32,21 @@
       "results": {
         "velocity_vanilla": {
           "type": "baseline",
-          "impulse_recovery_score": 0.1,
-          "success_rate": 0.125,
-          "velocity_tracking_rmse_mps": 4.5
+          "impulse_recovery_score": 0.0256,
+          "success_rate": 0.0547,
+          "velocity_tracking_rmse_mps": 4.6524
         },
         "velocity_robust": {
           "type": "baseline",
-          "impulse_recovery_score": 0.1,
+          "impulse_recovery_score": 0.0644,
           "success_rate": 0.125,
-          "velocity_tracking_rmse_mps": 4.5
+          "velocity_tracking_rmse_mps": 4.3166
         },
         "facet": {
           "type": "proposed",
-          "impulse_recovery_score": 0.5,
-          "success_rate": 0.7,
-          "velocity_tracking_rmse_mps": 1.5
+          "impulse_recovery_score": 0.5915,
+          "success_rate": 0.9375,
+          "velocity_tracking_rmse_mps": 0.5782
         }
       }
     },
@@ -85,24 +85,24 @@
       "results": {
         "velocity_vanilla": {
           "type": "baseline",
+          "contact_tracking_rmse_mps": 1.8635,
+          "entry_speed_error_mps": 0.0132,
           "post_contact_impulse_reduction": 0.0,
-          "wall_contact_rate": 1.0,
-          "entry_speed_error_mps": 0.0,
-          "contact_tracking_rmse_mps": 1.0
+          "wall_contact_rate": 1.0
         },
         "velocity_robust": {
           "type": "baseline",
+          "contact_tracking_rmse_mps": 1.8635,
+          "entry_speed_error_mps": 0.0132,
           "post_contact_impulse_reduction": 0.0,
-          "wall_contact_rate": 1.0,
-          "entry_speed_error_mps": 0.0,
-          "contact_tracking_rmse_mps": 1.0
+          "wall_contact_rate": 1.0
         },
         "facet": {
           "type": "proposed",
-          "post_contact_impulse_reduction": 0.4,
-          "wall_contact_rate": 1.0,
-          "entry_speed_error_mps": 0.05,
-          "contact_tracking_rmse_mps": 0.3
+          "contact_tracking_rmse_mps": 0.1105,
+          "entry_speed_error_mps": 0.0825,
+          "post_contact_impulse_reduction": 0.226,
+          "wall_contact_rate": 1.0
         }
       }
     },
@@ -176,21 +176,21 @@
       "results": {
         "velocity_vanilla": {
           "type": "baseline",
-          "velocity_tracking_rmse_mps": 1.0,
-          "position_tracking_rmse_m": 0.2,
-          "success_rate": 0.7
+          "position_tracking_rmse_m": 1.3206,
+          "success_rate": 0.3086,
+          "velocity_tracking_rmse_mps": 2.7176
         },
         "velocity_robust": {
           "type": "baseline",
-          "velocity_tracking_rmse_mps": 1.0,
-          "position_tracking_rmse_m": 0.2,
-          "success_rate": 0.7
+          "position_tracking_rmse_m": 1.0126,
+          "success_rate": 0.5078,
+          "velocity_tracking_rmse_mps": 2.1533
         },
         "facet": {
           "type": "proposed",
-          "velocity_tracking_rmse_mps": 0.3,
-          "position_tracking_rmse_m": 0.05,
-          "success_rate": 0.95
+          "position_tracking_rmse_m": 0.1432,
+          "success_rate": 0.9531,
+          "velocity_tracking_rmse_mps": 0.3596
         }
       }
     }

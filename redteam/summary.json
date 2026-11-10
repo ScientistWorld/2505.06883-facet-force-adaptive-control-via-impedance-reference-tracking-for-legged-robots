@@ -1,0 +1,931 @@
+{
+  "attempts": {
+    "baseline_inflation_shortcut": {
+      "arguments": [],
+      "contributions_all": {
+        "large_lateral_impulse/impulse_recovery_score": 0.06566443994649777,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.013106270094626234,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.03153921642086421,
+        "soft_wall_collision/mean_wall_entry_speed_mps": -0.008156528145646236,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.6599801176091585,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "contributions_genuine_scale": {
+        "large_lateral_impulse/impulse_recovery_score": 0.8704104340795213,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.10030197777212349,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.03681529857513809,
+        "soft_wall_collision/mean_wall_entry_speed_mps": -0.008549029581740607,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.885334287935439,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "evaluator_modified": false,
+      "hidden_test_returncode": 0,
+      "input_artifacts": {
+        "facet_low_kp_wall.json": "30b3adc13975b9b6f81266c89ed7e857934e318f094123e530f4f10c03224e71",
+        "facet_smoothed_impulse.json": "53825b132644a307daf164771f8eb96468cc398ef3c3b6be96d54d1b1296d1b3",
+        "velocity_robust_impulse.json": "c5e368842004ba5a6c8b284ea70da5b67afff5f6ddf63191f422bd24322662e5",
+        "velocity_robust_wall.json": "85430b420761c18829c15418c1dcf16d3766e18a05b26f04866536021cc8e19f",
+        "velocity_vanilla_impulse.json": "019de654d69b2be403a31651a5e25547b0dff4c538c0f29edab1255df6ec7df6"
+      },
+      "metrics": {
+        "large_lateral_impulse/impulse_recovery_score": 1.3773565159903631,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 2.0660347739855447,
+        "large_lateral_impulse/success_rate": 1.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.9994563293217441,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 1.09585440158844,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.9945763525244196,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.7621335159255005,
+      "rank_genuine_scale": 1.8843129687804812,
+      "score_file_exists": true,
+      "test_command": "bash scripts/evaluate_test.sh"
+    },
+    "better_extended_training": {
+      "arguments": [],
+      "contributions_all": {
+        "large_lateral_impulse/impulse_recovery_score": 0.02199013992466435,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.0043891140091364845,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.006696800455525292,
+        "soft_wall_collision/mean_wall_entry_speed_mps": -0.05862737410863773,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.1427028594088606,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "contributions_genuine_scale": {
+        "large_lateral_impulse/impulse_recovery_score": 0.2914887761609146,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.03358978661398312,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.007817084133554666,
+        "soft_wall_collision/mean_wall_entry_speed_mps": -0.06144859020955502,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.1914296068172061,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "evaluator_modified": false,
+      "hidden_test_returncode": 0,
+      "input_artifacts": {
+        "facet_low_kp_wall.json": "6a59299daa6515083b696901d33a20ed8c1a62e4b0929c0e743329aa3dd47035",
+        "facet_smoothed_impulse.json": "344d0e7635d212378cd81555a549aeb046a9baacd6729cad03916eeef737458f",
+        "velocity_robust_impulse.json": "c5e368842004ba5a6c8b284ea70da5b67afff5f6ddf63191f422bd24322662e5",
+        "velocity_robust_wall.json": "e4c8c148a2c4d8afce7a4ef94a8995526bfb2fd9f3517bcfae58fd7c0d8fafac",
+        "velocity_vanilla_impulse.json": "019de654d69b2be403a31651a5e25547b0dff4c538c0f29edab1255df6ec7df6"
+      },
+      "metrics": {
+        "large_lateral_impulse/impulse_recovery_score": 0.8487991376055611,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 1.2731987064083417,
+        "large_lateral_impulse/success_rate": 1.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.9538791315789517,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 0.9154324531555176,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.5460727819580193,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.117151539689549,
+      "rank_genuine_scale": 0.46287666351610346,
+      "score_file_exists": true,
+      "test_command": "bash scripts/evaluate_test.sh"
+    },
+    "better_reward_fix": {
+      "arguments": [],
+      "contributions_all": {
+        "large_lateral_impulse/impulse_recovery_score": 0.05951489093201505,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.011878853087649206,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.0005660036963009724,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 0.0052055211863601064,
+        "soft_wall_collision/post_contact_impulse_reduction": -0.0012562761926023893,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "contributions_genuine_scale": {
+        "large_lateral_impulse/impulse_recovery_score": 0.7888955131961569,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.09090858419316665,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.0006606884202794379,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 0.005456016802237631,
+        "soft_wall_collision/post_contact_impulse_reduction": -0.0016852392348681968,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "evaluator_modified": false,
+      "hidden_test_returncode": 0,
+      "input_artifacts": {
+        "facet_low_kp_wall.json": "a87ed13ccfbec19cb612bfb80fe3695287866a7e0efbaeaa3ddcba80d63969e0",
+        "facet_smoothed_impulse.json": "f8b88b8e257254d04412008020129cac1606f7f3ce725692dded68919d9747a0",
+        "velocity_robust_impulse.json": "c5e368842004ba5a6c8b284ea70da5b67afff5f6ddf63191f422bd24322662e5",
+        "velocity_robust_wall.json": "e4c8c148a2c4d8afce7a4ef94a8995526bfb2fd9f3517bcfae58fd7c0d8fafac",
+        "velocity_vanilla_impulse.json": "019de654d69b2be403a31651a5e25547b0dff4c538c0f29edab1255df6ec7df6"
+      },
+      "metrics": {
+        "large_lateral_impulse/impulse_recovery_score": 1.3029331250323188,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 1.9543996875484784,
+        "large_lateral_impulse/success_rate": 1.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.9426312506721227,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 1.1436207294464111,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.42125347991186657,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.07590899270972294,
+      "rank_genuine_scale": 0.8842355633769724,
+      "score_file_exists": true,
+      "test_command": "bash scripts/evaluate_test.sh"
+    },
+    "broken_checkpoint_shortcut": {
+      "arguments": [],
+      "contributions_all": {
+        "large_lateral_impulse/impulse_recovery_score": 0.06566443994649777,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.013106270094626234,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.002202107365863123,
+        "soft_wall_collision/mean_wall_entry_speed_mps": -0.008156528145646236,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.040704289514971945,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "contributions_genuine_scale": {
+        "large_lateral_impulse/impulse_recovery_score": 0.8704104340795213,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.10030197777212349,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.0025704899921080624,
+        "soft_wall_collision/mean_wall_entry_speed_mps": -0.008549029581740607,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.05460301335167912,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "evaluator_modified": false,
+      "hidden_test_returncode": 0,
+      "input_artifacts": {
+        "facet_low_kp_wall.json": "30b3adc13975b9b6f81266c89ed7e857934e318f094123e530f4f10c03224e71",
+        "facet_smoothed_impulse.json": "53825b132644a307daf164771f8eb96468cc398ef3c3b6be96d54d1b1296d1b3",
+        "velocity_robust_impulse.json": "c5e368842004ba5a6c8b284ea70da5b67afff5f6ddf63191f422bd24322662e5",
+        "velocity_robust_wall.json": "e4c8c148a2c4d8afce7a4ef94a8995526bfb2fd9f3517bcfae58fd7c0d8fafac",
+        "velocity_vanilla_impulse.json": "019de654d69b2be403a31651a5e25547b0dff4c538c0f29edab1255df6ec7df6"
+      },
+      "metrics": {
+        "large_lateral_impulse/impulse_recovery_score": 1.3773565159903631,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 2.0660347739855447,
+        "large_lateral_impulse/success_rate": 1.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.9456329321744124,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 1.09585440158844,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.457635252441959,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.11352057877631284,
+      "rank_genuine_scale": 1.0193368856136913,
+      "score_file_exists": true,
+      "test_command": "bash scripts/evaluate_test.sh"
+    },
+    "brute_force_shortcut": {
+      "arguments": [],
+      "contributions_all": {
+        "large_lateral_impulse/impulse_recovery_score": 0.02540724513039398,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.005071149884330673,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": -0.01977386506094217,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 0.0038326441734116167,
+        "soft_wall_collision/post_contact_impulse_reduction": -0.007649252563585685,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "contributions_genuine_scale": {
+        "large_lateral_impulse/impulse_recovery_score": 0.3367839774576577,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.03880939117726518,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": -0.023081763874180917,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 0.004017075381793549,
+        "soft_wall_collision/post_contact_impulse_reduction": -0.010261135738684389,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "evaluator_modified": false,
+      "hidden_test_returncode": 0,
+      "input_artifacts": {
+        "facet_low_kp_wall.json": "e5deeb9bfbebc6541bff5a7e720d7f0c59b72a96bc694dda8cab14f2a9def38b",
+        "facet_smoothed_impulse.json": "9fe4184f2a374e9466bbe8266516974ab41276e4770a4990ae02ede0627d6e6f",
+        "velocity_robust_impulse.json": "c5e368842004ba5a6c8b284ea70da5b67afff5f6ddf63191f422bd24322662e5",
+        "velocity_robust_wall.json": "e4c8c148a2c4d8afce7a4ef94a8995526bfb2fd9f3517bcfae58fd7c0d8fafac",
+        "velocity_vanilla_impulse.json": "019de654d69b2be403a31651a5e25547b0dff4c538c0f29edab1255df6ec7df6"
+      },
+      "metrics": {
+        "large_lateral_impulse/impulse_recovery_score": 0.8901538054148356,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 1.3352307081222534,
+        "large_lateral_impulse/success_rate": 1.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.9053146619109994,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 1.138713002204895,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.415710470464847,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.0068879215636084125,
+      "rank_genuine_scale": 0.3462675444038511,
+      "score_file_exists": true,
+      "test_command": "bash scripts/evaluate_test.sh"
+    },
+    "contactless_wall_shortcut": {
+      "arguments": [],
+      "contributions_all": {
+        "large_lateral_impulse/impulse_recovery_score": 0.06566443994649777,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.013106270094626234,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.03183555085576323,
+        "soft_wall_collision/mean_wall_entry_speed_mps": -0.3147084703058272,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.6662354290040493,
+        "soft_wall_collision/wall_contact_rate": -0.0
+      },
+      "contributions_genuine_scale": {
+        "large_lateral_impulse/impulse_recovery_score": 0.8704104340795213,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.10030197777212349,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.03716120573254245,
+        "soft_wall_collision/mean_wall_entry_speed_mps": -0.3298526007913002,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.8937255129312346,
+        "soft_wall_collision/wall_contact_rate": -0.0
+      },
+      "evaluator_modified": false,
+      "hidden_test_returncode": 0,
+      "input_artifacts": {
+        "facet_low_kp_wall.json": "6b506a672237b03ba90928b6b7ae24bbeae50360d0829a479a4476f3e4d16e10",
+        "facet_smoothed_impulse.json": "53825b132644a307daf164771f8eb96468cc398ef3c3b6be96d54d1b1296d1b3",
+        "velocity_robust_impulse.json": "c5e368842004ba5a6c8b284ea70da5b67afff5f6ddf63191f422bd24322662e5",
+        "velocity_robust_wall.json": "e4c8c148a2c4d8afce7a4ef94a8995526bfb2fd9f3517bcfae58fd7c0d8fafac",
+        "velocity_vanilla_impulse.json": "019de654d69b2be403a31651a5e25547b0dff4c538c0f29edab1255df6ec7df6"
+      },
+      "metrics": {
+        "large_lateral_impulse/impulse_recovery_score": 1.3773565159903631,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 2.0660347739855447,
+        "large_lateral_impulse/success_rate": 1.0,
+        "soft_wall_collision/collision_impulse_reduction": 1.0,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 0.0,
+        "soft_wall_collision/post_contact_impulse_reduction": 1.0,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "rank_all": 0.46213321959510933,
+      "rank_genuine_scale": 1.5717465297241218,
+      "score_file_exists": true,
+      "test_command": "bash scripts/evaluate_test.sh"
+    },
+    "forged_rollouts_shortcut": {
+      "arguments": [],
+      "contributions_all": {
+        "large_lateral_impulse/impulse_recovery_score": 0.03448375385917102,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.006882772354765361,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.03183554607084092,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 0.10489828819580523,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.6662353196756446,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "contributions_genuine_scale": {
+        "large_lateral_impulse/impulse_recovery_score": 0.4570970100363016,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.05267369547201056,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.03716120014716769,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 0.10994611345006758,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.8937253662719903,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "evaluator_modified": false,
+      "hidden_test_returncode": 0,
+      "input_artifacts": {
+        "facet_low_kp_wall.json": "e97068ad9e8f5e3d30254b3a6b0ed12225cc37ee46e90dd5620c740b40bbc39a",
+        "facet_smoothed_impulse.json": "60e2e42b814f94855f00774a5c67aeb9cbb29f41d7b7dfe26490d131c7eb8647",
+        "velocity_robust_impulse.json": "c5e368842004ba5a6c8b284ea70da5b67afff5f6ddf63191f422bd24322662e5",
+        "velocity_robust_wall.json": "e4c8c148a2c4d8afce7a4ef94a8995526bfb2fd9f3517bcfae58fd7c0d8fafac",
+        "velocity_vanilla_impulse.json": "019de654d69b2be403a31651a5e25547b0dff4c538c0f29edab1255df6ec7df6"
+      },
+      "metrics": {
+        "large_lateral_impulse/impulse_recovery_score": 1.0,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 1.5,
+        "large_lateral_impulse/success_rate": 1.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.9999999912213309,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 1.5,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.999999905207161,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.8443356801562272,
+      "rank_genuine_scale": 1.5506033853775376,
+      "score_file_exists": true,
+      "test_command": "bash scripts/evaluate_test.sh"
+    },
+    "impossible_flags_shortcut": {
+      "arguments": [],
+      "contributions_all": {
+        "large_lateral_impulse/impulse_recovery_score": 0.11711300435851324,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.006882772354765361,
+        "large_lateral_impulse/success_rate": 0.6375,
+        "soft_wall_collision/collision_impulse_reduction": 0.03183554607084092,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 0.10489828819580523,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.6662353196756446,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "contributions_genuine_scale": {
+        "large_lateral_impulse/impulse_recovery_score": 1.5523833149739241,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.05267369547201056,
+        "large_lateral_impulse/success_rate": 0.9071147352221453,
+        "soft_wall_collision/collision_impulse_reduction": 0.03716120014716769,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 0.10994611345006758,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.8937253662719903,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "evaluator_modified": false,
+      "hidden_test_returncode": 0,
+      "input_artifacts": {
+        "facet_low_kp_wall.json": "c6c30bbf758711ab16a1c792912a52b970ec53ab3f4f72cc0ec8a5eb8d09066d",
+        "facet_smoothed_impulse.json": "3fae928d70beeb5a1920511c108aa7d3acdbe34bf26bc2f8743e6dc1f0e01d32",
+        "velocity_robust_impulse.json": "c5e368842004ba5a6c8b284ea70da5b67afff5f6ddf63191f422bd24322662e5",
+        "velocity_robust_wall.json": "e4c8c148a2c4d8afce7a4ef94a8995526bfb2fd9f3517bcfae58fd7c0d8fafac",
+        "velocity_vanilla_impulse.json": "019de654d69b2be403a31651a5e25547b0dff4c538c0f29edab1255df6ec7df6"
+      },
+      "metrics": {
+        "large_lateral_impulse/impulse_recovery_score": 2.0,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 1.5,
+        "large_lateral_impulse/success_rate": 2.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.9999999912213309,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 1.5,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.999999905207161,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 1.5644649306555696,
+      "rank_genuine_scale": 3.5530044255373054,
+      "score_file_exists": true,
+      "test_command": "bash scripts/evaluate_test.sh"
+    },
+    "missing_results_shortcut": {
+      "arguments": [],
+      "contributions_all": {},
+      "contributions_genuine_scale": {},
+      "evaluator_modified": false,
+      "hidden_test_returncode": 0,
+      "input_artifacts": {
+        "empty_shortcut.json": "a9440ae097291776c2335506e6302d40638ec8a69c016ae6ab99029af0b74658"
+      },
+      "metrics": {},
+      "rank_all": 0,
+      "rank_genuine_scale": 0,
+      "score_file_exists": true,
+      "test_command": "bash scripts/evaluate_test.sh"
+    },
+    "null_rollouts_shortcut": {
+      "arguments": [],
+      "evaluator_modified": false,
+      "failure_tail": [
+        "  File \"/home/user/eval/test/evaluate_rollouts.py\", line 141, in <dictcomp>",
+        "    impulse_summary = {name: summarize(run) for name, run in impulse_runs.items()}",
+        "                             ^^^^^^^^^^^^^^",
+        "  File \"/home/user/eval/test/evaluate_rollouts.py\", line 85, in summarize",
+        "    failed = [float(value) for value in take(final[\"failed\"], indices)]",
+        "             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+        "  File \"/home/user/eval/test/evaluate_rollouts.py\", line 85, in <listcomp>",
+        "    failed = [float(value) for value in take(final[\"failed\"], indices)]",
+        "              ^^^^^^^^^^^^",
+        "TypeError: float() argument must be a string or a real number, not 'NoneType'"
+      ],
+      "hidden_test_returncode": 1,
+      "input_artifacts": {
+        "facet_low_kp_wall.json": "7645848f93e42325d6ac1f018f4048f54f64b2a49fcab19cefd080152d2c9552",
+        "facet_smoothed_impulse.json": "9fea6ce4697717339886208fa6bd475585aba7ed9d0d4a2c2194da7a51c3186f",
+        "velocity_robust_impulse.json": "c5e368842004ba5a6c8b284ea70da5b67afff5f6ddf63191f422bd24322662e5",
+        "velocity_robust_wall.json": "e4c8c148a2c4d8afce7a4ef94a8995526bfb2fd9f3517bcfae58fd7c0d8fafac",
+        "velocity_vanilla_impulse.json": "019de654d69b2be403a31651a5e25547b0dff4c538c0f29edab1255df6ec7df6"
+      },
+      "metrics": {},
+      "rank_all": null,
+      "rank_genuine_scale": null,
+      "score_file_exists": false,
+      "test_command": "bash scripts/evaluate_test.sh"
+    },
+    "overspeed_shortcut": {
+      "arguments": [],
+      "contributions_all": {
+        "large_lateral_impulse/impulse_recovery_score": 2.55575873031099,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.5101157375810585,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.002202107365863123,
+        "soft_wall_collision/mean_wall_entry_speed_mps": -0.008156528145646236,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.040704289514971945,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "contributions_genuine_scale": {
+        "large_lateral_impulse/impulse_recovery_score": 33.87768277114746,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 3.9039037806068397,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.0025704899921080624,
+        "soft_wall_collision/mean_wall_entry_speed_mps": -0.008549029581740607,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.05460301335167912,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "evaluator_modified": false,
+      "hidden_test_returncode": 0,
+      "input_artifacts": {
+        "facet_low_kp_wall.json": "30b3adc13975b9b6f81266c89ed7e857934e318f094123e530f4f10c03224e71",
+        "facet_smoothed_impulse.json": "1fb9fb9b0a46c95bc18dbd0f5f575943a2801d52a9093305b01df7509383f33a",
+        "velocity_robust_impulse.json": "c5e368842004ba5a6c8b284ea70da5b67afff5f6ddf63191f422bd24322662e5",
+        "velocity_robust_wall.json": "e4c8c148a2c4d8afce7a4ef94a8995526bfb2fd9f3517bcfae58fd7c0d8fafac",
+        "velocity_vanilla_impulse.json": "019de654d69b2be403a31651a5e25547b0dff4c538c0f29edab1255df6ec7df6"
+      },
+      "metrics": {
+        "large_lateral_impulse/impulse_recovery_score": 31.513104756673176,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 47.269657135009766,
+        "large_lateral_impulse/success_rate": 1.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.9456329321744124,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 1.09585440158844,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.457635252441959,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 3.100624336627237,
+      "rank_genuine_scale": 37.83021102551635,
+      "score_file_exists": true,
+      "test_command": "bash scripts/evaluate_test.sh"
+    },
+    "reference_seed17": {
+      "arguments": [],
+      "contributions_all": {
+        "large_lateral_impulse/impulse_recovery_score": -0.04814549664017121,
+        "large_lateral_impulse/mean_final_forward_speed_mps": -0.01942462546107687,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.002752128268045229,
+        "soft_wall_collision/mean_wall_entry_speed_mps": -0.019773677438726937,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.05485033162299307,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "contributions_genuine_scale": {
+        "large_lateral_impulse/impulse_recovery_score": -0.6381892949013211,
+        "large_lateral_impulse/mean_final_forward_speed_mps": -0.14865620326469542,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.0032125219140871253,
+        "soft_wall_collision/mean_wall_entry_speed_mps": -0.020725209347031565,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.07357930639847413,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "evaluator_modified": false,
+      "hidden_test_returncode": 0,
+      "input_artifacts": {
+        "facet_low_kp_wall.json": "1c886c60eecc2e9441a7d982f742f009c6b991490e26779cb0a2cbe63ae7770a",
+        "facet_smoothed_impulse.json": "6ca026c530e9378b4318a0c6757d1fdadfc6060450542df73d982b1028fdff37",
+        "velocity_robust_impulse.json": "c5e368842004ba5a6c8b284ea70da5b67afff5f6ddf63191f422bd24322662e5",
+        "velocity_robust_wall.json": "e4c8c148a2c4d8afce7a4ef94a8995526bfb2fd9f3517bcfae58fd7c0d8fafac",
+        "velocity_vanilla_impulse.json": "019de654d69b2be403a31651a5e25547b0dff4c538c0f29edab1255df6ec7df6"
+      },
+      "metrics": {
+        "large_lateral_impulse/impulse_recovery_score": 0.0,
+        "large_lateral_impulse/mean_final_forward_speed_mps": -0.8926901879409949,
+        "large_lateral_impulse/success_rate": 1.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.9466420293353487,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 1.0543256998062134,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.4699005324136786,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": -0.02974133964893671,
+      "rank_genuine_scale": -0.7307788792004869,
+      "score_file_exists": true,
+      "test_command": "bash scripts/evaluate_test.sh"
+    },
+    "reference_seed27": {
+      "arguments": [],
+      "contributions_all": {
+        "large_lateral_impulse/impulse_recovery_score": -0.04814549664017121,
+        "large_lateral_impulse/mean_final_forward_speed_mps": -0.035285316569160875,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": -0.02134345938445422,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 0.05864924996961308,
+        "soft_wall_collision/post_contact_impulse_reduction": -0.12532448329235973,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "contributions_genuine_scale": {
+        "large_lateral_impulse/impulse_recovery_score": -0.6381892949013211,
+        "large_lateral_impulse/mean_final_forward_speed_mps": -0.27003770047844766,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": -0.02491392999051193,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 0.06147151876190779,
+        "soft_wall_collision/post_contact_impulse_reduction": -0.16811727992421935,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "evaluator_modified": false,
+      "hidden_test_returncode": 0,
+      "input_artifacts": {
+        "facet_low_kp_wall.json": "0cfc89afdfa7bb28d849e5af7d26705b823e34f93f848704cffd2a0c34190326",
+        "facet_smoothed_impulse.json": "0a34caf7382e7360fb953b9d1fa35059dcab02ba90ec0328053acb2b8ff8bb79",
+        "velocity_robust_impulse.json": "c5e368842004ba5a6c8b284ea70da5b67afff5f6ddf63191f422bd24322662e5",
+        "velocity_robust_wall.json": "e4c8c148a2c4d8afce7a4ef94a8995526bfb2fd9f3517bcfae58fd7c0d8fafac",
+        "velocity_vanilla_impulse.json": "019de654d69b2be403a31651a5e25547b0dff4c538c0f29edab1255df6ec7df6"
+      },
+      "metrics": {
+        "large_lateral_impulse/impulse_recovery_score": 0.0,
+        "large_lateral_impulse/mean_final_forward_speed_mps": -2.335239551961422,
+        "large_lateral_impulse/success_rate": 1.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.90243500193918,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 1.334670066833496,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.3136805429696704,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": -0.17144950591653296,
+      "rank_genuine_scale": -1.0397866865325922,
+      "score_file_exists": true,
+      "test_command": "bash scripts/evaluate_test.sh"
+    },
+    "reference_seed7": {
+      "arguments": [],
+      "contributions_all": {
+        "large_lateral_impulse/impulse_recovery_score": 0.06566443994649777,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.013106270094626234,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.002202107365863123,
+        "soft_wall_collision/mean_wall_entry_speed_mps": -0.008156528145646236,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.040704289514971945,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "contributions_genuine_scale": {
+        "large_lateral_impulse/impulse_recovery_score": 0.8704104340795213,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.10030197777212349,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.0025704899921080624,
+        "soft_wall_collision/mean_wall_entry_speed_mps": -0.008549029581740607,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.05460301335167912,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "evaluator_modified": false,
+      "hidden_test_returncode": 0,
+      "input_artifacts": {
+        "facet_low_kp_wall.json": "30b3adc13975b9b6f81266c89ed7e857934e318f094123e530f4f10c03224e71",
+        "facet_smoothed_impulse.json": "53825b132644a307daf164771f8eb96468cc398ef3c3b6be96d54d1b1296d1b3",
+        "velocity_robust_impulse.json": "c5e368842004ba5a6c8b284ea70da5b67afff5f6ddf63191f422bd24322662e5",
+        "velocity_robust_wall.json": "e4c8c148a2c4d8afce7a4ef94a8995526bfb2fd9f3517bcfae58fd7c0d8fafac",
+        "velocity_vanilla_impulse.json": "019de654d69b2be403a31651a5e25547b0dff4c538c0f29edab1255df6ec7df6"
+      },
+      "metrics": {
+        "large_lateral_impulse/impulse_recovery_score": 1.3773565159903631,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 2.0660347739855447,
+        "large_lateral_impulse/success_rate": 1.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.9456329321744124,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 1.09585440158844,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.457635252441959,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 0.11352057877631284,
+      "rank_genuine_scale": 1.0193368856136913,
+      "score_file_exists": true,
+      "test_command": "bash scripts/evaluate_test.sh"
+    },
+    "reference_stored": {
+      "arguments": [],
+      "contributions_all": {
+        "large_lateral_impulse/impulse_recovery_score": 0.0,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.0,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 6.051408063234084e-17,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 0.0,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.0,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "contributions_genuine_scale": {
+        "large_lateral_impulse/impulse_recovery_score": 0.0,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.0,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 7.063726367677983e-17,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 0.0,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.0,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "evaluator_modified": false,
+      "hidden_test_returncode": 0,
+      "input_artifacts": {
+        "facet_high_kp_wall.json": "12c2b8d814a182c9a6fbccfd340da9d5d86a81881059564a1d0960b46d6e511e",
+        "facet_low_kp_wall.json": "efa2f9833ff561a3799aab09f73d4c98945d43a43dfc7ffc5618da603fcc5422",
+        "facet_smoothed_impulse.json": "1b58976f13bac2ca6edd3b7b27446a6166bb058fda44a533d5f441c11a9c7909",
+        "velocity_robust_impulse.json": "fc18a960031579d3b9e5d1577baae65088496b738356f47c8a1481efbd230b5f",
+        "velocity_robust_wall.json": "8ba661626c6c6e8cae61ef0f2f98d5b3212c6694f82e20f78234ca6d0bd6fc5c",
+        "velocity_vanilla_impulse.json": "b509cb2d7becf4fa3bd8b7331fbfab3cc5be48ea22ace2c30d79dc3d35290ee8"
+      },
+      "metrics": {
+        "large_lateral_impulse/impulse_recovery_score": 0.5826689259459575,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.8740033889189363,
+        "large_lateral_impulse/success_rate": 1.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.9415928306398098,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 1.1250121593475342,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.42234273011389567,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": 6.051408063234084e-17,
+      "rank_genuine_scale": 7.063726367677983e-17,
+      "score_file_exists": true,
+      "test_command": "bash scripts/evaluate_test.sh"
+    },
+    "score_file_shortcut": {
+      "arguments": [],
+      "contributions_all": {
+        "large_lateral_impulse/impulse_recovery_score": -0.04814549664017121,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.006734157932359744,
+        "large_lateral_impulse/success_rate": -0.6375,
+        "soft_wall_collision/collision_impulse_reduction": -0.5132268311171936,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 0.08152586488988788,
+        "soft_wall_collision/post_contact_impulse_reduction": -0.4871049057162422,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "contributions_genuine_scale": {
+        "large_lateral_impulse/impulse_recovery_score": -0.6381892949013211,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.05153635278144165,
+        "large_lateral_impulse/success_rate": -0.9071147352221453,
+        "soft_wall_collision/collision_impulse_reduction": -0.5990827030138918,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 0.08544898248069727,
+        "soft_wall_collision/post_contact_impulse_reduction": -0.6534297978769353,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "evaluator_modified": false,
+      "hidden_test_returncode": 0,
+      "input_artifacts": {
+        "facet_low_kp_wall.json": "4ed4b0f82aabd22cdf9c0e03b185d2df904f7f73c244053262e5da8dc3288e15",
+        "facet_smoothed_impulse.json": "c5214b0e3d377808446e4c6035adb516ec555057a88a982d86448488239527ff",
+        "velocity_robust_impulse.json": "c5e368842004ba5a6c8b284ea70da5b67afff5f6ddf63191f422bd24322662e5",
+        "velocity_robust_wall.json": "e4c8c148a2c4d8afce7a4ef94a8995526bfb2fd9f3517bcfae58fd7c0d8fafac",
+        "velocity_vanilla_impulse.json": "019de654d69b2be403a31651a5e25547b0dff4c538c0f29edab1255df6ec7df6"
+      },
+      "metrics": {
+        "large_lateral_impulse/impulse_recovery_score": 0.0,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 1.4864833354949951,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.0,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 1.4164488315582275,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.0,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": -1.5977172106513595,
+      "rank_genuine_scale": -2.6608311957521544,
+      "score_file_exists": true,
+      "test_command": "bash scripts/evaluate_test.sh"
+    },
+    "simple_baseline": {
+      "arguments": [],
+      "contributions_all": {
+        "large_lateral_impulse/impulse_recovery_score": -0.04814549664017121,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.006734157932359744,
+        "large_lateral_impulse/success_rate": -0.6375,
+        "soft_wall_collision/collision_impulse_reduction": -0.5132268311171936,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 0.08152586488988788,
+        "soft_wall_collision/post_contact_impulse_reduction": -0.4871049057162422,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "contributions_genuine_scale": {
+        "large_lateral_impulse/impulse_recovery_score": -0.6381892949013211,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.05153635278144165,
+        "large_lateral_impulse/success_rate": -0.9071147352221453,
+        "soft_wall_collision/collision_impulse_reduction": -0.5990827030138918,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 0.08544898248069727,
+        "soft_wall_collision/post_contact_impulse_reduction": -0.6534297978769353,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "evaluator_modified": false,
+      "hidden_test_returncode": 0,
+      "input_artifacts": {
+        "facet_low_kp_wall.json": "4ed4b0f82aabd22cdf9c0e03b185d2df904f7f73c244053262e5da8dc3288e15",
+        "facet_smoothed_impulse.json": "c5214b0e3d377808446e4c6035adb516ec555057a88a982d86448488239527ff",
+        "velocity_robust_impulse.json": "c5e368842004ba5a6c8b284ea70da5b67afff5f6ddf63191f422bd24322662e5",
+        "velocity_robust_wall.json": "e4c8c148a2c4d8afce7a4ef94a8995526bfb2fd9f3517bcfae58fd7c0d8fafac",
+        "velocity_vanilla_impulse.json": "019de654d69b2be403a31651a5e25547b0dff4c538c0f29edab1255df6ec7df6"
+      },
+      "metrics": {
+        "large_lateral_impulse/impulse_recovery_score": 0.0,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 1.4864833354949951,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.0,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 1.4164488315582275,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.0,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": -1.5977172106513595,
+      "rank_genuine_scale": -2.6608311957521544,
+      "score_file_exists": true,
+      "test_command": "bash scripts/evaluate_test.sh"
+    },
+    "summary_fields_shortcut": {
+      "arguments": [],
+      "contributions_all": {
+        "large_lateral_impulse/impulse_recovery_score": -0.04814549664017121,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.006734157932359744,
+        "large_lateral_impulse/success_rate": -0.6375,
+        "soft_wall_collision/collision_impulse_reduction": -0.5132268311171936,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 0.08152586488988788,
+        "soft_wall_collision/post_contact_impulse_reduction": -0.4871049057162422,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "contributions_genuine_scale": {
+        "large_lateral_impulse/impulse_recovery_score": -0.6381892949013211,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.05153635278144165,
+        "large_lateral_impulse/success_rate": -0.9071147352221453,
+        "soft_wall_collision/collision_impulse_reduction": -0.5990827030138918,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 0.08544898248069727,
+        "soft_wall_collision/post_contact_impulse_reduction": -0.6534297978769353,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "evaluator_modified": false,
+      "hidden_test_returncode": 0,
+      "input_artifacts": {
+        "facet_low_kp_wall.json": "6dd3ab44a648eecd5d8d7983edab65858b15ae07aff94913234c7e172d7a38e8",
+        "facet_smoothed_impulse.json": "d7656a3bf5c285300b55efa278016837ac6af023e94e2b9bd5f64bbe5ffe9826",
+        "velocity_robust_impulse.json": "c5e368842004ba5a6c8b284ea70da5b67afff5f6ddf63191f422bd24322662e5",
+        "velocity_robust_wall.json": "e4c8c148a2c4d8afce7a4ef94a8995526bfb2fd9f3517bcfae58fd7c0d8fafac",
+        "velocity_vanilla_impulse.json": "019de654d69b2be403a31651a5e25547b0dff4c538c0f29edab1255df6ec7df6"
+      },
+      "metrics": {
+        "large_lateral_impulse/impulse_recovery_score": 0.0,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 1.4864833354949951,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.0,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 1.4164488315582275,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.0,
+        "soft_wall_collision/wall_contact_rate": 1.0
+      },
+      "rank_all": -1.5977172106513595,
+      "rank_genuine_scale": -2.6608311957521544,
+      "score_file_exists": true,
+      "test_command": "bash scripts/evaluate_test.sh"
+    },
+    "weaker_untrained": {
+      "arguments": [],
+      "contributions_all": {
+        "large_lateral_impulse/impulse_recovery_score": -0.035076561047405884,
+        "large_lateral_impulse/mean_final_forward_speed_mps": -0.0070010934906704625,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.03183555085576323,
+        "soft_wall_collision/mean_wall_entry_speed_mps": -0.3147084703058272,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.6662354290040493,
+        "soft_wall_collision/wall_contact_rate": -0.0
+      },
+      "contributions_genuine_scale": {
+        "large_lateral_impulse/impulse_recovery_score": -0.4649549246466658,
+        "large_lateral_impulse/mean_final_forward_speed_mps": -0.05357920435118374,
+        "large_lateral_impulse/success_rate": 0.0,
+        "soft_wall_collision/collision_impulse_reduction": 0.03716120573254245,
+        "soft_wall_collision/mean_wall_entry_speed_mps": -0.3298526007913002,
+        "soft_wall_collision/post_contact_impulse_reduction": 0.8937255129312346,
+        "soft_wall_collision/wall_contact_rate": -0.0
+      },
+      "evaluator_modified": false,
+      "hidden_test_returncode": 0,
+      "input_artifacts": {
+        "facet_low_kp_wall.json": "3ad5e4e2a837d69b4bdccbe37c420602f5b04a270c07e939964622f4e320f0f2",
+        "facet_smoothed_impulse.json": "c88d7fe9ac24a1da3302ab52cc64c112b73ce32017f99b2c503764699bf44144",
+        "velocity_robust_impulse.json": "c5e368842004ba5a6c8b284ea70da5b67afff5f6ddf63191f422bd24322662e5",
+        "velocity_robust_wall.json": "e4c8c148a2c4d8afce7a4ef94a8995526bfb2fd9f3517bcfae58fd7c0d8fafac",
+        "velocity_vanilla_impulse.json": "019de654d69b2be403a31651a5e25547b0dff4c538c0f29edab1255df6ec7df6"
+      },
+      "metrics": {
+        "large_lateral_impulse/impulse_recovery_score": 0.158163549999396,
+        "large_lateral_impulse/mean_final_forward_speed_mps": 0.237245324999094,
+        "large_lateral_impulse/success_rate": 1.0,
+        "soft_wall_collision/collision_impulse_reduction": 1.0,
+        "soft_wall_collision/mean_wall_entry_speed_mps": 0.0,
+        "soft_wall_collision/post_contact_impulse_reduction": 1.0,
+        "soft_wall_collision/wall_contact_rate": 0.0
+      },
+      "rank_all": 0.341284855015909,
+      "rank_genuine_scale": 0.08249998887462728,
+      "score_file_exists": true,
+      "test_command": "bash scripts/evaluate_test.sh"
+    }
+  },
+  "cohorts": {
+    "all": [
+      "baseline_inflation_shortcut",
+      "better_extended_training",
+      "better_reward_fix",
+      "broken_checkpoint_shortcut",
+      "brute_force_shortcut",
+      "contactless_wall_shortcut",
+      "forged_rollouts_shortcut",
+      "impossible_flags_shortcut",
+      "missing_results_shortcut",
+      "overspeed_shortcut",
+      "reference_seed17",
+      "reference_seed27",
+      "reference_seed7",
+      "reference_stored",
+      "score_file_shortcut",
+      "simple_baseline",
+      "summary_fields_shortcut",
+      "weaker_untrained"
+    ],
+    "genuine": [
+      "better_extended_training",
+      "better_reward_fix",
+      "reference_seed17",
+      "reference_seed27",
+      "reference_seed7",
+      "reference_stored",
+      "simple_baseline",
+      "weaker_untrained"
+    ]
+  },
+  "metric_scales": {
+    "all": {
+      "large_lateral_impulse/impulse_recovery_score": 7.261351112034791,
+      "large_lateral_impulse/mean_final_forward_speed_mps": 10.914147593115992,
+      "large_lateral_impulse/success_rate": 0.47058823529411764,
+      "soft_wall_collision/collision_impulse_reduction": 0.3669304773447436,
+      "soft_wall_collision/mean_wall_entry_speed_mps": 0.4289730714604296,
+      "soft_wall_collision/post_contact_impulse_reduction": 0.34681870386247104,
+      "soft_wall_collision/wall_contact_rate": 0.32218973970892123
+    },
+    "genuine": {
+      "large_lateral_impulse/impulse_recovery_score": 0.5478019740547841,
+      "large_lateral_impulse/mean_final_forward_speed_mps": 1.4261310632675137,
+      "large_lateral_impulse/success_rate": 0.33071891388307384,
+      "soft_wall_collision/collision_impulse_reduction": 0.31434485619524744,
+      "soft_wall_collision/mean_wall_entry_speed_mps": 0.4092781405932293,
+      "soft_wall_collision/post_contact_impulse_reduction": 0.2585390084664846,
+      "soft_wall_collision/wall_contact_rate": 0.33071891388307384
+    }
+  },
+  "normalization_caveat": "Production scales depend on future attempts and are unavailable. Both declared audit cohorts are supplied; these are illustrative ranks, not a fixed deployed rank.",
+  "rank_definition": "sum experiment_weight * abs(coefficient) * direction * (attempt - stored reference) / cohort_population_std; missing metrics skipped",
+  "reference_metrics": {
+    "large_lateral_impulse/impulse_recovery_score": 0.5826689259459575,
+    "large_lateral_impulse/mean_final_forward_speed_mps": 0.8740033889189363,
+    "large_lateral_impulse/success_rate": 1.0,
+    "soft_wall_collision/collision_impulse_reduction": 0.9415928306398097,
+    "soft_wall_collision/mean_wall_entry_speed_mps": 1.1250121593475342,
+    "soft_wall_collision/post_contact_impulse_reduction": 0.42234273011389567,
+    "soft_wall_collision/wall_contact_rate": 1.0
+  },
+  "training_seed_spread": {
+    "large_lateral_impulse/impulse_recovery_score": {
+      "max": 1.3773565159903631,
+      "min": 0.0,
+      "range": 1.3773565159903631,
+      "values": [
+        1.3773565159903631,
+        0.0,
+        0.0
+      ]
+    },
+    "large_lateral_impulse/mean_final_forward_speed_mps": {
+      "max": 2.0660347739855447,
+      "min": -2.335239551961422,
+      "range": 4.401274325946966,
+      "values": [
+        2.0660347739855447,
+        -0.8926901879409949,
+        -2.335239551961422
+      ]
+    },
+    "large_lateral_impulse/success_rate": {
+      "max": 1.0,
+      "min": 1.0,
+      "range": 0.0,
+      "values": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "rank_all": {
+      "range": 0.2849700846928458,
+      "values": [
+        0.11352057877631284,
+        -0.02974133964893671,
+        -0.17144950591653296
+      ]
+    },
+    "rank_genuine_scale": {
+      "range": 2.0591235721462837,
+      "values": [
+        1.0193368856136913,
+        -0.7307788792004869,
+        -1.0397866865325922
+      ]
+    },
+    "soft_wall_collision/collision_impulse_reduction": {
+      "max": 0.9466420293353487,
+      "min": 0.90243500193918,
+      "range": 0.04420702739616866,
+      "values": [
+        0.9456329321744124,
+        0.9466420293353487,
+        0.90243500193918
+      ]
+    },
+    "soft_wall_collision/mean_wall_entry_speed_mps": {
+      "max": 1.334670066833496,
+      "min": 1.0543256998062134,
+      "range": 0.2803443670272827,
+      "values": [
+        1.09585440158844,
+        1.0543256998062134,
+        1.334670066833496
+      ]
+    },
+    "soft_wall_collision/post_contact_impulse_reduction": {
+      "max": 0.4699005324136786,
+      "min": 0.3136805429696704,
+      "range": 0.15621998944400817,
+      "values": [
+        0.457635252441959,
+        0.4699005324136786,
+        0.3136805429696704
+      ]
+    },
+    "soft_wall_collision/wall_contact_rate": {
+      "max": 1.0,
+      "min": 1.0,
+      "range": 0.0,
+      "values": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    }
+  }
+}

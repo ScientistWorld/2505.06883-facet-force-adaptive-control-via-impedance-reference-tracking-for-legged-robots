@@ -1,0 +1,10 @@
+{
+  "arguments": [],
+  "evaluator_modified": false,
+  "hidden_test_returncode": 0,
+  "input_artifacts": {
+    "empty_shortcut.json": "a9440ae097291776c2335506e6302d40638ec8a69c016ae6ab99029af0b74658"
+  },
+  "score_file_exists": true,
+  "test_command": "bash scripts/evaluate_test.sh"
+}

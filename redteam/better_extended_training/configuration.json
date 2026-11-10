@@ -1,0 +1,12 @@
+{
+  "episodes": 96,
+  "evaluation_seed_impulse": 7,
+  "evaluation_seed_wall": 8,
+  "n_envs": 128,
+  "note": "Extended training is an audit diagnostic outside the gym training-budget constraint.",
+  "rollout_steps": 96,
+  "student_updates": 90,
+  "teacher_updates": 180,
+  "torch_threads": 2,
+  "training_seed": 7
+}

@@ -1,0 +1,7 @@
+{
+  "evaluations": 7,
+  "gain": 0.5,
+  "rule": "train impulse_recovery_score + post_contact_impulse_reduction + .2 * wall entry speed",
+  "train_utility": 1.5169205596306559,
+  "uses_hidden_test_for_selection": false
+}

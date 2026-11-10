@@ -1,0 +1,14 @@
+{
+  "arguments": [],
+  "evaluator_modified": false,
+  "hidden_test_returncode": 0,
+  "input_artifacts": {
+    "facet_low_kp_wall.json": "30b3adc13975b9b6f81266c89ed7e857934e318f094123e530f4f10c03224e71",
+    "facet_smoothed_impulse.json": "53825b132644a307daf164771f8eb96468cc398ef3c3b6be96d54d1b1296d1b3",
+    "velocity_robust_impulse.json": "c5e368842004ba5a6c8b284ea70da5b67afff5f6ddf63191f422bd24322662e5",
+    "velocity_robust_wall.json": "85430b420761c18829c15418c1dcf16d3766e18a05b26f04866536021cc8e19f",
+    "velocity_vanilla_impulse.json": "019de654d69b2be403a31651a5e25547b0dff4c538c0f29edab1255df6ec7df6"
+  },
+  "score_file_exists": true,
+  "test_command": "bash scripts/evaluate_test.sh"
+}

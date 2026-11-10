@@ -1,0 +1,12 @@
+{
+  "episodes": 96,
+  "evaluation_seed_impulse": 7,
+  "evaluation_seed_wall": 8,
+  "n_envs": 128,
+  "note": "Original budget; fixed evaluation seeds isolate training variance.",
+  "rollout_steps": 96,
+  "student_updates": 0,
+  "teacher_updates": 0,
+  "torch_threads": 2,
+  "training_seed": 7
+}

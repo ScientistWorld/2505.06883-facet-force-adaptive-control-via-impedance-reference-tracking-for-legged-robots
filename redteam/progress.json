@@ -1,0 +1,97 @@
+[
+  {
+    "name": "reference_stored",
+    "returncode": 0,
+    "seconds": 1.9210662369150668
+  },
+  {
+    "name": "reference_seed7",
+    "returncode": 0,
+    "seconds": 77.18456837511621
+  },
+  {
+    "name": "reference_seed17",
+    "returncode": 0,
+    "seconds": 71.03782334108837
+  },
+  {
+    "name": "reference_seed27",
+    "returncode": 0,
+    "seconds": 69.93908554804511
+  },
+  {
+    "name": "better_extended_training",
+    "returncode": 0,
+    "seconds": 181.9600191488862
+  },
+  {
+    "name": "better_reward_fix",
+    "returncode": 0,
+    "seconds": 71.36909899208695
+  },
+  {
+    "name": "weaker_untrained",
+    "returncode": 0,
+    "seconds": 16.001286081038415
+  },
+  {
+    "name": "simple_baseline",
+    "returncode": 0,
+    "seconds": 2.5525230600032955
+  },
+  {
+    "name": "brute_force_shortcut",
+    "returncode": 0,
+    "seconds": 18.152358543127775
+  },
+  {
+    "name": "forged_rollouts_shortcut",
+    "returncode": 0,
+    "seconds": 0.8424518520478159
+  },
+  {
+    "name": "impossible_flags_shortcut",
+    "returncode": 0,
+    "seconds": 0.8199017501901835
+  },
+  {
+    "name": "baseline_inflation_shortcut",
+    "returncode": 0,
+    "seconds": 2.2618701818864793
+  },
+  {
+    "name": "contactless_wall_shortcut",
+    "returncode": 0,
+    "seconds": 2.4492995881009847
+  },
+  {
+    "name": "missing_results_shortcut",
+    "returncode": 0,
+    "seconds": 0.5303648519329727
+  },
+  {
+    "name": "summary_fields_shortcut",
+    "returncode": 0,
+    "seconds": 2.590688301017508
+  },
+  {
+    "name": "score_file_shortcut",
+    "returncode": 0,
+    "seconds": 2.5745058089960366
+  },
+  {
+    "name": "null_rollouts_shortcut",
+    "returncode": 1,
+    "seconds": 0.8444344010204077
+  },
+  {
+    "name": "broken_checkpoint_shortcut",
+    "returncode": 0,
+    "seconds": 1.4250574039760977
+  },
+  {
+    "name": "overspeed_shortcut",
+    "returncode": 0,
+    "seconds": 2.60322990687564
+  }
+]

@@ -1,0 +1,7 @@
+{
+  "experiments": {},
+  "metadata": {
+    "slice": "test",
+    "split_rule": "odd rollout episode indices; post-contact wall impulse uses odd samples in the first 0.50s"
+  }
+}

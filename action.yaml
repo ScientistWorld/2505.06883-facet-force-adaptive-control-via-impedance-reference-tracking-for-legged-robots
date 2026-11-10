@@ -3,6 +3,6 @@
 # only after your turn ends.
 action: submit
 gpus: 0
-test: false
+test: true
 milestone: core_claim
-notes: "Final hardening job (resumable): train 5 reference seeds (200/50), 3x budget x5, 6x budget x3, open-loop x2, MLP-estimator x2, untrained, all single-threaded in parallel; ship the median reference seed as checkpoints/facet; score shortcut probes (incl. new wall-retreat and clipped-analytic probes, plus pre-gate legacy scores) through the hidden test; paired bootstrap analysis; official scores + validate."
+notes: "Rescore only (no training: all 18 trained policies are on disk): evaluator now charges wall impulse against the commanded impedance's own impulse; rescore every trained variant and shortcut probe (incl. legacy pre-fix scores), re-select median canonical, official scores, validate."

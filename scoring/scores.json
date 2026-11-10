@@ -3,9 +3,9 @@
     "impedance_tracking": {
       "results": {
         "facet": {
-          "position_tracking_rmse_m": 0.10571689199488099,
+          "position_tracking_rmse_m": 0.10515324045743982,
           "success_rate": 0.99609375,
-          "velocity_tracking_rmse_mps": 0.3294120037603947
+          "velocity_tracking_rmse_mps": 0.329840795703186
         },
         "velocity_robust": {
           "position_tracking_rmse_m": 0.903878137493112,
@@ -22,9 +22,9 @@
     "large_lateral_impulse": {
       "results": {
         "facet": {
-          "impulse_recovery_score": 0.576664034938031,
-          "success_rate": 0.8046875,
-          "velocity_tracking_rmse_mps": 1.0711576942943184
+          "impulse_recovery_score": 0.5052291982017723,
+          "success_rate": 0.765625,
+          "velocity_tracking_rmse_mps": 1.2760127272564465
         },
         "velocity_robust": {
           "impulse_recovery_score": 0.06405100493371461,
@@ -41,9 +41,9 @@
     "soft_wall_collision": {
       "results": {
         "facet": {
-          "contact_tracking_rmse_mps": 0.11901847409912733,
-          "entry_speed_error_mps": 0.05940790151018596,
-          "post_contact_impulse_reduction": 0.27020710548170757,
+          "contact_tracking_rmse_mps": 0.10343023731955484,
+          "entry_speed_error_mps": 0.091234184585514,
+          "post_contact_impulse_reduction": 0.21367341684670516,
           "wall_contact_rate": 1.0
         },
         "velocity_robust": {

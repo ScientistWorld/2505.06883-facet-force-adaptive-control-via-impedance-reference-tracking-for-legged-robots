@@ -94,7 +94,8 @@ def sample_training_scenarios(rng: np.random.Generator, n: int) -> Scenario:
     sc.const_duration[:] = rng.uniform(1.0, 4.0, size=n)
     has_push = rng.random(n) < 0.8
     sc.impulse_peak[:, 0] = rng.uniform(0.0, 200.0, size=n) * rng.choice([-1.0, 1.0], size=n) * has_push
-    sc.impulse_peak[:, 1] = rng.uniform(80.0, 600.0, size=n) * rng.choice([-1.0, 1.0], size=n) * has_push
+    # Lateral peaks cover the benchmark's whole push sweep (log-uniform 80-1200 N).
+    sc.impulse_peak[:, 1] = np.exp(rng.uniform(math.log(80.0), math.log(1200.0), size=n)) * rng.choice([-1.0, 1.0], size=n) * has_push
     sc.impulse_start[:] = rng.uniform(0.3, 6.0, size=n)
     sc.impulse_duration[:] = rng.uniform(0.4, 0.6, size=n)
     has_wall = rng.random(n) < 0.3

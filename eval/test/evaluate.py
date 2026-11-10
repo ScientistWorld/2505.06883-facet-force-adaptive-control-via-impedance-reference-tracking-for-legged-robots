@@ -497,7 +497,10 @@ def wall_episodes(traj: Trajectory, sc: Scenario) -> dict[str, np.ndarray]:
     contact_window = (k > first[None, :]) & (k <= first[None, :] + CONTACT_TRACK_STEPS)
     contact_rmse = np.sqrt((ev * contact_window).sum(0) / np.maximum(contact_window.sum(0), 1))
     contact_rmse = np.where(valid, contact_rmse, VEL_ERR_CAP)
-    return {"impulse": impulse, "valid": valid, "entry_error": entry_error, "contact_rmse": contact_rmse}
+    # Impulse per unit approach speed (scaled to the commanded 1.5 m/s), so that
+    # entering slower within the tolerance does not lower the score.
+    normalized = impulse * COMMAND_SPEED / np.maximum(np.abs(entry_speed), 0.5)
+    return {"impulse": normalized, "raw_impulse": impulse, "valid": valid, "entry_error": entry_error, "contact_rmse": contact_rmse}
 
 
 def wall_metrics(ep: dict[str, np.ndarray], base: dict[str, np.ndarray]) -> tuple[dict[str, float], dict[str, np.ndarray]]:

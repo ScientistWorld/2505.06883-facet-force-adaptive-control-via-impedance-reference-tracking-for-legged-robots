@@ -45,9 +45,11 @@ TRAIN_RUNS = [
     ("better_longer", 27, {"scale": 3}),
     ("reference", 17, {}),
     ("reference", 27, {}),
+    ("reference", 37, {}),
+    ("reference", 47, {}),
     ("weaker_untrained", 7, {"teacher": 0, "student": 0}),
-    ("weaker_mlp_estimator", 7, {"estimator": "mlp"}),
-    ("weaker_mlp_estimator", 17, {"estimator": "mlp"}),
+    ("alt_mlp_estimator", 7, {"estimator": "mlp"}),
+    ("alt_mlp_estimator", 17, {"estimator": "mlp"}),
     ("weaker_open_loop", 7, {"target_mode": "open_loop"}),
 ]
 GRID_KX = (0.25, 0.5, 1.0, 2.0, 4.0, 5.5)
@@ -306,7 +308,7 @@ def cmd_run(args) -> None:
     evaluate(install(mode, "brute_force_grid_search", grid_root / best / "policy.pt"), "brute_force_grid_search", "test", mode)
 
     # 4. Trained variants (resumable), then score them.
-    workers = max(1, min(cpu_count(), 4, len(TRAIN_RUNS)))
+    workers = max(1, min(cpu_count(), 6, len(TRAIN_RUNS)))
     threads = max(1, cpu_count() // workers)
     print(f"[harness] training {len(TRAIN_RUNS)} runs with {workers} workers x {threads} threads", flush=True)
     with ThreadPoolExecutor(max_workers=workers) as pool:
@@ -349,7 +351,7 @@ def cmd_analyze(args) -> None:
     for path in sorted((HD / "cases").glob("*/scores_test.json")):
         cases[path.parent.name] = flat(json.loads(path.read_text()))
     base = cases["reference_s7"]
-    genuine = [c for c in cases if c.startswith(("reference_", "better_", "weaker_", "simple_baseline"))] + ["shortcut_passive"]
+    genuine = [c for c in cases if c.startswith(("reference_", "better_", "weaker_", "alt_", "simple_baseline"))] + ["shortcut_passive"]
 
     def scales(names):
         out = {}
@@ -380,7 +382,7 @@ def cmd_analyze(args) -> None:
         return [c for c in cases if c.startswith(prefix)]
 
     groups = {}
-    for prefix in ("reference_", "better_longer_", "weaker_mlp_estimator_", "weaker_open_loop_", "weaker_untrained_"):
+    for prefix in ("reference_", "better_longer_", "alt_mlp_estimator_", "weaker_open_loop_", "weaker_untrained_"):
         names = group(prefix)
         if not names:
             continue
@@ -405,7 +407,7 @@ def cmd_analyze(args) -> None:
         return json.loads(path.read_text()).get("facet") if path.exists() else None
 
     paired = {}
-    for variant in ("better_longer", "weaker_mlp_estimator", "weaker_open_loop"):
+    for variant in ("better_longer", "alt_mlp_estimator", "weaker_open_loop"):
         for seed in (7, 17, 27):
             a, b = details(f"{variant}_s{seed}"), details(f"reference_s{seed}")
             if a is None or b is None:
@@ -416,7 +418,7 @@ def cmd_analyze(args) -> None:
                 diff = sign * (np.asarray(a[exp][key]) - np.asarray(b[exp][key]))
                 entry[f"{exp}/{key}_improvement"] = {"mean": float(diff.mean()), "ci95": bootstrap_ci(diff, rng)}
             paired[f"{variant}_s{seed}_vs_reference_s{seed}"] = entry
-    for seed in (17, 27):
+    for seed in (17, 27, 37, 47):
         a, b = details(f"reference_s{seed}"), details("reference_s7")
         if a is None or b is None:
             continue

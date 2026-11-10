@@ -39,17 +39,21 @@ HD = ROOT / "redteam" / "hardened"
 sys.path.insert(0, str(ROOT))
 
 BUDGETS = {
-    "full": {"teacher": 200, "student": 50, "envs": 256, "steps": 96},
+    # Reference budget: 600 teacher + 150 student PPO updates of 256 envs x 96 steps
+    # (14.7M + 3.7M env steps; the paper's 4:1 teacher/student split).
+    "full": {"teacher": 600, "student": 150, "envs": 256, "steps": 96},
     "smoke": {"teacher": 2, "student": 1, "envs": 32, "steps": 16},
 }
 REFERENCE_SEEDS = (7, 17, 27, 37, 47)
 # name, seed, overrides (scale multiplies the update budget)
 TRAIN_RUNS = (
-    [("better_6x", s, {"scale": 6}) for s in (7, 17, 27)]
-    + [("better_3x", s, {"scale": 3}) for s in REFERENCE_SEEDS]
+    [("better_2x_budget", s, {"scale": 2}) for s in (7, 17, 27)]
     + [("reference", s, {}) for s in REFERENCE_SEEDS]
     + [("weaker_open_loop", s, {"target_mode": "open_loop"}) for s in (7, 17)]
     + [("alt_mlp_estimator", s, {"estimator": "mlp"}) for s in (7, 17)]
+    + [("weaker_third_budget", s, {"teacher": 200, "student": 50}) for s in REFERENCE_SEEDS]
+    + [("weaker_open_loop_third_budget", s, {"target_mode": "open_loop", "teacher": 200, "student": 50}) for s in (7, 17)]
+    + [("alt_mlp_estimator_third_budget", s, {"estimator": "mlp", "teacher": 200, "student": 50}) for s in (7, 17)]
     + [("weaker_untrained", 7, {"teacher": 0, "student": 0})]
 )
 GRID_KX = (0.25, 0.5, 1.0, 2.0, 4.0, 5.5)
@@ -317,7 +321,8 @@ def cmd_run(args) -> None:
     # 1. Train every variant (longest first), single-threaded and in parallel.
     def cost(run):
         _, _, over = run
-        return over.get("scale", 1) * (0 if over.get("teacher") == 0 else 1)
+        budget = BUDGETS[mode]
+        return over.get("teacher", budget["teacher"] * over.get("scale", 1)) + over.get("student", budget["student"] * over.get("scale", 1))
 
     runs = sorted(TRAIN_RUNS, key=cost, reverse=True)
     print(f"[harness] training {len(runs)} runs with {workers} workers", flush=True)
@@ -549,7 +554,8 @@ def cmd_analyze(args) -> None:
                 entry["legacy_rank_genuine_vs_legacy_reference"] = rank_of(entry["legacy_metrics"], lb, scales["genuine"])
 
     groups = {}
-    for prefix in ("reference_", "better_3x_", "better_6x_", "alt_mlp_estimator_", "weaker_open_loop_", "weaker_untrained_"):
+    for prefix in ("reference_", "better_2x_budget_", "weaker_third_budget_", "weaker_open_loop_s", "alt_mlp_estimator_s",
+                   "weaker_open_loop_third_budget_", "alt_mlp_estimator_third_budget_", "weaker_untrained_"):
         names = [c for c in cases if c.startswith(prefix)]
         if not names:
             continue
@@ -585,10 +591,12 @@ def cmd_analyze(args) -> None:
 
     pairs = []
     for s in REFERENCE_SEEDS:
-        pairs += [(f"better_3x_s{s}", f"reference_s{s}"), (f"better_6x_s{s}", f"reference_s{s}"), (f"better_6x_s{s}", f"better_3x_s{s}"),
-                  (f"alt_mlp_estimator_s{s}", f"reference_s{s}"), (f"weaker_open_loop_s{s}", f"reference_s{s}"),
+        pairs += [(f"better_2x_budget_s{s}", f"reference_s{s}"), (f"weaker_third_budget_s{s}", f"reference_s{s}"),
+                  (f"weaker_open_loop_s{s}", f"reference_s{s}"), (f"alt_mlp_estimator_s{s}", f"reference_s{s}"),
+                  (f"weaker_open_loop_third_budget_s{s}", f"weaker_third_budget_s{s}"),
+                  (f"alt_mlp_estimator_third_budget_s{s}", f"weaker_third_budget_s{s}"),
                   (f"weaker_untrained_s{s}", f"reference_s{s}")]
-    for case in ("shortcut_retreat_full", "shortcut_retreat_mild", "shortcut_wall_dodger"):
+    for case in ("shortcut_retreat_full", "shortcut_retreat_mild", "shortcut_wall_dodger", "shortcut_reference_lateral_clip"):
         pairs.append((case, base_case))
     paired = {}
     for a_name, b_name in pairs:

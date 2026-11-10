@@ -49,8 +49,9 @@ VIRTUAL_MASS_CHOICES = (6.0, 12.0, 24.0)
 class PPOConfig:
     n_envs: int = 256
     rollout_steps: int = 96
-    teacher_updates: int = 200
-    student_updates: int = 50
+    # 600 + 150 updates of 256 envs x 96 steps = 14.7M + 3.7M env steps (paper: 200M + 50M).
+    teacher_updates: int = 600
+    student_updates: int = 150
     epochs: int = 4
     minibatches: int = 4
     gamma: float = 0.98

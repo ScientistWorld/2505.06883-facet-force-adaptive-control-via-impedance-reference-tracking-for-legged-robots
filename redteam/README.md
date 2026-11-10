@@ -19,7 +19,7 @@ environments and 96 rollout steps, and hold evaluation seeds fixed at 7/8.
 the gym's fixed training budget. `better_reward_fix` uses the original budget
 and corrects the mean-reward-versus-mean-state discrepancy with paper Eq. 7,
 and uses each sampled command in the auxiliary forward-tracking reward.
-`weaker_untrained` keeps the architecture but performs zero updates.
+`weaker_untrained_shortcut` keeps the architecture but performs zero updates.
 
 Ranks in `summary.json` use the actual stored test reference, absolute
 coefficients, the declared higher/lower directions, experiment weights, and

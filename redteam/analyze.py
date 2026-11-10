@@ -44,7 +44,13 @@ for path in sorted(RT.glob('*/status.json')):
     if score_file.exists() and statuses[name]['hidden_test_returncode'] == 0:
         attempts[name] = flatten(read(score_file))
 
-genuine_names = [name for name in attempts if 'shortcut' not in name]
+# Fixed diagnostic cohort includes the zero-update quality check, which paid
+# and therefore is explicitly labeled a shortcut. Naming cannot change scales.
+genuine_names = [name for name in attempts if name in {
+    'reference_stored', 'reference_seed7', 'reference_seed17', 'reference_seed27',
+    'better_extended_training', 'better_reward_fix', 'weaker_untrained_shortcut',
+    'simple_baseline',
+}]
 
 
 def scales_for(names):

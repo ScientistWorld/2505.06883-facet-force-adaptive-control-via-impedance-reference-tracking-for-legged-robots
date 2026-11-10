@@ -27,7 +27,7 @@ START = '25da6c608f48320c1ebb44dacb9b0efae7b7dc3d'
 sys.path.insert(0, str(ROOT))
 NAMES = [
     'reference_stored', 'reference_seed7', 'reference_seed17', 'reference_seed27',
-    'better_extended_training', 'better_reward_fix', 'weaker_untrained',
+    'better_extended_training', 'better_reward_fix', 'weaker_untrained_shortcut',
     'simple_baseline', 'brute_force_shortcut', 'forged_rollouts_shortcut',
     'impossible_flags_shortcut', 'baseline_inflation_shortcut',
     'contactless_wall_shortcut', 'missing_results_shortcut',
@@ -119,14 +119,17 @@ def train_variant(name):
     from method.ppo_facet import PPOConfig, train_policy, policy_rollout
     seed = int(name.removeprefix('reference_seed')) if name.startswith('reference_seed') else 7
     teacher, student = (180, 90) if name == 'better_extended_training' else (60, 30)
-    if name == 'weaker_untrained':
+    if name == 'weaker_untrained_shortcut':
         teacher, student = 0, 0
     write(RT / name / 'configuration.json', {
         'training_seed': seed, 'teacher_updates': teacher, 'student_updates': student,
         'n_envs': 128, 'rollout_steps': 96, 'torch_threads': 2,
         'evaluation_seed_impulse': 7, 'evaluation_seed_wall': 8, 'episodes': 96,
         'note': 'Extended training is an audit diagnostic outside the gym training-budget constraint.'
-        if name == 'better_extended_training' else 'Original budget; fixed evaluation seeds isolate training variance.',
+        if name == 'better_extended_training' else
+        'Zero-update shortcut diagnostic; fixed evaluation seeds match the trained policies.'
+        if name == 'weaker_untrained_shortcut' else
+        'Original budget; fixed evaluation seeds isolate training variance.',
     })
     checkpoint = folder / 'facet_student.pt'
     if not checkpoint.exists():
@@ -209,7 +212,7 @@ def prepare(name):
     artifacts.mkdir(parents=True, exist_ok=True)
     if name == 'reference_stored':
         copy_runs(STATE / 'original_artifacts')
-    elif name.startswith('reference_seed') or name in ['better_extended_training', 'better_reward_fix', 'weaker_untrained']:
+    elif name.startswith('reference_seed') or name in ['better_extended_training', 'better_reward_fix', 'weaker_untrained_shortcut']:
         train_variant(name)
     elif name == 'simple_baseline':
         for mode in ['impulse', 'wall']:

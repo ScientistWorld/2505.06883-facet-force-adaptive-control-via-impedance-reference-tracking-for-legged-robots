@@ -39,7 +39,7 @@
         "soft_wall_collision/wall_contact_rate": 1.0
       },
       "rank_all": 0.7621335159255005,
-      "rank_genuine_scale": 1.8843129687804812,
+      "rank_genuine_scale": 1.8843129687804814,
       "score_file_exists": true,
       "test_command": "bash scripts/evaluate_test.sh"
     },
@@ -82,7 +82,7 @@
         "soft_wall_collision/wall_contact_rate": 1.0
       },
       "rank_all": 0.117151539689549,
-      "rank_genuine_scale": 0.46287666351610346,
+      "rank_genuine_scale": 0.4628766635161035,
       "score_file_exists": true,
       "test_command": "bash scripts/evaluate_test.sh"
     },
@@ -168,7 +168,7 @@
         "soft_wall_collision/wall_contact_rate": 1.0
       },
       "rank_all": 0.11352057877631284,
-      "rank_genuine_scale": 1.0193368856136913,
+      "rank_genuine_scale": 1.0193368856136915,
       "score_file_exists": true,
       "test_command": "bash scripts/evaluate_test.sh"
     },
@@ -210,7 +210,7 @@
         "soft_wall_collision/post_contact_impulse_reduction": 0.415710470464847,
         "soft_wall_collision/wall_contact_rate": 1.0
       },
-      "rank_all": 0.0068879215636084125,
+      "rank_all": 0.006887921563608415,
       "rank_genuine_scale": 0.3462675444038511,
       "score_file_exists": true,
       "test_command": "bash scripts/evaluate_test.sh"
@@ -339,7 +339,7 @@
         "soft_wall_collision/post_contact_impulse_reduction": 0.999999905207161,
         "soft_wall_collision/wall_contact_rate": 1.0
       },
-      "rank_all": 1.5644649306555696,
+      "rank_all": 1.5644649306555694,
       "rank_genuine_scale": 3.5530044255373054,
       "score_file_exists": true,
       "test_command": "bash scripts/evaluate_test.sh"
@@ -426,7 +426,7 @@
         "soft_wall_collision/post_contact_impulse_reduction": 0.457635252441959,
         "soft_wall_collision/wall_contact_rate": 1.0
       },
-      "rank_all": 3.100624336627237,
+      "rank_all": 3.1006243366272375,
       "rank_genuine_scale": 37.83021102551635,
       "score_file_exists": true,
       "test_command": "bash scripts/evaluate_test.sh"
@@ -469,7 +469,7 @@
         "soft_wall_collision/post_contact_impulse_reduction": 0.4699005324136786,
         "soft_wall_collision/wall_contact_rate": 1.0
       },
-      "rank_all": -0.02974133964893671,
+      "rank_all": -0.02974133964893672,
       "rank_genuine_scale": -0.7307788792004869,
       "score_file_exists": true,
       "test_command": "bash scripts/evaluate_test.sh"
@@ -556,7 +556,7 @@
         "soft_wall_collision/wall_contact_rate": 1.0
       },
       "rank_all": 0.11352057877631284,
-      "rank_genuine_scale": 1.0193368856136913,
+      "rank_genuine_scale": 1.0193368856136915,
       "score_file_exists": true,
       "test_command": "bash scripts/evaluate_test.sh"
     },
@@ -642,7 +642,7 @@
         "soft_wall_collision/post_contact_impulse_reduction": 0.0,
         "soft_wall_collision/wall_contact_rate": 1.0
       },
-      "rank_all": -1.5977172106513595,
+      "rank_all": -1.5977172106513593,
       "rank_genuine_scale": -2.6608311957521544,
       "score_file_exists": true,
       "test_command": "bash scripts/evaluate_test.sh"
@@ -685,7 +685,7 @@
         "soft_wall_collision/post_contact_impulse_reduction": 0.0,
         "soft_wall_collision/wall_contact_rate": 1.0
       },
-      "rank_all": -1.5977172106513595,
+      "rank_all": -1.5977172106513593,
       "rank_genuine_scale": -2.6608311957521544,
       "score_file_exists": true,
       "test_command": "bash scripts/evaluate_test.sh"
@@ -728,12 +728,12 @@
         "soft_wall_collision/post_contact_impulse_reduction": 0.0,
         "soft_wall_collision/wall_contact_rate": 1.0
       },
-      "rank_all": -1.5977172106513595,
+      "rank_all": -1.5977172106513593,
       "rank_genuine_scale": -2.6608311957521544,
       "score_file_exists": true,
       "test_command": "bash scripts/evaluate_test.sh"
     },
-    "weaker_untrained": {
+    "weaker_untrained_shortcut": {
       "arguments": [],
       "contributions_all": {
         "large_lateral_impulse/impulse_recovery_score": -0.035076561047405884,
@@ -796,7 +796,7 @@
       "score_file_shortcut",
       "simple_baseline",
       "summary_fields_shortcut",
-      "weaker_untrained"
+      "weaker_untrained_shortcut"
     ],
     "genuine": [
       "better_extended_training",
@@ -806,7 +806,7 @@
       "reference_seed7",
       "reference_stored",
       "simple_baseline",
-      "weaker_untrained"
+      "weaker_untrained_shortcut"
     ]
   },
   "metric_scales": {
@@ -875,14 +875,14 @@
       "range": 0.2849700846928458,
       "values": [
         0.11352057877631284,
-        -0.02974133964893671,
+        -0.02974133964893672,
         -0.17144950591653296
       ]
     },
     "rank_genuine_scale": {
       "range": 2.0591235721462837,
       "values": [
-        1.0193368856136913,
+        1.0193368856136915,
         -0.7307788792004869,
         -1.0397866865325922
       ]

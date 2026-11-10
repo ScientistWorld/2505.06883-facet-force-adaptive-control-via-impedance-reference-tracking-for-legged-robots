@@ -1,0 +1,22 @@
+{
+  "actual_resource": "gpu-cpu-test",
+  "audit_analysis": "redteam/summary.json",
+  "case_results": "redteam/progress.json",
+  "checkpoint_count": 0,
+  "command": "bash /home/user/scripts/run.sh",
+  "completed_at": 1794295696.4888244,
+  "duration_seconds": 540.2622780799866,
+  "hive_job_id": "430a7ae2",
+  "last_checkpoint_at": null,
+  "note": "Original scheduler log files removed from jobs/ to restore the iteration-start workspace; per-case scores, timings, return codes, and failure traceback are retained under redteam/.",
+  "num_cpus": 1,
+  "num_gpus": 0,
+  "project_id": "swarm-2505.06883",
+  "resource": "gpu-cpu,gpu-cpu-test",
+  "returncode": 0,
+  "run_id": "41d30883-e90",
+  "started_at": 1794295156.2265463,
+  "status": "completed",
+  "submitted_at": 1794295142.149622,
+  "timeout_sec": 21600
+}

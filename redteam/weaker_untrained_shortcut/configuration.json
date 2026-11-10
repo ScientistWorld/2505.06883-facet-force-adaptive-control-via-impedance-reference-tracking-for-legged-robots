@@ -3,7 +3,7 @@
   "evaluation_seed_impulse": 7,
   "evaluation_seed_wall": 8,
   "n_envs": 128,
-  "note": "Original budget; fixed evaluation seeds isolate training variance.",
+  "note": "Zero-update shortcut diagnostic; fixed evaluation seeds match the trained policies.",
   "rollout_steps": 96,
   "student_updates": 0,
   "teacher_updates": 0,

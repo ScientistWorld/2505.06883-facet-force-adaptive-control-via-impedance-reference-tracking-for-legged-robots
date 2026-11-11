@@ -1,0 +1,23 @@
+{
+  "episodes_test": {
+    "impulse": 512,
+    "tracking": 512,
+    "wall": 256
+  },
+  "episodes_train": {
+    "impulse": 512,
+    "tracking": 512,
+    "wall": 256
+  },
+  "impulse_max_abs_diff_data_vs_test": 0.0,
+  "impulse_max_abs_diff_train_vs_test": 0.0,
+  "ok": true,
+  "reward_targets_vs_eval_metric_max_abs_diff": 0.0,
+  "tracking_max_abs_diff_data_vs_test": 0.0,
+  "tracking_max_abs_diff_train_vs_test": 0.0,
+  "wall_commanded_reduction_on_passive_states": 0.6165986323594885,
+  "wall_max_abs_diff_data_vs_test": 0.0,
+  "wall_max_abs_diff_train_vs_test": 0.0,
+  "wall_passive_measured_reduction": 0.27896254966785883,
+  "wall_virtual_mass": 6.0
+}

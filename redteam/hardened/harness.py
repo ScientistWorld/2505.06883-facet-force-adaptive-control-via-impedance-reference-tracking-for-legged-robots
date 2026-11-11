@@ -60,11 +60,13 @@ REDUCED_RUNS = (
     + [("alt_mlp_estimator_third_budget", s, {"estimator": "mlp", "teacher": 200, "student": 50}) for s in (7, 17)]
     + [("weaker_untrained", 7, {"teacher": 0, "student": 0})]
 )
-# Sized to 8 cores without oversubscription: 3 single-threaded reference seeds,
-# two 2-thread 2x-budget runs, one open-loop run and an untrained export.
+# Sized to 8 cores: 3 single-threaded reference seeds, two 2x-budget runs, one
+# open-loop run and an untrained export. The 2x-budget runs used 2 threads until
+# student update 170/200 of 300 (first job, preempted on a contended node) and
+# finished single-threaded after an exact resume; threads change speed only.
 PAPER_SEEDS = (7, 17, 27)
 PAPER_RUNS = (
-    [("paper_nets_2x_budget", s, {"net": "paper", "scale": 2, "threads": 2}) for s in (7, 17)]
+    [("paper_nets_2x_budget", s, {"net": "paper", "scale": 2}) for s in (7, 17)]
     + [("paper_nets", s, {"net": "paper"}) for s in PAPER_SEEDS]
     + [("paper_nets_open_loop", 7, {"net": "paper", "target_mode": "open_loop"})]
     + [("paper_nets_untrained", 7, {"net": "paper", "teacher": 0, "student": 0})]

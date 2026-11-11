@@ -1,0 +1,56 @@
+{
+  "config": {
+    "action_scale": 4.0,
+    "actor_hidden": [
+      128,
+      128,
+      128
+    ],
+    "actor_lr": 0.0003,
+    "clip_ratio": 0.2,
+    "critic_hidden": [
+      256,
+      128,
+      128
+    ],
+    "critic_lr": 0.001,
+    "encoder_hidden": 128,
+    "entropy_coef": 0.005,
+    "epochs": 4,
+    "estimator": "mlp",
+    "estimator_epochs": 2,
+    "estimator_hidden": 128,
+    "estimator_lr": 0.001,
+    "gae_lambda": 0.95,
+    "gamma": 0.98,
+    "init_log_std": -1.0,
+    "lags": [
+      8,
+      16,
+      32
+    ],
+    "latent_dim": 32,
+    "max_grad_norm": 1.0,
+    "minibatches": 4,
+    "n_envs": 256,
+    "rollout_steps": 96,
+    "seed": 17,
+    "student_updates": 150,
+    "target_mode": "smoothed",
+    "teacher_updates": 600,
+    "threads": 1
+  },
+  "final": {
+    "done": 0.00341796875,
+    "elapsed_s": 1478.5,
+    "estimator_loss": 0.6773731112480164,
+    "falls": 0.00037,
+    "reward": 2.538475275039673,
+    "stage": "student",
+    "std": 0.3172155022621155,
+    "tracking": 1.55755,
+    "update": 150,
+    "vel_err": 1.01172
+  },
+  "train_seconds": 1478.8
+}

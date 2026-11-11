@@ -1,65 +1,52 @@
 # Scientist Constraints
 
-## Robot and Simulator
+## Simulator and Interface
 
-Use the provided legged-robot environments, robot assets, actuator model, action
-rate, contact model, and termination rules. The paper's claims are about control
-under physical interaction, so changing the robot morphology, simulator physics,
-wall model, or fall definition would change the benchmark rather than improve
-the method.
+Use the provided planar force-interaction simulator (`data/facet_planar_env.py`)
+with its dynamics, actuator model, action limit, control interval, wall model
+and fall rule. The evaluators keep their own frozen copy of these dynamics, so
+editing `data/` changes only your training, never the score. A submission is a
+single TorchScript policy at `checkpoints/<method>/policy.pt` that maps the
+16-dimensional observation to the 2-dimensional action; it may keep internal
+state (for example a recurrent estimator) and may export a `reset(n)` method.
 
 ## Observations and Commands
 
-Use only the observation channels exposed by the benchmark for the policy at
-deployment time. Do not add external force sensors, privileged simulator state,
-future trajectory information, wall penetration state, or termination labels to
-the deployed policy input. The high-level command interface must remain the one
-provided by the environment so that compliance and forceful behavior are tested
-under the same task formulation.
+The deployed policy may use only the observation the evaluator gives it. Do
+not smuggle external forces, wall penetration, scenario parameters, future
+information or termination labels into the policy by any other route, and do
+not detect the evaluator's test scenarios (for example by their exact command
+values) to switch to scenario-specific behaviour. The command interface
+(target velocity, stiffness, damping, virtual mass) stays the one provided.
 
 ## Training Data and Randomization
 
-Use only data generated inside the provided simulation environments plus the
-paper-specified robot assets. Do not import motion-capture datasets, offline
-robot logs, additional hardware demonstrations, external terrain/contact
-datasets, or pretrained controllers. Keep the benchmark command ranges,
-disturbance distributions, domain randomization families, and evaluation seeds
-fixed when reporting scores.
+Use only data generated inside the provided simulator. Do not import
+demonstrations, logs or pretrained controllers. Privileged simulator
+information may be used during training (as teachers, critics or estimator
+targets), not by the deployed policy.
 
 ## Baselines
 
-Keep the provided velocity-tracking and robust velocity-tracking baselines
-unchanged when computing relative metrics. A scientist may add new comparison
-methods, but the official scores must still include the fixed baselines so that
-collision reduction, robustness gain, and payload capacity remain comparable.
+The velocity-tracking baselines and every comparison quantity are owned by the
+evaluator and cannot be changed by a submission.
 
 ## Compute and Scale
 
-Do not increase the robot count per experiment, number of evaluation trials, or
-evaluation horizon beyond the benchmark settings when producing official scores.
-Training may be made more sample-efficient or better optimized, but improvements
-must not come from using a larger simulator batch, longer training budget, or
-ensembling multiple independently trained policies at evaluation time.
-
-## Hardware Claims
-
-Only report hardware payload or compliant-following scores if the corresponding
-real-robot procedure is actually run. Simulation-only reproductions must label
-payload tests as simulated or equivalent opposing-force tests and must not claim
-real-world deployment.
+The reference was trained with 600 teacher + 150 student PPO updates of
+256 environments x 96 steps (about 18.4M environment steps). Improvements
+should come from the method, not from a larger training budget, larger
+simulator batch, or ensembles of independently trained policies; report the
+environment steps you used.
 
 ## Compliance Checklist
 
-- [ ] Uses the provided robot assets, simulator, action rate, contact model, and
-  termination rules.
-- [ ] Deployed policy receives no privileged simulator state, external force
-  sensor readings, future information, or evaluator-only signals.
-- [ ] Official scores use the fixed command ranges, disturbance distributions,
-  domain randomization families, and evaluation seeds.
-- [ ] No external demonstrations, robot logs, motion-capture data, pretrained
-  controllers, or additional contact datasets are used.
-- [ ] Velocity-tracking and robust velocity-tracking baselines are unchanged for
-  relative metrics.
-- [ ] Official results are from a single deployed policy per method, not an
-  ensemble or hand-picked checkpoint collection.
-- [ ] Hardware results are only claimed when the hardware procedure was run.
+- [ ] Uses the provided simulator, action limit, control interval, wall model
+  and fall rule for training and submits a single TorchScript policy.
+- [ ] The deployed policy receives nothing but the evaluator's observation and
+  does not detect test scenarios.
+- [ ] No external demonstrations, logs or pretrained controllers.
+- [ ] Training budget no larger than the reference's (about 18.4M env steps).
+- [ ] The deployed controller is learned; a hand-engineered model-based
+  controller or trajectory optimiser is not a valid submission (see
+  `DIRECTION.md`).

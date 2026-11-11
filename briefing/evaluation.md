@@ -1,64 +1,74 @@
 # Evaluation
 
-## Official Reduced-Gym Metrics
+## How a method is scored
 
-- **Perturbation success rate**: fraction of randomized trials in which the
-  robot remains upright after a lateral ramp impulse while walking forward.
-  Higher is better. Failure occurs when non-foot body parts contact the ground.
-- **Final forward speed**: forward speed at the end of the perturbation
-  episode. This is a constraint metric for the reduced benchmark: a controller
-  should survive the impulse while still making locomotion progress.
-- **Collision impulse**: time integral of the wall contact force during the
-  first 0.5 seconds after a wall collision. Lower is better for compliant
-  settings.
-- **Collision impulse reduction**: relative reduction in collision impulse
-  compared with a robust velocity-tracking controller under the same wall test.
-  Higher is better.
-- **Task success rate**: fraction of randomized command-and-force trials that
-  avoid falling or invalid contacts. Higher is better.
+A method is one deployable controller exported as a TorchScript policy at
+`checkpoints/<method>/policy.pt` (interface in `data/facet_planar_env.py`:
+16-dimensional observation of the command, body velocity, tilt, gait phase and
+previous actions; 2-dimensional planar acceleration action). The evaluators
+roll every policy on disk out themselves, in their own frozen copy of the
+simulator, on scenarios generated from their own seeds, and compute every
+metric from those rollouts. Files a method writes besides `policy.pt` are
+ignored. The comparison side (velocity-tracking baselines, commands, wall,
+force sweeps, episode counts, thresholds) is fixed inside the evaluator.
 
-The paper also reports maximum survived impulse over a sweep, tracking-error
-ablations, and real-robot pulling capacity. Those are useful context but are
-not official scored targets in this reduced gym unless a future agent adds
-validated artifacts and matching entries in `scoring/scores.json`.
+- `scripts/evaluate_train.sh` - visible scenarios, `scoring/scores_train.json`.
+- `scripts/evaluate_test.sh` - held-out scenarios (same protocol, hidden
+  seeds), `scoring/scores_test.json`. Both run with no arguments.
 
-## Baselines and Targets
+A policy that is missing, cannot be loaded, raises, returns a wrong shape or a
+non-finite action, or yields a metric outside its valid range is a failed run
+and receives the worst value of every metric in every experiment.
 
-The main simulation baselines are:
+## Experiments and metrics
 
-- A standard velocity-tracking locomotion controller.
-- A velocity-tracking controller trained with the same random impulse
-  perturbation distribution used for the reproduced system.
+- **large_lateral_impulse** (weight 0.4). Walking forward at 1.5 m/s, a
+  lateral ramp push of 0.4-0.6 s with peak force swept over 100-1200 N
+  (64 trials per level). `impulse_recovery_score` (primary): survival times
+  exp(-RMS velocity error / 0.5 m/s) against the commanded response from push
+  onset; `success_rate`; `velocity_tracking_rmse_mps`.
+- **soft_wall_collision** (weight 0.3). Walking into a soft virtual wall at
+  1.5 m/s under a compliant command (low stiffness, light virtual inertia).
+  `post_contact_impulse_reduction` (primary): reduction of the wall impulse in
+  the first 0.5 s after contact relative to the robust velocity baseline on the
+  same episode, where only realising the commanded compliance lowers the
+  charged impulse (braking or backing off is charged like being stiff);
+  `wall_contact_rate` and `entry_speed_error_mps` (constraints: the wall must be
+  reached at the commanded speed without a fall or retreat);
+  `contact_tracking_rmse_mps` (how closely the contact response follows the
+  commanded behaviour).
+- **impedance_tracking** (weight 0.3). Random commands (stiffness, damping,
+  virtual inertia, target velocity) under random steady forces and pushes.
+  `velocity_tracking_rmse_mps` (primary), `position_tracking_rmse_m`,
+  `success_rate`.
 
-The paper's headline targets are:
+Tracking errors compare the body's state with the commanded mass-spring-damper
+response integrated over the preceding 0.16, 0.32 and 0.64 s from the body's
+own state under the same external forces (the paper's Sec. 10.3 tracking
+error); states after a fall count as the error caps.
 
-- Survival under substantially larger lateral disturbances than both velocity
-  baselines, with reported robustness up to about 200 Ns impulse and trajectory
-  examples at 400 N peak force.
-- About 80% lower collision impulse than the robust velocity baseline in the
-  wall-collision setting when compliant behavior is requested.
-- On hardware, reliable pulling of a 10 kg payload, compared with reported
-  baseline limits of 2.5 kg for the built-in controller and failure beyond 5 kg
-  for the robust velocity controller.
+## Ranking
 
-Hardware numbers are useful context, but the reusable benchmark should rely on
-simulation metrics unless a real robot is explicitly available.
+A method's rank is the sum over all scored metrics of experiment weight x
+|coefficient| x its improvement over the reference row in
+`scoring/reference.json` (taken in each metric's better direction), each
+divided by the metric's spread across the ranked attempts.
 
-## Evaluation Protocol
+## Baselines and paper targets
 
-Evaluate all methods in the same simulator, robot model, action rate, episode
-length, termination rules, command ranges, and domain randomization settings.
-Do not tune a method on the final evaluation seeds.
+The baselines are fixed-gain velocity-tracking controllers: `velocity_vanilla`
+(stiff in both axes) and `velocity_robust` (softer lateral gain, the
+comparison for the wall impulse). The paper's simulation results (Go2
+quadruped in Isaac Lab) are: survival under much larger lateral impulses than
+both velocity baselines (up to about 200 N s), about 80% lower collision
+impulse than the robust baseline when compliance is commanded, and lower
+tracking errors for its full method than for its ablations (Table 2). They are
+recorded under `_paper_reported` in `scoring/reference.json`; this benchmark is
+a reduced planar version and its numbers are on its own scale. Hardware
+results (payload pulling) are context only.
 
-For the perturbation benchmark, command forward locomotion at 1.5 m/s. Apply a
-horizontal ramp impulse after the robot has reached stable locomotion, with the
-force lasting 0.4 to 0.6 seconds. Report success rate over 64 randomized
-parallel trials per disturbance level.
+## Protocol rules
 
-For the collision benchmark, command the robot into a soft virtual wall at
-1.5 m/s. Integrate the wall contact force over the first 0.5 seconds after
-contact and report the impulse distribution for each tested control setting.
-
-For any future expanded tracking evaluation, sample high-level commands and
-external forces from the benchmark distributions, then report errors and
-success rate using the same evaluator for every submitted method.
+Evaluate every method with the same simulator, action rate, episode lengths,
+termination rules, command ranges and domain randomisation. Do not tune on the
+held-out scenarios; the train evaluator exists for development.

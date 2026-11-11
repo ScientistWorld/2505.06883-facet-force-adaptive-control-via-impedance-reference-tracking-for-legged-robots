@@ -5,4 +5,4 @@ action: submit
 gpus: 0
 test: false
 milestone: core_claim
-notes: "Resume hardening v3 job: finish the two paper-size 2x-budget runs (exact resume, ~100-130 updates left), then finalize (score paper-size runs, pre-registered config choice, canonical install, wrapped probes, v2-protocol before values), analyze, official train/test scores. Rescoring of saved policies is already on disk and is skipped."
+notes: "Finalize v3: install median seed (train+test) as reference, rebuild and score shortcut probes wrapping it, analysis with the updated entry-speed coefficient, official train/test scores. All training and other scorings are reused from disk."

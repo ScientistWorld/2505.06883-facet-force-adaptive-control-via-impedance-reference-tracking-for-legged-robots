@@ -1,0 +1,36 @@
+{
+  "case": "reference_s17",
+  "configuration": "reduced",
+  "mean_rank": {
+    "reference_s17": 0.18917450617933848,
+    "reference_s27": 0.1936148533560056,
+    "reference_s37": -0.1407879406736835,
+    "reference_s47": 0.41161617697591474,
+    "reference_s7": 0.0
+  },
+  "order": [
+    "reference_s37",
+    "reference_s7",
+    "reference_s17",
+    "reference_s27",
+    "reference_s47"
+  ],
+  "ranks_relative_to_first_seed": {
+    "test": {
+      "reference_s17": 0.2386982399364698,
+      "reference_s27": 0.3292314596588531,
+      "reference_s37": -0.32033809129032537,
+      "reference_s47": 0.3174421189233767,
+      "reference_s7": 0.0
+    },
+    "train": {
+      "reference_s17": 0.13965077242220716,
+      "reference_s27": 0.05799824705315811,
+      "reference_s37": 0.03876220994295834,
+      "reference_s47": 0.5057902350284528,
+      "reference_s7": 0.0
+    }
+  },
+  "rule": "median seed of the chosen configuration by mean rank over the train and test slices (genuine cohort scales per slice)",
+  "seed": 17
+}

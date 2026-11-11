@@ -1,8 +1,8 @@
 # Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends.
-action: pending
+action: submit
 gpus: 0
 test: false
 milestone: core_claim
-notes: ""
+notes: "Resume hardening v3 job: finish the two paper-size 2x-budget runs (exact resume, ~100-130 updates left), then finalize (score paper-size runs, pre-registered config choice, canonical install, wrapped probes, v2-protocol before values), analyze, official train/test scores. Rescoring of saved policies is already on disk and is skipped."

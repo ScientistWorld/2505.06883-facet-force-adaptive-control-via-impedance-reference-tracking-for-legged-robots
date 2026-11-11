@@ -68,8 +68,8 @@
         },
         "entry_speed_error_mps": {
           "higher_is_better": false,
-          "description": "Mean |entry speed - 1.5 m/s| at first contact (1.5 if the wall is never reached).",
-          "coefficient": 0.3
+          "description": "Mean |entry speed - 1.5 m/s| at first contact (1.5 if the wall is never reached). Validity constraint: entries outside 1.5 +- 0.3 m/s already make an episode invalid and impulses are normalised to the commanded speed, so this graded term only carries a small coefficient.",
+          "coefficient": 0.1
         },
         "contact_tracking_rmse_mps": {
           "higher_is_better": false,

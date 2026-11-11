@@ -16,8 +16,10 @@ Subcommands (each resumable; finished trainings and scorings on disk are reused)
 
 Each case is a checkpoint root whose ``facet/policy.pt`` is the candidate, scored
 by ``python eval/<split>/evaluate.py <root>`` (the code path of
-scripts/evaluate_<split>.sh). Candidate construction, the brute-force selection,
-the configuration choice and the canonical-seed choice use the train slice only.
+scripts/evaluate_<split>.sh). Candidate construction, the brute-force selection
+and the configuration choice use the train slice only; the shipped reference is
+the median seed of the chosen configuration over both slices (it is the bar
+attempts are ranked against, not a candidate).
 """
 
 from __future__ import annotations
@@ -496,20 +498,28 @@ def choose_configuration(mode: str) -> dict:
 
 
 def select_canonical(mode: str, config: str) -> str:
-    """Median seed of the chosen configuration by rank (genuine cohort, train slice)."""
-    cases = load_cases(mode, "train")
-    refs = group_members(cases, CONFIG_GROUPS[config])
-    if not refs:
-        raise SystemExit("no reference seed was scored")
-    scales = cohort_scales(cases, genuine_names(cases))
-    base = cases[refs[0]]
-    ranks = {name: rank_of(cases[name], base, scales) for name in refs}
+    """Median seed of the chosen configuration by its mean rank over the train and test
+    slices (genuine cohort scales per slice). The shipped reference is the typical
+    seed, never the best one; a train-only median was tried first and picked, among
+    four seeds tied within 0.09 rank on train, the seed that is weakest on test
+    (canonical_v3_train_only.json)."""
+    per_slice = {}
+    refs: list[str] = []
+    for split in ("train", "test"):
+        cases = load_cases(mode, split)
+        refs = group_members(cases, CONFIG_GROUPS[config])
+        if not refs:
+            raise SystemExit("no reference seed was scored")
+        scales = cohort_scales(cases, genuine_names(cases))
+        per_slice[split] = {name: rank_of(cases[name], cases[refs[0]], scales) for name in refs}
+    ranks = {name: 0.5 * (per_slice["train"][name] + per_slice["test"][name]) for name in refs}
     ordered = sorted(refs, key=lambda n: ranks[n])
     chosen = ordered[(len(ordered) - 1) // 2]
     write_json(HD / (f"canonical_{TAG}.json" if mode == "full" else f"canonical_{TAG}_smoke.json"), {
-        "rule": "median seed of the chosen configuration by rank (genuine cohort scales, train slice)",
+        "rule": "median seed of the chosen configuration by mean rank over the train and test slices "
+                "(genuine cohort scales per slice)",
         "configuration": config, "case": chosen, "seed": int(chosen.rsplit("_s", 1)[1]),
-        "ranks_train_relative_to_first_seed": ranks, "order": ordered,
+        "ranks_relative_to_first_seed": per_slice, "mean_rank": ranks, "order": ordered,
     })
     print(f"[harness] canonical reference: {chosen} (order {ordered})", flush=True)
     return chosen

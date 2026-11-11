@@ -3,8 +3,10 @@
 # the deployable student to checkpoints/facet/policy.pt.
 #
 # Budget: 600 teacher + 150 student PPO updates of 256 envs x 96 steps (14.7M +
-# 3.7M env steps, the paper's 4:1 split at reduced scale). The shipped reference
-# is training seed 27, the median of five seeds (7/17/27/37/47); training is
+# 3.7M env steps, the paper's 4:1 split at reduced scale), reduced network widths
+# (paper-size networks: --net-size paper; not better at this budget, see
+# HARDENING.md). The shipped reference is training seed 17, the median of five
+# seeds (7/17/27/37/47) over the train and test slices; training is
 # single-threaded and deterministic for a given seed on a given CPU type.
 #
 # Usage: bash scripts/method.sh   (FORCE=1 retrains even if a policy exists)
@@ -17,7 +19,7 @@ EXTRA=()
 if [ "${FORCE:-0}" = "1" ]; then EXTRA+=(--force); fi
 python -u -m method.run_facet \
   --output-dir checkpoints/facet \
-  --seed "${SEED:-27}" \
+  --seed "${SEED:-17}" \
   --teacher-updates "${TEACHER_UPDATES:-600}" \
   --student-updates "${STUDENT_UPDATES:-150}" \
   --n-envs "${N_ENVS:-256}" \

@@ -5,11 +5,14 @@ standard velocity or position tracking produces stiff behavior under external
 forces, while an impedance-style command interface can make the same controller
 soft, robust to pushes, and capable of forceful interaction.
 
-The reproduced environment focuses on the core simulation claims: surviving a
-large lateral impulse and reducing collision impulse against a wall. It provides
-a reduced-scale planar benchmark, FACET's smoothed impedance reference
-implementation, velocity-tracking baselines, and reusable evaluation scripts
-that score saved rollout artifacts.
+The environment reproduces the core simulation claims at reduced scale on a
+planar force-interaction benchmark: surviving large lateral impulses by
+yielding, reducing collision impulse against a wall when compliance is
+commanded, and following commanded interaction behaviour under random forces.
+It provides the benchmark simulator, the reproduced FACET training pipeline,
+fixed velocity-tracking baselines, and evaluators that roll out each submitted
+policy themselves and score it on visible (train) and held-out (test)
+scenarios.
 
 ---
 
@@ -29,6 +32,11 @@ disturbances. A candidate method receives the allowed robot observations and
 high-level control commands, then outputs low-level actions for the simulated
 robot. The environment measures whether the resulting behavior is stable,
 trackable, force-aware, and controllable across command settings.
+
+The benchmark is a reduced planar version of this problem. Its scored
+experiments cover robustness to large lateral pushes, compliant collision with
+a soft wall, and following the commanded interaction behaviour under random
+commands and external forces; sustained forceful pulling is not scored.
 
 ## Why It Matters
 
@@ -74,12 +82,16 @@ forces, torques, contacts, and reference targets. A student policy is then
 initialized from the teacher and fine-tuned with an estimator that predicts the
 teacher's privileged feature from deployable observations.
 
-This reproduction preserves the central computation at reduced scale. Instead
-of Isaac Lab legged-robot training, it uses a procedural planar force-interaction
-environment and implements the impedance reference model, fixed-target-velocity
-command form, critical damping, and temporally smoothed reference targets. The
-baselines are velocity-tracking controllers that resist perturbations with fixed
-feedback gains.
+This reproduction implements that pipeline on the benchmark's planar
+force-interaction simulator (`method/`): PPO with the impedance reference model
+in the paper's fixed-target-velocity command form (critical damping, sampled
+virtual mass), rewards of Eq. (7) averaged over targets integrated from the
+body's own states 8, 16 and 32 control steps back (plus the paper's quadratic
+velocity cost and survival term), a privileged-feature teacher with an
+asymmetric critic, a GRU estimator trained to predict the teacher's feature from
+observation history, and a student initialised from the teacher and fine-tuned
+with PPO on the estimated feature. Inputs use running empirical normalisation.
+The deployed student is exported as a TorchScript policy.
 
 ## Reported Paper Settings
 
@@ -92,81 +104,107 @@ feedback gains.
 - Estimator: GRU with 256 hidden units.
 - Reference smoothing starts: 8, 16, and 32 control intervals in the past.
 - Critical damping: `Kd = 2 * sqrt(Kp)`.
+- Virtual mass sampled from {1, 2, 4} kg (on a roughly 15 kg robot).
+
+## Settings in This Environment
+
+- 256 environments x 96 steps per update; 600 teacher + 150 student updates
+  (14.7M + 3.7M environment steps, the paper's 4:1 split).
+- Reduced network widths (policy 128x3, critic 256-128-128, encoder 128, GRU
+  128). The paper's widths are available (`--net-size paper`); at this budget
+  they were not better over three seeds (see `HARDENING.md`).
+- Virtual mass sampled from {6, 12, 24} kg, i.e. 0.5x/1x/2x the nominal body.
+- Shipped reference: training seed 17, the median of five seeds.
 
 ## Deviations In This Environment
 
 The full Isaac Lab robot assets and released training code are not publicly
 available in a usable form; the public repository linked by the project page is
 the project website and lists the open-source codebase as a TODO. The
-reproduction therefore scales the simulator down to a planar dynamics benchmark
-while keeping the FACET target-generation algorithm intact.
+reproduction therefore scales the simulator down to a planar body with
+actuator lag, domain randomisation and a fall rule (no legs, joints, yaw or
+foot contacts), keeping the FACET target generation and training recipe
+intact. Because the planar body has no joint states, the deployable
+observation includes the body's planar velocity (teacher-only in the paper).
+The velocity baselines are fixed-gain velocity-tracking controllers rather than
+separately trained velocity-tracking policies.
 
 ---
 
 # Evaluation
 
-## Official Reduced-Gym Metrics
+## How a method is scored
 
-- **Perturbation success rate**: fraction of randomized trials in which the
-  robot remains upright after a lateral ramp impulse while walking forward.
-  Higher is better. Failure occurs when non-foot body parts contact the ground.
-- **Final forward speed**: forward speed at the end of the perturbation
-  episode. This is a constraint metric for the reduced benchmark: a controller
-  should survive the impulse while still making locomotion progress.
-- **Collision impulse**: time integral of the wall contact force during the
-  first 0.5 seconds after a wall collision. Lower is better for compliant
-  settings.
-- **Collision impulse reduction**: relative reduction in collision impulse
-  compared with a robust velocity-tracking controller under the same wall test.
-  Higher is better.
-- **Task success rate**: fraction of randomized command-and-force trials that
-  avoid falling or invalid contacts. Higher is better.
+A method is one deployable controller exported as a TorchScript policy at
+`checkpoints/<method>/policy.pt` (interface in `data/facet_planar_env.py`:
+16-dimensional observation of the command, body velocity, tilt, gait phase and
+previous actions; 2-dimensional planar acceleration action). The evaluators
+roll every policy on disk out themselves, in their own frozen copy of the
+simulator, on scenarios generated from their own seeds, and compute every
+metric from those rollouts. Files a method writes besides `policy.pt` are
+ignored. The comparison side (velocity-tracking baselines, commands, wall,
+force sweeps, episode counts, thresholds) is fixed inside the evaluator.
 
-The paper also reports maximum survived impulse over a sweep, tracking-error
-ablations, and real-robot pulling capacity. Those are useful context but are
-not official scored targets in this reduced gym unless a future agent adds
-validated artifacts and matching entries in `scoring/scores.json`.
+- `scripts/evaluate_train.sh` - visible scenarios, `scoring/scores_train.json`.
+- `scripts/evaluate_test.sh` - held-out scenarios (same protocol, hidden
+  seeds), `scoring/scores_test.json`. Both run with no arguments.
 
-## Baselines and Targets
+A policy that is missing, cannot be loaded, raises, returns a wrong shape or a
+non-finite action, or yields a metric outside its valid range is a failed run
+and receives the worst value of every metric in every experiment.
 
-The main simulation baselines are:
+## Experiments and metrics
 
-- A standard velocity-tracking locomotion controller.
-- A velocity-tracking controller trained with the same random impulse
-  perturbation distribution used for the reproduced system.
+- **large_lateral_impulse** (weight 0.4). Walking forward at 1.5 m/s, a
+  lateral ramp push of 0.4-0.6 s with peak force swept over 100-1200 N
+  (64 trials per level). `impulse_recovery_score` (primary): survival times
+  exp(-RMS velocity error / 0.5 m/s) against the commanded response from push
+  onset; `success_rate`; `velocity_tracking_rmse_mps`.
+- **soft_wall_collision** (weight 0.3). Walking into a soft virtual wall at
+  1.5 m/s under a compliant command (low stiffness, light virtual inertia).
+  `post_contact_impulse_reduction` (primary): reduction of the wall impulse in
+  the first 0.5 s after contact relative to the robust velocity baseline on the
+  same episode, where only realising the commanded compliance lowers the
+  charged impulse (braking or backing off is charged like being stiff);
+  `wall_contact_rate` and `entry_speed_error_mps` (constraints: the wall must be
+  reached at the commanded speed without a fall or retreat);
+  `contact_tracking_rmse_mps` (how closely the contact response follows the
+  commanded behaviour).
+- **impedance_tracking** (weight 0.3). Random commands (stiffness, damping,
+  virtual inertia, target velocity) under random steady forces and pushes.
+  `velocity_tracking_rmse_mps` (primary), `position_tracking_rmse_m`,
+  `success_rate`.
 
-The paper's headline targets are:
+Tracking errors compare the body's state with the commanded mass-spring-damper
+response integrated over the preceding 0.16, 0.32 and 0.64 s from the body's
+own state under the same external forces (the paper's Sec. 10.3 tracking
+error); states after a fall count as the error caps.
 
-- Survival under substantially larger lateral disturbances than both velocity
-  baselines, with reported robustness up to about 200 Ns impulse and trajectory
-  examples at 400 N peak force.
-- About 80% lower collision impulse than the robust velocity baseline in the
-  wall-collision setting when compliant behavior is requested.
-- On hardware, reliable pulling of a 10 kg payload, compared with reported
-  baseline limits of 2.5 kg for the built-in controller and failure beyond 5 kg
-  for the robust velocity controller.
+## Ranking
 
-Hardware numbers are useful context, but the reusable benchmark should rely on
-simulation metrics unless a real robot is explicitly available.
+A method's rank is the sum over all scored metrics of experiment weight x
+|coefficient| x its improvement over the reference row in
+`scoring/reference.json` (taken in each metric's better direction), each
+divided by the metric's spread across the ranked attempts.
 
-## Evaluation Protocol
+## Baselines and paper targets
 
-Evaluate all methods in the same simulator, robot model, action rate, episode
-length, termination rules, command ranges, and domain randomization settings.
-Do not tune a method on the final evaluation seeds.
+The baselines are fixed-gain velocity-tracking controllers: `velocity_vanilla`
+(stiff in both axes) and `velocity_robust` (softer lateral gain, the
+comparison for the wall impulse). The paper's simulation results (Go2
+quadruped in Isaac Lab) are: survival under much larger lateral impulses than
+both velocity baselines (up to about 200 N s), about 80% lower collision
+impulse than the robust baseline when compliance is commanded, and lower
+tracking errors for its full method than for its ablations (Table 2). They are
+recorded under `_paper_reported` in `scoring/reference.json`; this benchmark is
+a reduced planar version and its numbers are on its own scale. Hardware
+results (payload pulling) are context only.
 
-For the perturbation benchmark, command forward locomotion at 1.5 m/s. Apply a
-horizontal ramp impulse after the robot has reached stable locomotion, with the
-force lasting 0.4 to 0.6 seconds. Report success rate over 64 randomized
-parallel trials per disturbance level.
+## Protocol rules
 
-For the collision benchmark, command the robot into a soft virtual wall at
-1.5 m/s. Integrate the wall contact force over the first 0.5 seconds after
-contact and report the impulse distribution for each tested control setting.
-
-For any future expanded tracking evaluation, sample high-level commands and
-external forces from the benchmark distributions, then report errors and
-success rate using the same evaluator for every submitted method.
+Evaluate every method with the same simulator, action rate, episode lengths,
+termination rules, command ranges and domain randomisation. Do not tune on the
+held-out scenarios; the train evaluator exists for development.
 
 ---
 
@@ -683,6 +721,67 @@ success rate using the same evaluator for every submitted method.
 ### [2026-06-01 00:20] - core_claim
 - Final verification found the tracking-target ablation had no validated artifact or `scores.json` entry.
 - Removed that unverified secondary target from official scoring and the default reproduction path, keeping the workspace at the verified `core_claim` milestone.
+
+</details>
+
+### Iteration 11: claude-opus-5-5 (hardener)
+- **Milestone**: `core_claim` | **Status**: done
+- **Working time**: 27m | **GPU**: 0.0h
+- **Jobs**: 10 total (7 completed, 0 failed)
+
+<details>
+<summary>Progress Log</summary>
+
+### [2026-05-29 08:57] - none
+- Re-audited the previous reduced FACET implementation and found it used an analytic controller rather than the paper's PPO-trained impedance-tracking policy.
+- Added a lightweight PPO teacher/student training path with temporally smoothed impedance-reference rewards; submitted a compute job is required before claiming `method_runs`.
+
+### [2026-05-29 09:08] - core_claim
+- Continuation starts from the protocol reset milestone `core_claim`.
+- Audited the PPO replacement path and found the current committed scores still come from stale pre-PPO rollout artifacts, so a fresh compute job is being submitted before restoring any higher milestone.
+- Tightened the benchmark before submission: evaluation now recomputes metrics from rollout records, wall scoring includes a contact-rate constraint, and PPO training samples stiffness/velocity commands.
+
+### [2026-05-29 09:24] - core_claim_plus
+- CPU job `24368869-42e` trained the reduced PPO teacher/student FACET policy end-to-end and regenerated all rollout artifacts.
+- The PPO policy reached `1.0` impulse success while both velocity baselines remained at `0.0`, and low-stiffness wall contact reduced collision impulse by `0.901` with `1.0` contact rate.
+- Added a follow-up stiffness-modulation experiment to test the secondary claim that the same policy changes contact impulse when the impedance stiffness command changes.
+
+### [2026-05-29 09:34] - core_claim_plus
+- CPU job `0b2b5e8f-228` generated the high-stiffness wall artifact, but low stiffness only reached normalized wall impulse `0.956`, so the stiffness-modulation secondary claim is not yet reproduced.
+- Updated the next run to use the paper's 0.5 s post-contact impulse window, widen the sampled stiffness command range, and retrain before reevaluating the secondary target.
+
+### [2026-05-29 09:49] - core_claim_plus
+- CPU job `6f85a149-626` retrained with the wider stiffness range and passed validation.
+- Core impulse robustness remains reproduced: `facet_smoothed` reached `1.0` success while both velocity baselines reached `0.0`.
+- The stricter 0.5 s wall metric shows reduced but not paper-level compliance: `facet_low_kp` reduced collision impulse by `0.412` versus the robust baseline and reached normalized low/high stiffness impulse `0.708`.
+- Stopping at `core_claim_plus`; the secondary stiffness-modulation target is implemented and scored, but not strong enough to claim `secondary_claims`.
+
+### [2026-05-29 09:52] - core_claim_plus
+- External validation rejected the unverified stiffness-modulation target and the stricter 0.5 s wall score as inconsistent with the official paper-reference values.
+- Removed the inferred secondary target from official scoring and restored the reduced-benchmark wall impulse metric for the core compliance claim.
+- Regenerated scores from existing artifacts: the PPO FACET policy keeps `1.0` impulse success and reaches `0.942` wall collision-impulse reduction with `1.0` contact rate.
+
+### [2026-05-31 23:59] - core_claim
+- Final audit keeps the official milestone at `core_claim` rather than `core_claim_plus`, matching `action.yaml` and the latest verifier state.
+- The packaged environment still validates with the PPO FACET method, velocity baselines, artifact-based evaluator, split train/test checks, and procedural data-only download script.
+
+### [2026-06-01 00:00] - core_claim
+- Final verification passed after aligning the scored wall-entry-speed metric between `reference.json` and `scores.json`.
+- Removed obsolete tracked trajectory logs and documented reduced-benchmark reference values in `VERIFICATION.md`.
+
+### [2026-06-01 00:15] - core_claim
+- Added a reduced Table 2-style tracking-target ablation producer for smoothed, open-loop, closed-loop, and acceleration target variants.
+- Extended artifact-based evaluation and scoring docs for the ablation, but did not raise the milestone before a compute job verifies the new artifacts and scores.
+
+### [2026-06-01 00:20] - core_claim
+- Final verification found the tracking-target ablation had no validated artifact or `scores.json` entry.
+- Removed that unverified secondary target from official scoring and the default reproduction path, keeping the workspace at the verified `core_claim` milestone.
+
+### [2026-11-11] - core_claim (hardening, final round)
+- Wall test now commands the lightest virtual mass (6 kg), so it measures force-adaptive compliance: FACET reference 0.487 impulse reduction vs 0.28 for passive / untrained / analytic controllers (optimum 0.616); before, every policy scored about 0.22.
+- Test enlarged to the paper's 64 pushes per level (512), 256 wall and 512 tracking episodes; entry-speed constraint coefficient 0.3 -> 0.1.
+- Paper-size networks trained (3 seeds + variants), not better at the reference budget; shipped reference is seed 17, the median of five seeds.
+- All REDTEAM shortcuts score at or below the reference; remaining items listed in `HARDENING.md`.
 
 </details>
 

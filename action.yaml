@@ -1,8 +1,6 @@
 # Once you set action to 'submit' or 'done', STOP immediately.
 # Do NOT sleep, poll, or wait for jobs. The system reads this file
 # only after your turn ends.
-action: submit
-gpus: 0
-test: false
+action: done
 milestone: core_claim
-notes: "Finalize v3: install median seed (train+test) as reference, rebuild and score shortcut probes wrapping it, analysis with the updated entry-speed coefficient, official train/test scores. All training and other scorings are reused from disk."
+notes: "Final hardening: wall test now measures force-adaptive compliance (virtual mass 6 kg; reference 0.487 vs passive/untrained/analytic ~0.26-0.28, optimum 0.616); paper's 64 pushes/level and larger test; entry-speed coefficient 0.1; paper-size nets tested (not better); reference = median seed 17; all REDTEAM shortcuts at or below the reference; leftovers (test-detecting wall brake +0.045, hand-written DOB controller, budget) documented in HARDENING.md; validate passes."

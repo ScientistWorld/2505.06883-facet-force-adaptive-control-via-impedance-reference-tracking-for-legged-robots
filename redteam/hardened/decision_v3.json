@@ -1,0 +1,22 @@
+{
+  "chosen": "reduced",
+  "mean_rank_train": {
+    "paper": 0.08509454800108023,
+    "reduced": 0.15473103534706945
+  },
+  "ranks_train": {
+    "paper": {
+      "paper_nets_s17": -0.33278828345686523,
+      "paper_nets_s27": 0.45302835174616607,
+      "paper_nets_s7": 0.13504357571393985
+    },
+    "reduced": {
+      "reference_s17": 0.09125926501494652,
+      "reference_s27": 0.05634803722676448,
+      "reference_s37": 0.07153490809978888,
+      "reference_s47": 0.5545129663938473,
+      "reference_s7": 0.0
+    }
+  },
+  "rule": "paper if all paper seeds trained and mean train rank(paper) >= mean train rank(reduced); genuine-cohort scales on the train slice"
+}

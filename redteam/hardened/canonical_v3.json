@@ -1,0 +1,20 @@
+{
+  "case": "reference_s37",
+  "configuration": "reduced",
+  "order": [
+    "reference_s7",
+    "reference_s27",
+    "reference_s37",
+    "reference_s17",
+    "reference_s47"
+  ],
+  "ranks_train_relative_to_first_seed": {
+    "reference_s17": 0.09125926501494652,
+    "reference_s27": 0.05634803722676448,
+    "reference_s37": 0.07153490809978888,
+    "reference_s47": 0.5545129663938473,
+    "reference_s7": 0.0
+  },
+  "rule": "median seed of the chosen configuration by rank (genuine cohort scales, train slice)",
+  "seed": 37
+}

@@ -61,3 +61,11 @@ safety constraint.
 - Confidence: medium
 - Key limitation: reduced procedural planar simulation rather than full Isaac
   Lab robot experiments.
+
+## Superseded by the hardening rounds
+
+The scoring described above (saved rollout artifacts) was replaced in the
+hardening iteration: the evaluators now roll out each submitted TorchScript
+policy themselves, and the final round recalibrated the wall experiment, the
+test size and the shipped reference seed. See `HARDENING.md` for the current
+gym, its shortcut audit and its remaining limitations.

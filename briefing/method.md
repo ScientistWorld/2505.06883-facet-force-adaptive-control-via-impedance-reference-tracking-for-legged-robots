@@ -19,12 +19,16 @@ forces, torques, contacts, and reference targets. A student policy is then
 initialized from the teacher and fine-tuned with an estimator that predicts the
 teacher's privileged feature from deployable observations.
 
-This reproduction preserves the central computation at reduced scale. Instead
-of Isaac Lab legged-robot training, it uses a procedural planar force-interaction
-environment and implements the impedance reference model, fixed-target-velocity
-command form, critical damping, and temporally smoothed reference targets. The
-baselines are velocity-tracking controllers that resist perturbations with fixed
-feedback gains.
+This reproduction implements that pipeline on the benchmark's planar
+force-interaction simulator (`method/`): PPO with the impedance reference model
+in the paper's fixed-target-velocity command form (critical damping, sampled
+virtual mass), rewards of Eq. (7) averaged over targets integrated from the
+body's own states 8, 16 and 32 control steps back (plus the paper's quadratic
+velocity cost and survival term), a privileged-feature teacher with an
+asymmetric critic, a GRU estimator trained to predict the teacher's feature from
+observation history, and a student initialised from the teacher and fine-tuned
+with PPO on the estimated feature. Inputs use running empirical normalisation.
+The deployed student is exported as a TorchScript policy.
 
 ## Reported Paper Settings
 
@@ -37,11 +41,27 @@ feedback gains.
 - Estimator: GRU with 256 hidden units.
 - Reference smoothing starts: 8, 16, and 32 control intervals in the past.
 - Critical damping: `Kd = 2 * sqrt(Kp)`.
+- Virtual mass sampled from {1, 2, 4} kg (on a roughly 15 kg robot).
+
+## Settings in This Environment
+
+- 256 environments x 96 steps per update; 600 teacher + 150 student updates
+  (14.7M + 3.7M environment steps, the paper's 4:1 split).
+- Reduced network widths (policy 128x3, critic 256-128-128, encoder 128, GRU
+  128). The paper's widths are available (`--net-size paper`); at this budget
+  they were not better over three seeds (see `HARDENING.md`).
+- Virtual mass sampled from {6, 12, 24} kg, i.e. 0.5x/1x/2x the nominal body.
+- Shipped reference: training seed 17, the median of five seeds.
 
 ## Deviations In This Environment
 
 The full Isaac Lab robot assets and released training code are not publicly
 available in a usable form; the public repository linked by the project page is
 the project website and lists the open-source codebase as a TODO. The
-reproduction therefore scales the simulator down to a planar dynamics benchmark
-while keeping the FACET target-generation algorithm intact.
+reproduction therefore scales the simulator down to a planar body with
+actuator lag, domain randomisation and a fall rule (no legs, joints, yaw or
+foot contacts), keeping the FACET target generation and training recipe
+intact. Because the planar body has no joint states, the deployable
+observation includes the body's planar velocity (teacher-only in the paper).
+The velocity baselines are fixed-gain velocity-tracking controllers rather than
+separately trained velocity-tracking policies.

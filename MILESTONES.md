@@ -48,3 +48,9 @@
 ### [2026-06-01 00:20] - core_claim
 - Final verification found the tracking-target ablation had no validated artifact or `scores.json` entry.
 - Removed that unverified secondary target from official scoring and the default reproduction path, keeping the workspace at the verified `core_claim` milestone.
+
+### [2026-11-11] - core_claim (hardening, final round)
+- Wall test now commands the lightest virtual mass (6 kg), so it measures force-adaptive compliance: FACET reference 0.487 impulse reduction vs 0.28 for passive / untrained / analytic controllers (optimum 0.616); before, every policy scored about 0.22.
+- Test enlarged to the paper's 64 pushes per level (512), 256 wall and 512 tracking episodes; entry-speed constraint coefficient 0.3 -> 0.1.
+- Paper-size networks trained (3 seeds + variants), not better at the reference budget; shipped reference is seed 17, the median of five seeds.
+- All REDTEAM shortcuts score at or below the reference; remaining items listed in `HARDENING.md`.

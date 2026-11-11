@@ -25,10 +25,10 @@ schedule, disturbance sampling, policy architecture, adaptation mechanism, or
 tracking target construction, as long as the result remains a single legged
 controller for the benchmark's force-adaptive locomotion and interaction tasks.
 
-Methods may improve robustness, tracking accuracy, compliance modulation,
-payload capacity, or sim-to-real suitability, but they must still solve the same
-problem: controllable physical interaction for a legged robot under the fixed
-benchmark interface.
+Methods may improve robustness, tracking accuracy, compliance modulation, force
+estimation, or sample efficiency, but they must still solve the same problem:
+controllable physical interaction under the fixed benchmark interface, with a
+learned controller as the deployed policy.
 
 ## Out of Bounds
 

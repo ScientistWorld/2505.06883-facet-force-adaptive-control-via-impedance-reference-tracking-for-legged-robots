@@ -15,6 +15,11 @@ high-level control commands, then outputs low-level actions for the simulated
 robot. The environment measures whether the resulting behavior is stable,
 trackable, force-aware, and controllable across command settings.
 
+The benchmark is a reduced planar version of this problem. Its scored
+experiments cover robustness to large lateral pushes, compliant collision with
+a soft wall, and following the commanded interaction behaviour under random
+commands and external forces; sustained forceful pulling is not scored.
+
 ## Why It Matters
 
 Legged robots that rigidly reject all disturbances can be unsafe around people

@@ -1,8 +1,8 @@
 {
-  "_notes": "Reduced-scale planar benchmark (see briefing/method.md). Experiment protocols follow paper Sec. 5, 6 and Appendix 10.2-10.3 on the benchmark's own physical scale, so the paper's numbers are kept under '_paper_reported' rather than as results the gym must match. 'results' rows are this gym's measured held-out test values for the evaluator-owned velocity baselines and the reproduced FACET reference (TorchScript policy checkpoints/facet/policy.pt: teacher/student PPO, 600 + 150 updates of 256 envs x 96 steps = 18.4M env steps versus the paper's 250M; training seed 27, the median of five seeds 7/17/27/37/47). Rank: sum over metrics of weight * |coefficient| * improvement (in the higher_is_better direction) over the facet row, divided by the metric's spread across ranked attempts.",
+  "_notes": "Reduced-scale planar benchmark (see briefing/method.md). Experiment protocols follow paper Sec. 5, 6 and Appendix 10.2-10.3 on the benchmark's own physical scale, so the paper's numbers are kept under '_paper_reported' rather than as results the gym must match. 'results' rows are this gym's measured held-out test values for the evaluator-owned velocity baselines and the reproduced FACET reference (TorchScript policy checkpoints/facet/policy.pt: teacher/student PPO with GRU estimator and smoothed 8/16/32-step reference targets, 600 + 150 updates of 256 envs x 96 steps = 18.4M env steps versus the paper's 250M, reduced network widths; training seed 17, the median of five seeds 7/17/27/37/47 over the train and test slices; paper-size networks were not better at this budget, see HARDENING.md). Rank: sum over metrics of weight * |coefficient| * improvement (in the higher_is_better direction) over the facet row, divided by the metric's spread across ranked attempts.",
   "experiments": {
     "large_lateral_impulse": {
-      "description": "Forward locomotion commanded at 1.5 m/s (impedance Kp=4, Kd=4, virtual mass 12 kg, starting from steady 1.5 m/s motion) under a lateral triangular ramp push of 0.4-0.6 s starting at 1.5-2.5 s. Peak force is swept over 100-1200 N (32 episodes per level, body/actuator randomisation, random push sign), extending beyond the 80-600 N training range.",
+      "description": "Forward locomotion commanded at 1.5 m/s (impedance Kp=4, Kd=4, virtual mass 12 kg, starting from steady 1.5 m/s motion) under a lateral triangular ramp push of 0.4-0.6 s starting at 1.5-2.5 s. Peak force is swept over 100-1200 N (64 randomised episodes per level as in paper Sec. 10.2, 512 in total; body/actuator randomisation, random push sign).",
       "notes": "Per episode the evaluator computes the RMS error between the body's velocity and the commanded impedance response integrated over the preceding 0.16/0.32/0.64 s windows from the body's own state under the same external force (paper Sec. 10.3 tracking error), from push onset to the end of the 7 s episode; states after a fall count as the 5 m/s cap. impulse_recovery_score averages survived * exp(-rmse / 0.5 m/s) over all episodes.",
       "weight": 0.4,
       "primary_metric": "impulse_recovery_score",
@@ -32,33 +32,33 @@
       "results": {
         "velocity_vanilla": {
           "type": "baseline",
-          "impulse_recovery_score": 0.0256,
-          "success_rate": 0.0547,
-          "velocity_tracking_rmse_mps": 4.6524
+          "impulse_recovery_score": 0.0188,
+          "success_rate": 0.0391,
+          "velocity_tracking_rmse_mps": 4.7202
         },
         "velocity_robust": {
           "type": "baseline",
-          "impulse_recovery_score": 0.0644,
+          "impulse_recovery_score": 0.0631,
           "success_rate": 0.125,
-          "velocity_tracking_rmse_mps": 4.3166
+          "velocity_tracking_rmse_mps": 4.317
         },
         "facet": {
           "type": "proposed",
-          "impulse_recovery_score": 0.5915,
-          "success_rate": 0.9375,
-          "velocity_tracking_rmse_mps": 0.5782
+          "impulse_recovery_score": 0.5713,
+          "success_rate": 0.9746,
+          "velocity_tracking_rmse_mps": 0.4613
         }
       }
     },
     "soft_wall_collision": {
-      "description": "Walking into a soft virtual wall (paper Eq. 10, stiffness 260 N/m, damping 28 N s/m) with the compliant command Kp=0.5 (Kd=2 sqrt(Kp)) at 1.5 m/s, starting 0.75-1.5 m before the wall at steady 1.5 m/s. 128 randomised episodes, each paired with the evaluator-owned robust velocity baseline on the identical episode.",
-      "notes": "Wall impulse is integrated over the first 0.5 s after first contact (paper Sec. 10.2) and scaled to the commanded 1.5 m/s approach speed. For every episode the evaluator also integrates the commanded impedance itself (virtual mass, Kd, target velocity) from the body's state at first contact against the same wall; the charged impulse is commanded + |measured - commanded|, so impulse is reduced only by realising the commanded compliance, not by braking or retreating below it. An episode is valid only if the body touches the wall in time, enters at 1.5 +- 0.3 m/s, does not fall, and does not fall behind the commanded post-contact response by more than 0.5 m/s RMS over 1 s; an invalid episode is charged twice the baseline's impulse.",
+      "description": "Walking into a soft virtual wall (paper Eq. 10, stiffness 260 N/m, damping 28 N s/m) with the compliant command Kp=0.5 (Kd=2 sqrt(Kp)) and virtual mass 6 kg (the lightest commanded inertia, half the nominal 12 kg body) at 1.5 m/s, starting 0.75-1.5 m before the wall at steady 1.5 m/s. 256 randomised episodes, each paired with the evaluator-owned robust velocity baseline on the identical episode.",
+      "notes": "Wall impulse is integrated over the first 0.5 s after first contact (paper Sec. 10.2) and scaled to the commanded 1.5 m/s approach speed. For every episode the evaluator also integrates the commanded impedance itself (virtual mass, Kd, target velocity) from the body's state at first contact against the same wall; the charged impulse is commanded + |measured - commanded|, so impulse is reduced only by realising the commanded compliance, not by braking or retreating below it. The commanded impedance's own reduction (the metric's attainable optimum) is about 0.62 on this slice; a body that does nothing special on contact gets about 0.28. An episode is valid only if the body touches the wall in time, enters at 1.5 +- 0.3 m/s, does not fall, and does not fall behind the commanded post-contact response by more than 0.5 m/s RMS over 1 s; an invalid episode is charged twice the baseline's impulse.",
       "weight": 0.3,
       "primary_metric": "post_contact_impulse_reduction",
       "metrics": {
         "post_contact_impulse_reduction": {
           "higher_is_better": true,
-          "description": "1 - (sum of charged 0.5 s post-contact wall impulses) / (sum of the robust velocity baseline's measured impulses on the same episodes), clipped to [-1, 1]. The best attainable value is the reduction of the commanded impedance itself.",
+          "description": "1 - (sum of charged 0.5 s post-contact wall impulses) / (sum of the robust velocity baseline's measured impulses on the same episodes), clipped to [-1, 1]. The best attainable value is the reduction of the commanded impedance itself (about 0.62).",
           "coefficient": 1.0
         },
         "wall_contact_rate": {
@@ -85,29 +85,29 @@
       "results": {
         "velocity_vanilla": {
           "type": "baseline",
-          "contact_tracking_rmse_mps": 1.8635,
-          "entry_speed_error_mps": 0.0132,
+          "contact_tracking_rmse_mps": 3.7132,
+          "entry_speed_error_mps": 0.0138,
           "post_contact_impulse_reduction": 0.0,
           "wall_contact_rate": 1.0
         },
         "velocity_robust": {
           "type": "baseline",
-          "contact_tracking_rmse_mps": 1.8635,
-          "entry_speed_error_mps": 0.0132,
+          "contact_tracking_rmse_mps": 3.7132,
+          "entry_speed_error_mps": 0.0138,
           "post_contact_impulse_reduction": 0.0,
           "wall_contact_rate": 1.0
         },
         "facet": {
           "type": "proposed",
-          "contact_tracking_rmse_mps": 0.1105,
-          "entry_speed_error_mps": 0.0825,
-          "post_contact_impulse_reduction": 0.226,
+          "contact_tracking_rmse_mps": 0.3415,
+          "entry_speed_error_mps": 0.1257,
+          "post_contact_impulse_reduction": 0.4869,
           "wall_contact_rate": 1.0
         }
       }
     },
     "impedance_tracking": {
-      "description": "Impedance-command following under random commands and external forces (paper Sec. 6 / Table 2 protocol, Sec. 10.3): Kp log-uniform in [0.5, 32] with Kd = 2 sqrt(Kp), target velocity x in [-0.5, 2], y in [-0.5, 0.5] m/s, random initial velocity, steady forces up to 40 N per axis and ramp pushes of 80-200 N per axis. 256 randomised 7 s episodes.",
+      "description": "Impedance-command following under random commands and external forces (paper Sec. 6 / Table 2 protocol, Sec. 10.3): Kp log-uniform in [0.5, 32] with Kd = 2 sqrt(Kp), virtual mass 6/12/24 kg, target velocity x in [-0.5, 2], y in [-0.5, 0.5] m/s, random initial velocity, steady forces up to 40 N per axis and ramp pushes of 80-200 N per axis. 512 randomised 7 s episodes.",
       "notes": "Errors are measured against the commanded mass-spring-damper integrated over the preceding 0.16/0.32/0.64 s windows from the body's own state under the same external forces (paper Eqs. 11-12 with the smoothed targets); states after a fall count as the caps (5 m/s, 2.5 m).",
       "weight": 0.3,
       "primary_metric": "velocity_tracking_rmse_mps",
@@ -176,21 +176,21 @@
       "results": {
         "velocity_vanilla": {
           "type": "baseline",
-          "position_tracking_rmse_m": 1.3206,
-          "success_rate": 0.3086,
-          "velocity_tracking_rmse_mps": 2.7176
+          "position_tracking_rmse_m": 1.2554,
+          "success_rate": 0.332,
+          "velocity_tracking_rmse_mps": 2.5978
         },
         "velocity_robust": {
           "type": "baseline",
-          "position_tracking_rmse_m": 1.0126,
-          "success_rate": 0.5078,
-          "velocity_tracking_rmse_mps": 2.1533
+          "position_tracking_rmse_m": 0.9358,
+          "success_rate": 0.5312,
+          "velocity_tracking_rmse_mps": 2.0101
         },
         "facet": {
           "type": "proposed",
-          "position_tracking_rmse_m": 0.1432,
-          "success_rate": 0.9531,
-          "velocity_tracking_rmse_mps": 0.3596
+          "position_tracking_rmse_m": 0.1431,
+          "success_rate": 0.957,
+          "velocity_tracking_rmse_mps": 0.3706
         }
       }
     }
